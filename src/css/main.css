@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+/* Khai báo quét tất cả file PHP trong theme để Tailwind CSS v4 biên dịch */
+@source "../../**/*.php";
+
+@theme {
+  --color-lc-blue: #0052cc;     /* Xanh chủ đạo Long Châu */
+  --color-lc-darkblue: #003b99;
+  --color-lc-orange: #f58220;   /* Màu cam */
+  --color-lc-red: #e11b22;      /* Màu giá giảm */
+  --color-lc-bg: #f0f2f5;       /* Nền xám nhạt */
+}
+
+/* Các tùy chỉnh CSS toàn cục bổ sung */
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #1f2937;
+  background-color: var(--color-lc-bg);
+}
+
+/* Định dạng Menu điều hướng Header Desktop */
+.site-header .desktop-nav {
+  display: flex;
+  align-items: center;
+}
+
+.site-header .desktop-nav ul {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 1.5rem !important; /* Tương đương gap-6 */
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.site-header .desktop-nav ul li {
+  display: inline-block !important;
+  white-space: nowrap !important;
+}
+
+.site-header .desktop-nav ul li a {
+  display: block;
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 800; /* font-extrabold */
+  text-transform: uppercase; /* uppercase */
+  letter-spacing: 0.05em; /* tracking-wider */
+  color: #6b7280; /* text-gray-500 */
+  transition: color 0.2s ease-in-out;
+  padding: 0.5rem 0;
+}
+
+.site-header .desktop-nav ul li a:hover {
+  color: var(--color-lc-blue) !important;
+}
+
+.site-header .desktop-nav ul li.current-menu-item a,
+.site-header .desktop-nav ul li.current_page_item a {
+  color: var(--color-lc-blue) !important;
+}
+
+/* Định dạng Menu điều hướng Header Mobile */
+.site-header .mobile-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.site-header .mobile-nav ul {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important; /* Tương đương gap-4 */
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.site-header .mobile-nav ul li {
+  display: block !important;
+}
+
+.site-header .mobile-nav ul li a {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  transition: color 0.2s ease-in-out;
+  padding: 0.25rem 0;
+}
+
+.site-header .mobile-nav ul li a:hover {
+  color: var(--color-lc-blue) !important;
+}
+
+/* Ẩn thanh cuộn dọc mặc định của một số slider nếu cần */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

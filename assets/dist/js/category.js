@@ -1,0 +1,1 @@
+import{t as e}from"./chunks/rolldown-runtime-BX80bFGj.js";var t=e((()=>{document.addEventListener(`DOMContentLoaded`,()=>{console.log(`Product Category Page Script Loaded!`);let e=document.getElementById(`category-sort-select`);e&&e.addEventListener(`change`,e=>{console.log(`Category sorting changed to:`,e.target.value)})})}));export default t();
