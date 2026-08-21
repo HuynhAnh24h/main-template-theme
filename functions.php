@@ -219,3 +219,9 @@ function theme_resource_hints($urls, $relation_type) {
     return $urls;
 }
 add_filter('wp_resource_hints', 'theme_resource_hints', 10, 2);
+
+/**
+ * 8. Quản lý Custom Fields (ACF Settings)
+ * Nạp cấu hình các trường dữ liệu tùy biến từ thư mục custom-fields/
+ */
+require get_template_directory() . '/custom-fields/acf-setup.php';

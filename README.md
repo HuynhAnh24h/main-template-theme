@@ -86,6 +86,10 @@ theme-ecommerce-store/
 │   ├── 404.php                   # Template trang lỗi 404
 │   └── search.php                # Template trang kết quả tìm kiếm
 │
+├── custom-fields/                # Thư mục chứa cấu hình Advanced Custom Fields (ACF)
+│   ├── acf-setup.php             # Bộ nạp tự động (Autoloader) các cấu hình Custom Fields
+│   └── acf-home-fields.php       # Khai báo cấu hình Custom Fields cho Trang chủ (Slider)
+│
 ├── index.php                     # Mẫu trang dự phòng chính (Fallback, Bắt buộc ở Root)
 ├── header.php                    # Đầu trang dùng chung (Sticky header, Bắt buộc ở Root)
 ├── footer.php                    # Chân trang dùng chung (Multi-column, Bắt buộc ở Root)

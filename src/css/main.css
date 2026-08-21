@@ -4,100 +4,273 @@
 @source "../../**/*.php";
 
 @theme {
-  --color-lc-blue: #0052cc;     /* Xanh chủ đạo Long Châu */
+  --color-lc-blue: #0052cc; /* Xanh chủ đạo Long Châu */
   --color-lc-darkblue: #003b99;
-  --color-lc-orange: #f58220;   /* Màu cam */
-  --color-lc-red: #e11b22;      /* Màu giá giảm */
-  --color-lc-bg: #f0f2f5;       /* Nền xám nhạt */
+  --color-lc-orange: #f58220; /* Màu cam */
+  --color-lc-red: #e11b22; /* Màu giá giảm */
+  --color-lc-bg: #f0f2f5; /* Nền xám nhạt */
 }
 
 /* Các tùy chỉnh CSS toàn cục bổ sung */
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
   color: #1f2937;
   background-color: var(--color-lc-bg);
 }
 
 /* Định dạng Menu điều hướng Header Desktop */
-.site-header .desktop-nav {
+ /* Sticky header: transparent by default (sits over the hero),
+     gains a solid background once the page is scrolled. */
+  .site-header{
+    background-color:transparent;
+    border-bottom:1px solid transparent;
+    box-shadow:none;
+    transition:background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+  .site-header--scrolled{
+    background-color:rgba(0,0,0,0.92);
+    -webkit-backdrop-filter:blur(12px);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(255,255,255,0.1);
+    box-shadow:0 10px 30px -14px rgba(0,0,0,0.7);
+  }
+/* =========================================
+     BLOCK: home — background layers
+     (kept as plain CSS: layered gradients/noise aren't expressible as utilities)
+     ========================================= */
+.home {
+  position: relative;
+  isolation: isolate;
+  background-color: #000000;
+}
+
+.home__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      1000px 620px at 78% 20%,
+      rgba(255, 255, 255, 0.1),
+      transparent 60%
+    ),
+    radial-gradient(
+      700px 500px at 8% 90%,
+      rgba(255, 255, 255, 0.06),
+      transparent 55%
+    ),
+    repeating-linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0.035) 0px,
+      rgba(255, 255, 255, 0.035) 2px,
+      transparent 2px,
+      transparent 46px
+    ),
+    #000000;
+}
+
+.home__grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+}
+
+.home__watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -52%);
+  z-index: 0;
+  font-family: "Anton", sans-serif;
+  font-size: min(40vw, 620px);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.06);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* =========================================
+     ELEMENT: home__title-row — kinetic reveal
+     ========================================= */
+.home__title-row {
+  overflow: hidden;
+}
+.home__title-row span {
+  display: inline-block;
+  color: #ffffff;
+  transform: translateY(115%);
+  animation: home-rise 0.9s cubic-bezier(0.2, 0.9, 0.25, 1) forwards;
+}
+.home__title-row--outline span {
+  color: transparent;
+  -webkit-text-stroke: 2px #ffffff;
+}
+
+/* fade-up utility hook (used on nav, copy blocks, visual column) */
+.home__reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: home-fade-up 0.8s ease forwards;
+}
+
+/* =========================================
+     ELEMENT: home__btn — shine-on-hover CTA
+     ========================================= */
+.home__btn {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #ffffff;
+  background-color: #ffffff;
+  color: #000000;
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.9, 0.25, 1),
+    background-color 0.35s ease,
+    color 0.35s ease;
+}
+.home__btn:hover {
+  transform: translateY(-3px);
+  background-color: #000000;
+  color: #ffffff;
+}
+.home__btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  transform: translateX(-120%);
+}
+.home__btn:hover::before {
+  animation: home-sheen 0.9s ease forwards;
+}
+.home__btn-arrow {
+  transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.25, 1);
+}
+.home__btn:hover .home__btn-arrow {
+  transform: translateX(6px);
+}
+
+/* =========================================
+     ELEMENT: home__visual — glow / ring / tilt / float
+     ========================================= */
+.home__visual-glow {
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.22),
+    rgba(255, 255, 255, 0.02) 65%,
+    transparent 70%
+  );
+  filter: blur(10px);
+  animation: home-pulse 5s ease-in-out infinite;
+}
+.home__visual-ring {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  animation: home-spin 22s linear infinite;
+}
+.home__product {
+  transform-style: preserve-3d;
+  transition: transform 0.25s ease-out;
+}
+.home__product-image {
+  animation: home-float 4.5s ease-in-out infinite;
+  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.65));
+}
+.home__badge {
+  animation: home-bob 3.2s ease-in-out infinite;
+}
+.home__badge--sale {
+  animation-delay: 0.9s;
+}
+
+/* =========================================
+     ELEMENT: home__ticker — infinite marquee
+     ========================================= */
+.home__ticker-track {
   display: flex;
-  align-items: center;
+  width: max-content;
+  animation: home-scroll 18s linear infinite;
 }
 
-.site-header .desktop-nav ul {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  gap: 1.5rem !important; /* Tương đương gap-6 */
-  list-style: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
+/* =========================================
+     Keyframes
+     ========================================= */
+@keyframes home-rise {
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes home-fade-up {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes home-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+}
+@keyframes home-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes home-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-6deg);
+  }
+  50% {
+    transform: translateY(-18px) rotate(-3deg);
+  }
+}
+@keyframes home-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes home-sheen {
+  to {
+    transform: translateX(120%);
+  }
+}
+@keyframes home-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
-.site-header .desktop-nav ul li {
-  display: inline-block !important;
-  white-space: nowrap !important;
-}
-
-.site-header .desktop-nav ul li a {
-  display: block;
-  font-size: 0.75rem; /* text-xs */
-  font-weight: 800; /* font-extrabold */
-  text-transform: uppercase; /* uppercase */
-  letter-spacing: 0.05em; /* tracking-wider */
-  color: #6b7280; /* text-gray-500 */
-  transition: color 0.2s ease-in-out;
-  padding: 0.5rem 0;
-}
-
-.site-header .desktop-nav ul li a:hover {
-  color: var(--color-lc-blue) !important;
-}
-
-.site-header .desktop-nav ul li.current-menu-item a,
-.site-header .desktop-nav ul li.current_page_item a {
-  color: var(--color-lc-blue) !important;
-}
-
-/* Định dạng Menu điều hướng Header Mobile */
-.site-header .mobile-nav {
-  display: flex;
-  flex-direction: column;
-}
-
-.site-header .mobile-nav ul {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 1rem !important; /* Tương đương gap-4 */
-  list-style: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.site-header .mobile-nav ul li {
-  display: block !important;
-}
-
-.site-header .mobile-nav ul li a {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #6b7280;
-  transition: color 0.2s ease-in-out;
-  padding: 0.25rem 0;
-}
-
-.site-header .mobile-nav ul li a:hover {
-  color: var(--color-lc-blue) !important;
-}
-
-/* Ẩn thanh cuộn dọc mặc định của một số slider nếu cần */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
