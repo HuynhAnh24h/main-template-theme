@@ -13,7 +13,9 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'src/js/main.js'),
         home: resolve(__dirname, 'src/js/pages/home.js'),
+        menu: resolve(__dirname, 'src/js/pages/menu.js'),
         about: resolve(__dirname, 'src/js/pages/about.js'),
+        booking: resolve(__dirname, 'src/js/pages/booking.js'),
         contact: resolve(__dirname, 'src/js/pages/contact.js'),
         'category-all': resolve(__dirname, 'src/js/pages/category-all.js'),
         category: resolve(__dirname, 'src/js/pages/category.js'),

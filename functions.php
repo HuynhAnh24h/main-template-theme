@@ -36,9 +36,32 @@ function theme_footer_menu_fallback() {
     echo '</ul>';
 }
 
+/**
+ * 1.c Helper: Chuẩn hóa URL nội bộ theme, luôn đảm bảo trỏ đúng thư mục WordPress kể cả trong localhost/subfolder
+ */
+function otr_url($path_or_url) {
+    if (empty($path_or_url) || in_array($path_or_url, array('#', ''))) {
+        return home_url('/');
+    }
+    // Nếu là link tuyệt đối bên ngoài hoặc protocol đặc biệt
+    if (strpos($path_or_url, 'http://') === 0 || strpos($path_or_url, 'https://') === 0 || strpos($path_or_url, 'mailto:') === 0 || strpos($path_or_url, 'tel:') === 0) {
+        return $path_or_url;
+    }
+    // Chuẩn hóa link nội bộ thành link tuyệt đối đầy đủ theo home_url()
+    return home_url('/' . ltrim($path_or_url, '/'));
+}
+
 // 2. Nhúng CSS/JS thông minh (Biên dịch qua Vite) vào theme
 function theme_scripts(){
     
+    // 0. Nhúng Google Font Roboto chuẩn quốc tế
+    wp_enqueue_style(
+        'theme-font-roboto',
+        'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap',
+        array(),
+        null
+    );
+
     // Nhúng CSS Biên dịch từ Tailwind CSS v4
     $css_path = '/assets/dist/css/style.css';
     if (file_exists(get_template_directory() . $css_path)) {
@@ -75,9 +98,13 @@ function theme_scripts(){
 
     if (is_front_page()) {
         $page_script = 'home';
+    } elseif (is_page_template('theme-pages/page-menu.php') || is_page('menu')) {
+        $page_script = 'menu';
+    } elseif (is_page_template('theme-pages/page-booking.php') || is_page('booking')) {
+        $page_script = 'booking';
     } elseif (is_page_template('theme-pages/page-about.php')) {
         $page_script = 'about';
-    } elseif (is_page_template('theme-pages/page-contact.php')) {
+    } elseif (is_page_template('theme-pages/page-contact.php') || is_page('contact')) {
         $page_script = 'contact';
     } elseif (is_page_template('theme-pages/page-category-all.php')) {
         $page_script = 'category-all';
@@ -115,6 +142,17 @@ function theme_scripts(){
                 filemtime(get_template_directory() . $page_js_path),
                 true
             );
+
+            if ($page_script === 'booking') {
+                wp_localize_script(
+                    'theme-page-' . $page_script,
+                    'otrBookingData',
+                    array(
+                        'ajax_url' => admin_url('admin-ajax.php'),
+                        'nonce'    => wp_create_nonce('otr_booking_nonce'),
+                    )
+                );
+            }
         }
     }
 }
@@ -148,9 +186,47 @@ function get_svg_icon($icon_name, $classes = '') {
  * giúp thư mục gốc (root) của theme luôn sạch sẽ, chỉ chừa lại các file setup chuẩn.
  */
 function theme_custom_template_loader($template) {
+    $template_file = '';
+
+    // 1. Ánh xạ các trang đặc biệt sử dụng Conditional Tags của WordPress
+    if ( is_front_page() ) {
+        $template_file = 'front-page.php';
+    } elseif ( is_home() ) {
+        $template_file = 'home.php';
+    } elseif ( is_single() ) {
+        if ( is_singular('product') ) {
+            $template_file = 'single-product.php';
+        } else {
+            $template_file = 'single.php';
+        }
+    } elseif ( is_page() ) {
+        // Nếu trang sử dụng Custom Page Template (ví dụ: theme-pages/page-about.php), WordPress tự nhận đường dẫn đầy đủ
+        $custom_template = get_post_meta( get_the_ID(), '_wp_page_template', true );
+        if ( $custom_template && $custom_template !== 'default' ) {
+            return $template;
+        }
+        $template_file = 'page.php';
+    } elseif ( is_post_type_archive('product') || (function_exists('is_shop') && is_shop()) ) {
+        $template_file = 'archive-product.php';
+    } elseif ( is_tax('product_cat') || is_product_category() ) {
+        $template_file = 'taxonomy-product_cat.php';
+    } elseif ( is_category() ) {
+        $template_file = 'category.php';
+    } elseif ( is_search() ) {
+        $template_file = 'search.php';
+    } elseif ( is_404() ) {
+        $template_file = '404.php';
+    }
+
+    if ( !empty($template_file) ) {
+        $custom_path = get_template_directory() . '/theme-pages/' . $template_file;
+        if ( file_exists($custom_path) ) {
+            return $custom_path;
+        }
+    }
+
+    // 2. Cơ chế dự phòng: Tìm theo tên tệp tin gốc nếu khớp
     $file_name = basename($template);
-    
-    // Đường dẫn tệp tin trong thư mục theme-pages/
     $custom_template_path = get_template_directory() . '/theme-pages/' . $file_name;
     
     if (file_exists($custom_template_path)) {
@@ -175,6 +251,10 @@ function theme_defer_scripts($tag, $handle, $src) {
     }
     // Defer cho toàn bộ script của theme và các thư viện frontend khác
     if (strpos($handle, 'theme-') !== false || strpos($handle, 'woocommerce') !== false || strpos($handle, 'lucide') !== false) {
+        // Thêm type="module" cho script của theme để hỗ trợ ES Modules của Vite
+        if (strpos($handle, 'theme-') !== false) {
+            $tag = str_replace('<script ', '<script type="module" ', $tag);
+        }
         return str_replace(' src', ' defer="defer" src', $tag);
     }
     return $tag;
@@ -221,7 +301,53 @@ function theme_resource_hints($urls, $relation_type) {
 add_filter('wp_resource_hints', 'theme_resource_hints', 10, 2);
 
 /**
- * 8. Quản lý Custom Fields (ACF Settings)
+ * 8. Quản lý Custom Post Type Thực Đơn Bar (CPT & Taxonomy)
+ */
+require get_template_directory() . '/inc/cpt-menu.php';
+
+/**
+ * 9. Quản lý Custom Fields (ACF Settings)
  * Nạp cấu hình các trường dữ liệu tùy biến từ thư mục custom-fields/
  */
 require get_template_directory() . '/custom-fields/acf-setup.php';
+
+/**
+ * 10. Quản lý Hệ thống Đặt Bàn (Booking CPT & Email Notification)
+ */
+require get_template_directory() . '/inc/cpt-booking.php';
+
+/**
+ * 11. Tự động khởi tạo trang Đặt Bàn nếu chưa tồn tại
+ */
+function otr_auto_create_booking_page() {
+    $booking_page = get_page_by_path('booking');
+    if (!$booking_page) {
+        wp_insert_post(array(
+            'post_title'     => 'Đặt Bàn',
+            'post_name'      => 'booking',
+            'post_status'    => 'publish',
+            'post_type'      => 'page',
+            'comment_status' => 'closed',
+            'page_template'  => 'theme-pages/page-booking.php',
+        ));
+    }
+}
+add_action('after_setup_theme', 'otr_auto_create_booking_page');
+
+/**
+ * 12. Tự động khởi tạo trang Liên Hệ nếu chưa tồn tại
+ */
+function otr_auto_create_contact_page() {
+    $contact_page = get_page_by_path('contact');
+    if (!$contact_page) {
+        wp_insert_post(array(
+            'post_title'     => 'Liên Hệ',
+            'post_name'      => 'contact',
+            'post_status'    => 'publish',
+            'post_type'      => 'page',
+            'comment_status' => 'closed',
+            'page_template'  => 'theme-pages/page-contact.php',
+        ));
+    }
+}
+add_action('after_setup_theme', 'otr_auto_create_contact_page');

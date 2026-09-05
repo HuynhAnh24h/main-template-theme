@@ -1,7 +1,7 @@
 <?php
 /**
- * Template Name: Contact Page (Liên Hệ)
- * Description: Giao diện trang Liên Hệ chuẩn sang trọng cho On The Rock Cocktail Bar (100% khớp mockup).
+ * Template Name: Booking Page (Đặt Bàn)
+ * Description: Giao diện trang Đặt Bàn (Bookings) sang trọng cho On The Rock Cocktail Bar.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -23,7 +23,7 @@ $header_contact_url = (empty($raw_contact_url) || in_array($raw_contact_url, arr
 $header_booking  = function_exists('get_field') ? (get_field('header_booking_text', $front_page_id) ?: 'ĐẶT BÀN TRƯỚC') : 'ĐẶT BÀN TRƯỚC';
 $header_booking_url = home_url('/booking/');
 
-// 1. Nhúng Header điều hướng On The Rock (Cố định, z-[9999], chữ vàng nổi bật)
+// 1. Nhúng Header điều hướng On The Rock
 get_template_part( 'template-parts/header/site-header', null, array(
     'facebook_url'  => $header_fb,
     'instagram_url' => $header_insta,
@@ -36,10 +36,10 @@ get_template_part( 'template-parts/header/site-header', null, array(
     'booking_url'   => $header_booking_url,
 ) );
 
-// 2. Nhúng Khối thông tin liên hệ 4 ô (100% khớp mockup người dùng cung cấp)
-get_template_part( 'template-parts/contact/section-contact-info' );
+// 2. Nhúng Form Đặt Bàn (100% khớp mockup)
+get_template_part( 'template-parts/booking/section-booking-form' );
 
-// 3. Nhúng Không Gian 5 Ảnh & Dải Marquee Ticker (Y hệt trang booking theo yêu cầu)
+// 3. Nhúng Không Gian 5 Ảnh & Dải Marquee Ticker
 get_template_part( 'template-parts/booking/section-booking-atmosphere' );
 
 // 4. Nhúng Chân trang On The Rock

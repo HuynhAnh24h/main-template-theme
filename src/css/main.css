@@ -1,276 +1,291 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&subset=vietnamese,latin&display=swap');
 @import "tailwindcss";
 
 /* Khai báo quét tất cả file PHP trong theme để Tailwind CSS v4 biên dịch */
 @source "../../**/*.php";
 
 @theme {
+  --font-sans: 'Roboto', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Roboto', sans-serif;
+  --font-display: 'Roboto', sans-serif;
+
   --color-lc-blue: #0052cc; /* Xanh chủ đạo Long Châu */
   --color-lc-darkblue: #003b99;
   --color-lc-orange: #f58220; /* Màu cam */
   --color-lc-red: #e11b22; /* Màu giá giảm */
   --color-lc-bg: #f0f2f5; /* Nền xám nhạt */
+
+  /* Các biến màu cho hiệu ứng Wander */
+  --color-wander-ink: #171009;
+  --color-wander-wash: 71,52,34;
+  --color-wander-paper: #F4EFE8;
+  --color-wander-amber: #E8A33D;
+  --color-wander-teal: #C97B4A;
 }
 
-/* Các tùy chỉnh CSS toàn cục bổ sung */
+/* Đồng bộ toàn bộ website về cùng một font chữ Roboto duy nhất */
+*,
+*::before,
+*::after,
+html,
+body,
+h1, h2, h3, h4, h5, h6,
+p, span, a, button, input, textarea, select, label,
+.font-serif,
+.font-sans,
+.font-display {
+  font-family: 'Roboto', system-ui, -apple-system, sans-serif !important;
+}
+
 body {
-  font-family:
-    "Inter",
-    system-ui,
-    -apple-system,
-    sans-serif;
+  font-family: 'Roboto', system-ui, -apple-system, sans-serif !important;
   color: #1f2937;
   background-color: var(--color-lc-bg);
 }
 
-/* Định dạng Menu điều hướng Header Desktop */
- /* Sticky header: transparent by default (sits over the hero),
-     gains a solid background once the page is scrolled. */
-  .site-header{
-    background-color:transparent;
-    border-bottom:1px solid transparent;
-    box-shadow:none;
-    transition:background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+/* ================= WANDER LOADER & MOODBOARD ================= */
+body.home,
+body.page-template-page-menu,
+body.page-menu,
+body.page-template-page-booking,
+body.page-booking,
+body.page-template-page-contact,
+body.page-contact {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--color-wander-ink) !important;
+  font-family: 'Roboto', sans-serif !important;
+  overflow-x: clip;
+}
+
+body.home:not(.is-loaded) {
+  height: 100vh !important;
+  overflow: hidden !important;
+}
+
+body.home.is-loaded {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+/* Cố định Sidebar thực đơn Kiểu 2 khi cuộn chuột */
+@media (min-width: 1024px) {
+  .menu-sticky-sidebar {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 110px !important;
+    align-self: flex-start !important;
+    max-height: calc(100vh - 130px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(202, 168, 117, 0.3) transparent;
   }
-  .site-header--scrolled{
-    background-color:rgba(0,0,0,0.92);
-    -webkit-backdrop-filter:blur(12px);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid rgba(255,255,255,0.1);
-    box-shadow:0 10px 30px -14px rgba(0,0,0,0.7);
-  }
-/* =========================================
-     BLOCK: home — background layers
-     (kept as plain CSS: layered gradients/noise aren't expressible as utilities)
-     ========================================= */
-.home {
-  position: relative;
-  isolation: isolate;
-  background-color: #000000;
 }
 
-.home__backdrop {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      1000px 620px at 78% 20%,
-      rgba(255, 255, 255, 0.1),
-      transparent 60%
-    ),
-    radial-gradient(
-      700px 500px at 8% 90%,
-      rgba(255, 255, 255, 0.06),
-      transparent 55%
-    ),
-    repeating-linear-gradient(
-      115deg,
-      rgba(255, 255, 255, 0.035) 0px,
-      rgba(255, 255, 255, 0.035) 2px,
-      transparent 2px,
-      transparent 46px
-    ),
-    #000000;
+#loader {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 60;
+  background: var(--color-wander-ink);
 }
-
-.home__grain {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.5;
-  mix-blend-mode: overlay;
-}
-
-.home__watermark {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -52%);
-  z-index: 0;
-  font-family: "Anton", sans-serif;
-  font-size: min(40vw, 620px);
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.06);
-  white-space: nowrap;
-  pointer-events: none;
-  user-select: none;
-}
-
-/* =========================================
-     ELEMENT: home__title-row — kinetic reveal
-     ========================================= */
-.home__title-row {
-  overflow: hidden;
-}
-.home__title-row span {
-  display: inline-block;
-  color: #ffffff;
-  transform: translateY(115%);
-  animation: home-rise 0.9s cubic-bezier(0.2, 0.9, 0.25, 1) forwards;
-}
-.home__title-row--outline span {
-  color: transparent;
-  -webkit-text-stroke: 2px #ffffff;
-}
-
-/* fade-up utility hook (used on nav, copy blocks, visual column) */
-.home__reveal {
+.frame { position: relative; width: 170px; height: 210px; }
+#stackWrap { position: absolute; inset: 0; }
+.frame .photo {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.55), 0 0 0 1px rgba(244,239,232,0.15);
   opacity: 0;
-  transform: translateY(18px);
-  animation: home-fade-up 0.8s ease forwards;
 }
+.frame .ring { position: absolute; inset: -14px; border: 1px solid rgba(244,239,232,0.15); }
+.frame .ring::before, .frame .ring::after { content: ""; position: absolute; width: 10px; height: 10px; }
+.frame .ring::before { top: -1px; left: -1px; border-top: 1px solid var(--color-wander-amber); border-left: 1px solid var(--color-wander-amber); }
+.frame .ring::after { top: -1px; right: -1px; border-top: 1px solid var(--color-wander-amber); border-right: 1px solid var(--color-wander-amber); }
 
-/* =========================================
-     ELEMENT: home__btn — shine-on-hover CTA
-     ========================================= */
-.home__btn {
-  position: relative;
-  overflow: hidden;
-  border: 2px solid #ffffff;
-  background-color: #ffffff;
-  color: #000000;
-  transition:
-    transform 0.35s cubic-bezier(0.2, 0.9, 0.25, 1),
-    background-color 0.35s ease,
-    color 0.35s ease;
-}
-.home__btn:hover {
-  transform: translateY(-3px);
-  background-color: #000000;
-  color: #ffffff;
-}
-.home__btn::before {
-  content: "";
+.progress-container {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255, 255, 255, 0.5),
-    transparent
-  );
-  transform: translateX(-120%);
+  bottom: -35px;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: #0d0a06;
+  border-radius: 10px;
 }
-.home__btn:hover::before {
-  animation: home-sheen 0.9s ease forwards;
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--color-wander-amber);
+  border-radius: 10px;
+  transition: width 0.1s linear;
 }
-.home__btn-arrow {
-  transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.25, 1);
-}
-.home__btn:hover .home__btn-arrow {
-  transform: translateX(6px);
-}
-
-/* =========================================
-     ELEMENT: home__visual — glow / ring / tilt / float
-     ========================================= */
-.home__visual-glow {
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.22),
-    rgba(255, 255, 255, 0.02) 65%,
-    transparent 70%
-  );
-  filter: blur(10px);
-  animation: home-pulse 5s ease-in-out infinite;
-}
-.home__visual-ring {
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  animation: home-spin 22s linear infinite;
-}
-.home__product {
-  transform-style: preserve-3d;
-  transition: transform 0.25s ease-out;
-}
-.home__product-image {
-  animation: home-float 4.5s ease-in-out infinite;
-  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.65));
-}
-.home__badge {
-  animation: home-bob 3.2s ease-in-out infinite;
-}
-.home__badge--sale {
-  animation-delay: 0.9s;
+.progress-percent {
+  position: absolute;
+  bottom: -70px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: var(--color-wander-amber);
+  font-family: 'Roboto', sans-serif !important;
+  font-weight: 300;
+  font-size: 24px;
+  letter-spacing: 0.05em;
 }
 
-/* =========================================
-     ELEMENT: home__ticker — infinite marquee
-     ========================================= */
-.home__ticker-track {
+#board { position: absolute; inset: 0; z-index: 10; }
+
+.tile {
+  position: absolute;
+  background-size: cover; background-position: center;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+#wash {
+  position: absolute; inset: 0;
+  z-index: 20;
+  background: radial-gradient(120% 85% at 50% 50%, rgba(10, 7, 5, 0.68) 0%, rgba(8, 6, 4, 0.88) 100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+#home-wander {
+  position: relative;
+  z-index: 30;
+  height: 100vh;
   display: flex;
-  width: max-content;
-  animation: home-scroll 18s linear infinite;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 5vw;
 }
 
-/* =========================================
-     Keyframes
-     ========================================= */
-@keyframes home-rise {
-  to {
-    transform: translateY(0);
-  }
-}
-@keyframes home-fade-up {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes home-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.7;
-  }
-  50% {
-    transform: scale(1.12);
-    opacity: 1;
-  }
-}
-@keyframes home-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-@keyframes home-float {
-  0%,
-  100% {
-    transform: translateY(0) rotate(-6deg);
-  }
-  50% {
-    transform: translateY(-18px) rotate(-3deg);
-  }
-}
-@keyframes home-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-@keyframes home-sheen {
-  to {
-    transform: translateX(120%);
-  }
-}
-@keyframes home-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
+.otr-quote-box {
+  position: relative;
+  z-index: 40;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 900ms cubic-bezier(.16, 1, .3, 1), transform 900ms cubic-bezier(.16, 1, .3, 1);
+  will-change: opacity, transform;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+#home-wander.reveal .otr-quote-box,
+body.is-loaded #home-wander .otr-quote-box {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.otr-quote-title,
+h1.otr-quote-title {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif !important;
+  font-weight: 400;
+  font-style: normal;
+  color: #c2a066 !important;
+  font-size: clamp(24px, 3.8vw, 44px);
+  line-height: 1.82;
+  letter-spacing: 0.015em;
+  text-align: center;
+  text-shadow: 0 4px 28px rgba(0, 0, 0, 0.98), 0 2px 10px rgba(0, 0, 0, 0.9);
+  margin: 0;
+  padding: 0;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* ================= LIQUID GLASS HEADER (ALWAYS FIXED TOP) ================= */
+#site-header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  z-index: 9999 !important;
+  transition: padding 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              backdrop-filter 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: padding, background, backdrop-filter;
+}
+
+#site-header.liquid-glass,
+#site-header.is-scrolled,
+#site-header.site-header--scrolled {
+  padding-top: 0.65rem !important;
+  padding-bottom: 0.65rem !important;
+  background: linear-gradient(180deg, rgba(24, 17, 11, 0.96) 0%, rgba(10, 8, 5, 0.98) 100%) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+  border-bottom: 1px solid rgba(202, 168, 117, 0.28) !important;
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.95),
+              inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+              inset 0 -1px 0 0 rgba(202, 168, 117, 0.12) !important;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-marquee {
+  display: flex;
+  flex-shrink: 0;
+  animation: marquee 24s linear infinite;
+  will-change: transform;
+}
+
+/* ================= TESTIMONIALS SLIDER ================= */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ================= ULTRA SMOOTH SCROLL & GPU OPTIMIZATION ================= */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body.home {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Ép dựng tầng GPU cho các khối động để scroll 60-120fps mượt mà */
+.animate-marquee,
+.testi-slide,
+.menu-item-row {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Tối ưu hiệu ứng ảnh Fixed Parallax */
+.hero-bg-parallax {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.08s linear;
+}
+
+[data-parallax] {
+  will-change: transform;
+  transform: scale(1.06) translate3d(0, 0, 0);
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.35s ease forwards;
 }

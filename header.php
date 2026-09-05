@@ -3,16 +3,21 @@
 <head>
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php wp_head(); ?> <!-- BẮT BUỘC: Để WP nhúng CSS/JS và Meta Tag -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&subset=vietnamese,latin&display=swap" rel="stylesheet">
+    <?php wp_head(); ?> 
 </head>
 <body <?php body_class('bg-lc-bg text-gray-800 antialiased'); ?>>
 <?php wp_body_open(); ?>
 
-<!-- Sticky Header -->
+<!--
+
+Sticky Header 
 <header class="site-header sticky top-0 z-40 w-full bg-black">
     <div class="site-header__container container mx-auto px-4 py-3 flex items-center justify-between gap-6">
  
-        <!-- Logo (Bên trái) -->
+        Logo (Bên trái) 
         <div class="site-header__logo shrink-0">
             <a href="<?php echo esc_url(home_url('/')); ?>" class="site-header__logo-link flex items-center gap-2">
                 <span class="site-header__logo-mark w-10 h-10 rounded-2xl bg-white text-black flex items-center justify-center font-black text-xl shadow-md shadow-white/10">
@@ -22,7 +27,7 @@
             </a>
         </div>
  
-        <!-- Search bar (Ở giữa - Desktop) -->
+        Search bar (Ở giữa - Desktop) 
         <div class="site-header__search hidden lg:block flex-1 max-w-lg relative">
             <form role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>" class="site-header__search-form w-full">
                 <input type="search" name="s" class="site-header__search-input w-full bg-neutral-900 border border-white/15 rounded-2xl px-5 py-2.5 pl-11 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-white focus:bg-neutral-800 transition duration-200" placeholder="Tìm kiếm sản phẩm...">
@@ -32,7 +37,7 @@
             </form>
         </div>
  
-        <!-- Navigation Menu (Desktop) -->
+        Navigation Menu (Desktop) 
         <nav class="site-header__nav desktop-nav hidden lg:flex items-center font-extrabold text-xs uppercase tracking-wider text-gray-400">
             <?php
             wp_nav_menu(array(
@@ -44,19 +49,19 @@
             ?>
         </nav>
  
-        <!-- Utilities (Desktop + Mobile) -->
+         Utilities (Desktop + Mobile) 
         <div class="site-header__utilities flex items-center gap-4 text-gray-400 shrink-0">
-            <!-- Search Icon (Hiện ở Mobile/Tablet thay vì thanh Search dài) -->
+            Search Icon (Hiện ở Mobile/Tablet thay vì thanh Search dài)
             <a href="<?php echo esc_url(get_permalink(get_option('woocommerce_shop_page_id'))); ?>?s=" class="site-header__icon-link p-1.5 hover:text-white transition lg:hidden" title="Tìm kiếm">
                 <?php echo get_svg_icon('search', 'w-5 h-5'); ?>
             </a>
  
-            <!-- User Account Profile (Desktop) -->
+            User Account Profile (Desktop) 
             <a href="<?php echo function_exists('get_permalink') ? esc_url(get_permalink(get_option('woocommerce_myaccount_page_id'))) : '#'; ?>" class="site-header__icon-link p-1.5 hover:text-white transition hidden sm:block" title="Tài khoản">
                 <?php echo get_svg_icon('user', 'w-5 h-5'); ?>
             </a>
  
-            <!-- Cart Icon (WooCommerce - Luôn hiện) -->
+            Cart Icon (WooCommerce - Luôn hiện) 
             <a href="<?php echo function_exists('wc_get_cart_url') ? esc_url(wc_get_cart_url()) : '#'; ?>" class="site-header__icon-link p-1.5 hover:text-white transition relative" title="Giỏ hàng">
                 <?php echo get_svg_icon('shopping-cart', 'w-5 h-5'); ?>
                 <?php if (function_exists('WC') && WC()->cart && WC()->cart->get_cart_contents_count() > 0) : ?>
@@ -66,14 +71,14 @@
                 <?php endif; ?>
             </a>
  
-            <!-- Mobile Menu Toggle Button (Chỉ hiện ở Mobile/Tablet) -->
+            Mobile Menu Toggle Button (Chỉ hiện ở Mobile/Tablet) 
             <button id="mobile-menu-btn" class="site-header__mobile-toggle lg:hidden p-1.5 hover:text-white transition" title="Menu">
                 <?php echo get_svg_icon('menu', 'w-5 h-5'); ?>
             </button>
         </div>
     </div>
  
-    <!-- Mobile Navigation Menu Dropdown -->
+     Mobile Navigation Menu Dropdown
     <div id="mobile-menu" class="site-header__mobile-menu hidden lg:hidden bg-black border-t border-white/10 shadow-xl shadow-black/40 absolute w-full left-0 py-5 px-6">
         <nav class="site-header__mobile-nav flex flex-col gap-4 font-extrabold text-xs uppercase tracking-wider text-gray-400">
             <?php
@@ -84,7 +89,7 @@
                 'fallback_cb'    => 'theme_primary_menu_fallback'
             ));
             ?>
-            <!-- Search Mobile -->
+            Search Mobile 
             <div class="site-header__mobile-search relative mt-2 pt-2 border-t border-white/10">
                 <form role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
                     <input type="search" name="s" class="site-header__mobile-search-input w-full bg-neutral-900 border border-white/15 rounded-xl px-4 py-2.5 pl-10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-white" placeholder="Tìm kiếm...">
@@ -96,6 +101,15 @@
         </nav>
     </div>
 </header>
+-->
+<?php
+// Tự động nhúng Fixed Site Header nếu trang chưa tự gọi riêng
+if ( ! is_front_page() && ! is_page_template( 'theme-pages/page-booking.php' ) && ! is_page( 'booking' ) && ! is_page_template( 'theme-pages/page-contact.php' ) && ! is_page( 'contact' ) && ! is_page_template( 'theme-pages/page-menu.php' ) && ! is_page( 'menu' ) ) {
+    get_template_part( 'template-parts/header/site-header' );
+}
+?>
 
-<!-- Main Wrapper -->
+<?php if ( ! is_front_page() ) : ?>
+<!--Main Wrapper -->
 <main id="main-content" class="min-h-[70vh]">
+<?php endif; ?>

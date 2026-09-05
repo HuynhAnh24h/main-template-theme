@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Tự động tìm tất cả thẻ có data-lucide và chèn icon SVG tương ứng
     createIcons({ icons });
 
-    // 2. Logic Menu di động (Mobile Menu Hamburger)
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
+    // 2. Logic Menu di động (Mobile Menu Toggle & Drawer)
+    const mobileMenuBtn = document.getElementById('mobile-nav-toggle') || document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-nav-menu') || document.getElementById('mobile-menu');
 
     if (mobileMenuBtn && mobileMenu) {
         mobileMenuBtn.addEventListener('click', (e) => {
@@ -23,7 +23,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Logic Nút cuộn lên đầu trang (Back to Top)
+    // 3. Logic Cuộn mượt cho Contact nếu đang ở Trang Chủ
+    const contactLinks = document.querySelectorAll('a[href*="#contact"]');
+    contactLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            const contactSection = document.getElementById('contact');
+            if (contactSection) {
+                e.preventDefault();
+                contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Đóng mobile menu nếu đang mở
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            }
+        });
+    });
+
+    // 4. Logic Nút cuộn lên đầu trang (Back to Top)
     const backToTopBtn = document.getElementById('back-to-top');
     if (backToTopBtn) {
         window.addEventListener('scroll', () => {
@@ -41,24 +57,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    console.log('Global Javascript Loaded!');
-    // ---- Header: đổi nền khi scroll ----
-  (function () {
-    var header = document.querySelector(".site-header");
-    if (!header) return;
-
-    var threshold = 40;
-
-    function onScroll() {
-      if (window.scrollY > threshold) {
-        header.classList.add("site-header--scrolled");
-      } else {
-        header.classList.remove("site-header--scrolled");
-      }
+    // 5. Header: Đảm bảo luôn cố định chắc chắn & hiệu ứng scroll
+    const header = document.getElementById('site-header') || document.querySelector('.site-header');
+    if (header) {
+        const onHeaderScroll = () => {
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-[0_8px_30px_rgba(0,0,0,0.9)]');
+            } else {
+                header.classList.remove('shadow-[0_8px_30px_rgba(0,0,0,0.9)]');
+            }
+        };
+        window.addEventListener('scroll', onHeaderScroll, { passive: true });
+        onHeaderScroll();
     }
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-  })();
+    console.log('On The Rock Header & Global Javascript Loaded!');
 });
- 

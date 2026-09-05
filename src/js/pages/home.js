@@ -1,116 +1,328 @@
-// JS dành riêng cho trang chủ (Home Page)
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("Home Page Script Loaded!");
+// JS dành riêng cho trang chủ (Home Page) - Wander Loading Reveal
+function initWanderLoader() {
+  console.log("Wander Home Page Script Loaded!");
 
- 
-  // ---- Slider: nghiêng sản phẩm theo chuột ----
-  (function () {
-    var stage = document.getElementById("home-product-stage");
-    var visual = document.querySelector(".home__visual");
-    if (!stage || !visual) return;
+  const stackWrap = document.getElementById('stackWrap');
+  const pctNum  = document.getElementById('pctNum');
+  const progressBar = document.getElementById('progressBar');
+  const loader  = document.getElementById('loader');
+  const board   = document.getElementById('board');
+  const wash    = document.getElementById('wash');
+  const home    = document.getElementById('home-wander');
 
-    visual.addEventListener("mousemove", function (e) {
-      var r = visual.getBoundingClientRect();
-      var px = (e.clientX - r.left) / r.width - 0.5;
-      var py = (e.clientY - r.top) / r.height - 0.5;
-      stage.style.transform =
-        "rotateY(" + px * 18 + "deg) rotateX(" + -py * 14 + "deg)";
+  // Đọc danh sách ảnh truyền từ WordPress qua biến toàn cục (lấy tối đa 10 ảnh)
+  const rawImages = window.WanderConfig?.images || [];
+  const IMAGES = Array.isArray(rawImages) && rawImages.length > 0 ? rawImages.slice(0, 10) : [];
+
+  if (IMAGES.length === 0) {
+    console.warn("Wander Loader: No images configured.");
+    document.body.classList.add('is-loaded');
+    if (home) home.classList.add('reveal');
+    if (loader) loader.remove();
+  }
+
+  // Bố cục moodboard cố định
+  const LAYOUT = [
+    { left: 3,  top: 6,  w: 170, h: 220, rot: -5 },
+    { left: 20, top: 3,  w: 160, h: 210, rot: -7 },
+    { left: 44, top: 1,  w: 165, h: 195, rot: 3  },
+    { left: 65, top: 9,  w: 195, h: 175, rot: -2 },
+    { left: 86, top: 4,  w: 150, h: 215, rot: 6  },
+    { left: 12, top: 54, w: 150, h: 195, rot: -4 },
+    { left: 33, top: 60, w: 195, h: 175, rot: 3  },
+    { left: 56, top: 57, w: 195, h: 175, rot: -3 },
+    { left: 79, top: 52, w: 150, h: 215, rot: 5  },
+    { left: -4, top: 80, w: 165, h: 205, rot: -8 }
+  ];
+
+  const vw = () => window.innerWidth;
+  const vh = () => window.innerHeight;
+  const px = (layout) => ({
+    x: layout.left / 100 * vw(),
+    y: layout.top  / 100 * vh(),
+    w: layout.w, h: layout.h, rot: layout.rot
+  });
+
+  // ---------- Bước 1: Đếm 1/10 -> 10/10 với hoạt ảnh xấp bài mượt mà ----------
+  let i = 0;
+  const STACK_OFFSET = [
+    { x:-7,  y: 5,  rot:-9  },
+    { x: 6,  y:-4,  rot: 7  },
+    { x:-4,  y:-7,  rot:-5  },
+    { x: 8,  y: 6,  rot: 11 },
+    { x:-9,  y: 2,  rot:-12 },
+    { x: 4,  y:-8,  rot: 6  },
+    { x:-3,  y: 8,  rot:-7  },
+    { x: 9,  y:-5,  rot: 10 },
+    { x:-8,  y:-3,  rot:-10 },
+    { x: 3,  y: 7,  rot: 5  }
+  ];
+
+  const stackCards = [];
+  const totalSteps = Math.min(10, IMAGES.length);
+  const stepTime = 160; // 160ms mỗi nhịp đếm -> tổng cộng ~1.6s
+
+  function loadStep(){
+    i++;
+    const percent = Math.min(100, Math.round((i / totalSteps) * 100));
+    if (pctNum) pctNum.textContent = percent + '%';
+    if (progressBar) progressBar.style.width = percent + '%';
+
+    const off = STACK_OFFSET[(i - 1) % STACK_OFFSET.length];
+    const card = document.createElement('div');
+    card.className = 'photo';
+    card.style.backgroundImage = `url('${IMAGES[i-1]}')`;
+    card.style.zIndex = i;
+    if (stackWrap) stackWrap.appendChild(card);
+    stackCards.push(card);
+
+    // Hoạt ảnh quăng bài bay vào
+    const fromSide = (i % 2 === 0) ? 1 : -1;
+    const fromX = fromSide * 130;
+    const fromY = -40 + Math.random() * 20;
+    const fromRot = fromSide * 55;
+
+    if (card.animate) {
+      card.animate([
+        { transform:`translate(${fromX}px, ${fromY}px) rotate(${fromRot}deg) scale(0.7)`, opacity: 0 },
+        { transform:`translate(${off.x * 0.6}px, ${off.y * 0.6}px) rotate(${off.rot * 1.4}deg) scale(1.06)`, opacity: 1, offset: 0.65 },
+        { transform:`translate(${off.x}px, ${off.y}px) rotate(${off.rot}deg) scale(1)`, opacity: 1 }
+      ], {
+        duration: stepTime + 100,
+        easing: 'cubic-bezier(.25,.85,.35,1.1)',
+        fill: 'forwards'
+      });
+    } else {
+      card.style.opacity = '1';
+    }
+
+    if (i < totalSteps){
+      setTimeout(loadStep, stepTime);
+    } else {
+      setTimeout(bloom, 220); // Dừng lại một nhịp ngắn rồi tỏa ảnh
+    }
+  }
+
+  // Khởi chạy
+  if (loader && IMAGES.length > 0) {
+    setTimeout(loadStep, 150);
+  } else {
+    document.body.classList.add('is-loaded');
+    if (home) home.classList.add('reveal');
+    if (loader) loader.remove();
+  }
+
+  // ---------- Bước 2: Ảnh bay tỏa ra (bloom) về vị trí moodboard ----------
+  function bloom(){
+    const originX = vw()/2 - 85;
+    const originY = vh()/2 - 105;
+
+    IMAGES.forEach((src, idx) => {
+      const target = px(LAYOUT[idx % LAYOUT.length]);
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+      tile.style.backgroundImage = `url('${src}')`;
+      tile.style.width  = target.w + 'px';
+      tile.style.height = target.h + 'px';
+      tile.style.left = originX + 'px';
+      tile.style.top  = originY + 'px';
+      if (board) board.appendChild(tile);
+
+      const dx = target.x - originX;
+      const dy = target.y - originY;
+
+      // Độ cong đường bay
+      const arcSide = (idx % 2 === 0 ? 1 : -1);
+      const arcBend = 90 + Math.random() * 70;
+      const midX = dx * 0.5 + arcSide * arcBend * (dy >= 0 ? 0.4 : -0.4);
+      const midY = dy * 0.5 - (120 + Math.random() * 60);
+
+      const flipRot = target.rot + arcSide * (140 + Math.random() * 100);
+      const delay = 80 + idx * 60;
+
+      if (tile.animate) {
+        tile.animate([
+          { transform:`translate(0px,0px) rotate(0deg) scale(0.4)`,               opacity: 0,  offset: 0 },
+          { transform:`translate(${midX*0.35}px,${midY*0.35}px) rotate(${flipRot*0.3}deg) scale(0.75)`, opacity: 1, offset: 0.18 },
+          { transform:`translate(${midX}px,${midY}px) rotate(${flipRot}deg) scale(1.12)`,   opacity: 1, offset: 0.55 },
+          { transform:`translate(${dx*0.94}px,${dy*0.94}px) rotate(${target.rot*0.9}deg) scale(1.04)`, opacity: 1, offset: 0.86 },
+          { transform:`translate(${dx}px,${dy}px) rotate(${target.rot}deg) scale(1)`,       opacity: 1, offset: 1 }
+        ], {
+          duration: 1200,
+          delay: delay,
+          easing: 'cubic-bezier(.22,.7,.2,1)',
+          fill: 'forwards'
+        });
+      } else {
+        tile.style.transform = `translate(${dx}px, ${dy}px) rotate(${target.rot}deg)`;
+        tile.style.opacity = '1';
+      }
     });
 
-    visual.addEventListener("mouseleave", function () {
-      stage.style.transform = "rotateY(0deg) rotateX(0deg)";
-    });
-  })();
+    // Ẩn khung loader ngay khi ảnh bắt đầu bung ra
+    if (loader) {
+      loader.style.transition = 'opacity 500ms ease';
+      loader.style.opacity = '0';
+      setTimeout(() => {
+        if (loader && loader.parentNode) loader.remove();
+      }, 550);
+    }
 
-  // ---- Main Slider: Carousel Logic ----
-  (function () {
-    const slider = document.getElementById("home-main-slider");
-    if (!slider) return;
+    // Lớp phủ ấm hiện dần
+    setTimeout(() => {
+      if (wash) {
+        wash.style.transition = 'opacity 800ms ease';
+        wash.style.opacity = '1';
+      }
+    }, 350);
 
-    const wrapper = slider.querySelector(".slider-wrapper");
-    const slides = slider.querySelectorAll(".slide");
-    const prevBtn = document.getElementById("slider-prev");
-    const nextBtn = document.getElementById("slider-next");
-    const dots = slider.querySelectorAll(".slider-dot");
+    // Chữ nội dung trồi lên thanh lịch và mở khóa thanh cuộn trang
+    setTimeout(() => {
+      if (home) {
+        home.classList.add('reveal');
+      }
+      document.body.classList.add('is-loaded');
+    }, 600);
+  }
 
-    if (slides.length <= 1) return;
+  // Failsafe: Đảm bảo sau tối đa 3.2 giây chữ LUÔN LUÔN HIỂN THỊ trong mọi tình huống
+  setTimeout(() => {
+    if (home && !home.classList.contains('reveal')) {
+      home.classList.add('reveal');
+    }
+    document.body.classList.add('is-loaded');
+    if (wash) wash.style.opacity = '1';
+    if (loader && loader.parentNode) {
+      loader.style.opacity = '0';
+      setTimeout(() => {
+        if (loader && loader.parentNode) loader.remove();
+      }, 400);
+    }
+  }, 3200);
 
-    let currentIndex = 0;
-    const slideCount = slides.length;
-    let autoPlayTimer = null;
+  // Lắng nghe cuộn trang tối ưu hiệu năng (60-120fps) với Liquid Glass Header & Fixed Parallax
+  const siteHeader     = document.getElementById('site-header');
+  const heroBgParallax = document.querySelector('.hero-bg-parallax');
+  const parallaxMedia  = document.querySelectorAll('[data-parallax]');
 
-    function updateSlider() {
-      // Dịch chuyển wrapper theo chiều ngang
-      wrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
+  let isTicking = false;
+  const updateScrollPipeline = () => {
+    const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
 
-      // Cập nhật trạng thái hiển thị của các nút chỉ mục (dots)
-      dots.forEach((dot, index) => {
-        if (index === currentIndex) {
-          dot.classList.add("bg-white", "w-6");
-          dot.classList.remove("bg-white/35", "w-2.5");
-        } else {
-          dot.classList.add("bg-white/35", "w-2.5");
-          dot.classList.remove("bg-white", "w-6");
+    // 1. Kích hoạt Liquid Glass cho Header
+    if (siteHeader) {
+      if (scrollY > 30) {
+        siteHeader.classList.add('liquid-glass', 'is-scrolled');
+      } else {
+        siteHeader.classList.remove('liquid-glass', 'is-scrolled');
+      }
+    }
+
+    // 2. Hiệu ứng Fixed Parallax cho ảnh nền Hero (trôi êm ái 0.35x tạo độ sâu điện ảnh)
+    if (heroBgParallax && scrollY < window.innerHeight * 1.5) {
+      const heroOffset = scrollY * 0.35;
+      heroBgParallax.style.transform = `translate3d(0, ${heroOffset}px, 0)`;
+    }
+
+    // 3. Hiệu ứng Fixed Parallax nhẹ nhàng cho các hình ảnh trong trang
+    if (parallaxMedia.length > 0) {
+      const winH = window.innerHeight;
+      parallaxMedia.forEach((media) => {
+        const rect = media.getBoundingClientRect();
+        if (rect.top < winH && rect.bottom > 0) {
+          const progress = (rect.top + rect.height / 2 - winH / 2) / winH;
+          const translateY = progress * -20;
+          media.style.transform = `scale(1.06) translate3d(0, ${translateY}px, 0)`;
         }
       });
     }
 
-    function nextSlide() {
-      currentIndex = (currentIndex + 1) % slideCount;
-      updateSlider();
-    }
+    isTicking = false;
+  };
 
-    function prevSlide() {
-      currentIndex = (currentIndex - 1 + slideCount) % slideCount;
-      updateSlider();
+  const onWindowScroll = () => {
+    if (!isTicking) {
+      window.requestAnimationFrame(updateScrollPipeline);
+      isTicking = true;
     }
+  };
 
-    // Sự kiện nút điều hướng
-    if (nextBtn) {
-      nextBtn.addEventListener("click", () => {
-        nextSlide();
-        resetAutoPlay();
+  window.addEventListener('scroll', onWindowScroll, { passive: true });
+  updateScrollPipeline();
+
+  // Xử lý mở/đóng menu trên mobile
+  const mobileNavToggle = document.getElementById('mobile-nav-toggle');
+  const mobileNavMenu   = document.getElementById('mobile-nav-menu');
+  if (mobileNavToggle && mobileNavMenu) {
+    mobileNavToggle.addEventListener('click', () => {
+      mobileNavMenu.classList.toggle('hidden');
+    });
+  }
+
+  // Khởi tạo bộ điều khiển Testimonials Slider
+  const testiTrack   = document.getElementById('testimonials-track');
+  const testiPrevBtn = document.getElementById('testi-prev-btn');
+  const testiNextBtn = document.getElementById('testi-next-btn');
+
+  if (testiTrack) {
+    const getScrollAmount = () => {
+      const firstSlide = testiTrack.querySelector('.testi-slide');
+      return firstSlide ? firstSlide.offsetWidth : 320;
+    };
+
+    if (testiNextBtn) {
+      testiNextBtn.addEventListener('click', () => {
+        testiTrack.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
       });
     }
 
-    if (prevBtn) {
-      prevBtn.addEventListener("click", () => {
-        prevSlide();
-        resetAutoPlay();
+    if (testiPrevBtn) {
+      testiPrevBtn.addEventListener('click', () => {
+        testiTrack.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
       });
     }
 
-    // Sự kiện click chọn chỉ mục (dots)
-    dots.forEach((dot, index) => {
-      dot.addEventListener("click", () => {
-        currentIndex = index;
-        updateSlider();
-        resetAutoPlay();
-      });
+    // Hỗ trợ kéo lướt bằng chuột (Mouse Drag)
+    let isDown = false;
+    let startX = 0;
+    let scrollStart = 0;
+
+    testiTrack.addEventListener('mousedown', (e) => {
+      isDown = true;
+      startX = e.pageX - testiTrack.offsetLeft;
+      scrollStart = testiTrack.scrollLeft;
     });
 
-    // Tự động chuyển Slide
-    function startAutoPlay() {
-      autoPlayTimer = setInterval(nextSlide, 5000); // 5 giây chuyển ảnh
-    }
+    testiTrack.addEventListener('mouseleave', () => { isDown = false; });
+    testiTrack.addEventListener('mouseup', () => { isDown = false; });
 
-    // Dừng chuyển Slide
-    function stopAutoPlay() {
-      if (autoPlayTimer) clearInterval(autoPlayTimer);
-    }
+    testiTrack.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - testiTrack.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      testiTrack.scrollLeft = scrollStart - walk;
+    });
+  }
 
-    // Reset chạy tự động
-    function resetAutoPlay() {
-      stopAutoPlay();
-      startAutoPlay();
-    }
+  // Khởi tạo tương tác Menu Section (Chạm để bật/tắt trên Mobile/Tablet)
+  const menuRows = document.querySelectorAll('.menu-item-row');
+  if (menuRows.length > 0) {
+    menuRows.forEach((row) => {
+      row.addEventListener('click', () => {
+        const isAlreadyActive = row.classList.contains('is-active');
+        menuRows.forEach((r) => r.classList.remove('is-active'));
+        if (!isAlreadyActive) {
+          row.classList.add('is-active');
+        }
+      });
+    });
+  }
+}
 
-    // Khởi động ban đầu
-    updateSlider();
-    startAutoPlay();
-
-    // Tạm dừng khi rê chuột vào, tự động chạy tiếp khi rê chuột ra ngoài
-    slider.addEventListener("mouseenter", stopAutoPlay);
-    slider.addEventListener("mouseleave", startAutoPlay);
-  })();
-});
+// Chạy an toàn bất kể thời điểm script được tải (chạy ngay nếu sẵn sàng hoặc đợi DOMContentLoaded)
+if (document.readyState !== "loading") {
+  initWanderLoader();
+} else {
+  document.addEventListener("DOMContentLoaded", initWanderLoader);
+}
