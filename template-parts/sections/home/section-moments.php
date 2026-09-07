@@ -16,40 +16,52 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-$title_1       = ! empty( $args['title_1'] ) ? $args['title_1'] : 'THƯỞNG THỨC, LƯU LẠI KHOẢNH KHẮC';
-$title_2       = ! empty( $args['title_2'] ) ? $args['title_2'] : 'VÀ GẮN THẺ @ONTHEROCK.';
-$instagram_url = ! empty( $args['instagram_url'] ) ? $args['instagram_url'] : 'https://instagram.com';
-$facebook_url  = ! empty( $args['facebook_url'] ) ? $args['facebook_url'] : 'https://facebook.com';
+$front_page_id = get_option('page_on_front');
+
+$title_1       = ! empty( $args['title_1'] ) ? $args['title_1'] : (function_exists('get_field') ? (get_field('moments_title_1', $front_page_id) ?: 'THƯỞNG THỨC, LƯU LẠI KHOẢNH KHẮC') : 'THƯỞNG THỨC, LƯU LẠI KHOẢNH KHẮC');
+$title_2       = ! empty( $args['title_2'] ) ? $args['title_2'] : (function_exists('get_field') ? (get_field('moments_title_2', $front_page_id) ?: 'VÀ GẮN THẺ @ONTHEROCK.') : 'VÀ GẮN THẺ @ONTHEROCK.');
+$instagram_url = ! empty( $args['instagram_url'] ) ? $args['instagram_url'] : (function_exists('get_field') ? (get_field('moments_instagram_url', $front_page_id) ?: 'https://instagram.com') : 'https://instagram.com');
+$facebook_url  = ! empty( $args['facebook_url'] ) ? $args['facebook_url'] : (function_exists('get_field') ? (get_field('moments_facebook_url', $front_page_id) ?: 'https://facebook.com') : 'https://facebook.com');
 $items         = ! empty( $args['items'] ) ? $args['items'] : array();
+
+$fallback_moments_media = array(
+    1 => array('image' => 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1000&auto=format&fit=crop', 'badge' => ''),
+    2 => array('image' => 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?q=80&w=1000&auto=format&fit=crop', 'badge' => ''),
+    3 => array('image' => 'https://images.unsplash.com/photo-1574096079513-d8259312b785?q=80&w=1000&auto=format&fit=crop', 'badge' => 'THE BAR is where STORIES BEGIN'),
+    4 => array('image' => 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1000&auto=format&fit=crop', 'badge' => ''),
+);
+
+if ( empty( $items ) && function_exists('get_field') ) {
+    for ($i = 1; $i <= 4; $i++) {
+        $m_type  = get_field('moments_media_type_' . $i, $front_page_id) ?: 'image';
+        $m_img   = get_field('moments_image_' . $i, $front_page_id);
+        $m_vid   = get_field('moments_video_' . $i, $front_page_id);
+        $m_badge = get_field('moments_badge_' . $i, $front_page_id);
+        if ($m_badge === null || $m_badge === '') {
+            $m_badge = isset($fallback_moments_media[$i]['badge']) ? $fallback_moments_media[$i]['badge'] : '';
+        }
+
+        $img_url = (!empty($m_img) && is_array($m_img)) ? $m_img['url'] : (is_string($m_img) && !empty($m_img) ? $m_img : $fallback_moments_media[$i]['image']);
+
+        $items[] = array(
+            'type'  => $m_type,
+            'image' => $img_url,
+            'video' => $m_vid ?: '',
+            'badge' => $m_badge,
+        );
+    }
+}
 
 // Dữ liệu mẫu chuẩn ảnh thiết kế nếu chưa tải ảnh/video trong ACF
 if ( empty( $items ) ) {
-    $items = array(
-        array(
+    foreach ($fallback_moments_media as $f_item) {
+        $items[] = array(
             'type'  => 'image',
-            'image' => 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1000&auto=format&fit=crop',
+            'image' => $f_item['image'],
             'video' => '',
-            'badge' => '',
-        ),
-        array(
-            'type'  => 'image',
-            'image' => 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?q=80&w=1000&auto=format&fit=crop',
-            'video' => '',
-            'badge' => '',
-        ),
-        array(
-            'type'  => 'image',
-            'image' => 'https://images.unsplash.com/photo-1574096079513-d8259312b785?q=80&w=1000&auto=format&fit=crop',
-            'video' => '',
-            'badge' => 'THE BAR is where STORIES BEGIN',
-        ),
-        array(
-            'type'  => 'image',
-            'image' => 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1000&auto=format&fit=crop',
-            'video' => '',
-            'badge' => '',
-        ),
-    );
+            'badge' => $f_item['badge'],
+        );
+    }
 }
 ?>
 

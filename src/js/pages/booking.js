@@ -71,10 +71,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showAlert(msg, isSuccess = false) {
         if (!alertBox) return;
-        alertBox.innerHTML = msg;
+        const iconName = isSuccess ? 'check-circle' : 'alert-circle';
+        const iconColor = isSuccess ? 'text-emerald-400' : 'text-red-400';
+        alertBox.innerHTML = `
+            <div class="flex items-center gap-3">
+                <i data-lucide="${iconName}" class="w-5 h-5 shrink-0 ${iconColor}"></i>
+                <div class="text-sm leading-relaxed">${msg}</div>
+            </div>
+        `;
         alertBox.className = isSuccess 
-            ? 'p-4 rounded-xl text-sm leading-relaxed border border-green-500/40 bg-green-950/40 text-green-200 block'
-            : 'p-4 rounded-xl text-sm leading-relaxed border border-red-500/40 bg-red-950/40 text-red-200 block';
+            ? 'p-4 rounded-xl text-sm leading-relaxed border border-emerald-500/40 bg-emerald-950/40 text-emerald-200 block transition-all duration-300'
+            : 'p-4 rounded-xl text-sm leading-relaxed border border-red-500/40 bg-red-950/40 text-red-200 block transition-all duration-300';
+        if (window.lucide && window.lucide.createIcons) {
+            window.lucide.createIcons();
+        }
     }
 
     function hideAlert() {
@@ -89,27 +99,43 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (modalSummary) {
             modalSummary.innerHTML = `
-                <div class="flex justify-between border-b border-[#caa875]/20 pb-1.5">
-                    <span class="text-[#caa875]">👤 Khách hàng:</span>
-                    <span class="text-white font-medium">${escapeHtml(data.name)}</span>
+                <div class="flex justify-between items-center border-b border-[#caa875]/20 py-2">
+                    <span class="text-[#caa875] flex items-center gap-2 text-xs uppercase tracking-wider font-sans">
+                        <i data-lucide="user" class="w-4 h-4 text-[#caa875]"></i>
+                        Khách hàng:
+                    </span>
+                    <span class="text-white font-medium font-sans">${escapeHtml(data.name)}</span>
                 </div>
-                <div class="flex justify-between border-b border-[#caa875]/20 pb-1.5">
-                    <span class="text-[#caa875]">📞 Số điện thoại:</span>
-                    <span class="text-white font-medium">${escapeHtml(data.phone)}</span>
+                <div class="flex justify-between items-center border-b border-[#caa875]/20 py-2">
+                    <span class="text-[#caa875] flex items-center gap-2 text-xs uppercase tracking-wider font-sans">
+                        <i data-lucide="phone" class="w-4 h-4 text-[#caa875]"></i>
+                        Số điện thoại:
+                    </span>
+                    <span class="text-white font-medium font-sans">${escapeHtml(data.phone)}</span>
                 </div>
-                <div class="flex justify-between border-b border-[#caa875]/20 pb-1.5">
-                    <span class="text-[#caa875]">👥 Số lượng khách:</span>
-                    <span class="text-white font-medium">${escapeHtml(data.guests)}</span>
+                <div class="flex justify-between items-center border-b border-[#caa875]/20 py-2">
+                    <span class="text-[#caa875] flex items-center gap-2 text-xs uppercase tracking-wider font-sans">
+                        <i data-lucide="users" class="w-4 h-4 text-[#caa875]"></i>
+                        Số lượng khách:
+                    </span>
+                    <span class="text-white font-medium font-sans">${escapeHtml(data.guests)}</span>
                 </div>
-                <div class="flex justify-between border-b border-[#caa875]/20 pb-1.5">
-                    <span class="text-[#caa875]">⏰ Khung giờ:</span>
-                    <span class="text-[#caa875] font-bold">${escapeHtml(data.time)} ngày ${escapeHtml(data.date)}</span>
+                <div class="flex justify-between items-center border-b border-[#caa875]/20 py-2">
+                    <span class="text-[#caa875] flex items-center gap-2 text-xs uppercase tracking-wider font-sans">
+                        <i data-lucide="calendar" class="w-4 h-4 text-[#caa875]"></i>
+                        Khung giờ:
+                    </span>
+                    <span class="text-[#caa875] font-bold font-sans">${escapeHtml(data.time)} • ${escapeHtml(data.date)}</span>
                 </div>
                 ${data.message ? `
-                <div class="pt-1 text-neutral-300 italic">
-                    "${escapeHtml(data.message)}"
+                <div class="pt-2 text-neutral-300 italic flex items-start gap-2 text-xs font-sans">
+                    <i data-lucide="message-square" class="w-4 h-4 text-[#caa875] shrink-0 mt-0.5"></i>
+                    <span>"${escapeHtml(data.message)}"</span>
                 </div>` : ''}
             `;
+            if (window.lucide && window.lucide.createIcons) {
+                window.lucide.createIcons();
+            }
         }
 
         successModal.classList.remove('opacity-0', 'pointer-events-none');
@@ -182,10 +208,20 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        const updateBtnText = (txt) => {
+            if (!btnText) return;
+            const spans = btnText.querySelectorAll('.btn-roll-text span');
+            if (spans.length > 0) {
+                spans.forEach(s => { s.textContent = txt; });
+            } else {
+                btnText.textContent = txt;
+            }
+        };
+
         // Bật trạng thái gửi
         if (submitBtn) {
             submitBtn.disabled = true;
-            if (btnText) btnText.textContent = 'ĐANG GỬI THÔNG TIN...';
+            updateBtnText('ĐANG GỬI THÔNG TIN...');
             if (btnSpinner) btnSpinner.classList.remove('hidden');
         }
 
@@ -247,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Tắt trạng thái gửi
             if (submitBtn) {
                 submitBtn.disabled = false;
-                if (btnText) btnText.textContent = 'ĐẶT BÀN';
+                updateBtnText('ĐẶT BÀN');
                 if (btnSpinner) btnSpinner.classList.add('hidden');
             }
         }

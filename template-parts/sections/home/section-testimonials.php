@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-$section_title = ! empty( $args['title'] ) ? $args['title'] : 'CẢM NHẬN TỪ KHÁCH HÀNG';
+$section_title = ! empty( $args['title'] ) ? $args['title'] : (function_exists('get_field') ? (get_field('testimonials_title', get_option('page_on_front')) ?: 'CẢM NHẬN TỪ KHÁCH HÀNG') : 'CẢM NHẬN TỪ KHÁCH HÀNG');
 
 // 1. Lấy danh sách cảm nhận từ Custom Post Type "testimonial"
 $testimonials = array();
@@ -88,12 +88,12 @@ if ( empty( $testimonials ) ) {
 
             <!-- Nút Prev / Next Slider -->
             <div class="flex items-center gap-2.5 shrink-0">
-                <button id="testi-prev-btn" class="w-8 h-8 md:w-9 md:h-9 rounded-full border border-[#caa875]/40 text-[#caa875] flex items-center justify-center hover:border-[#caa875] hover:bg-[#caa875]/10 transition duration-300" aria-label="Trước">
+                <button id="testi-prev-btn" class="btn-liquid-glass w-8 h-8 md:w-9 md:h-9 rounded-full border border-[#caa875]/40 text-[#caa875] flex items-center justify-center cursor-pointer shadow-md" aria-label="Trước">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
                     </svg>
                 </button>
-                <button id="testi-next-btn" class="w-8 h-8 md:w-9 md:h-9 rounded-full border border-[#caa875]/40 text-[#caa875] flex items-center justify-center hover:border-[#caa875] hover:bg-[#caa875]/10 transition duration-300" aria-label="Sau">
+                <button id="testi-next-btn" class="btn-liquid-glass w-8 h-8 md:w-9 md:h-9 rounded-full border border-[#caa875]/40 text-[#caa875] flex items-center justify-center cursor-pointer shadow-md" aria-label="Sau">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
                     </svg>

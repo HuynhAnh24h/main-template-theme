@@ -21,8 +21,8 @@ function initWanderLoader() {
     if (loader) loader.remove();
   }
 
-  // Bố cục moodboard cố định
-  const LAYOUT = [
+  // Bố cục moodboard trên Desktop & Màn hình lớn
+  const DESKTOP_LAYOUT = [
     { left: 3,  top: 6,  w: 170, h: 220, rot: -5 },
     { left: 20, top: 3,  w: 160, h: 210, rot: -7 },
     { left: 44, top: 1,  w: 165, h: 195, rot: 3  },
@@ -35,8 +35,24 @@ function initWanderLoader() {
     { left: -4, top: 80, w: 165, h: 205, rot: -8 }
   ];
 
+  // Bố cục moodboard tối ưu riêng cho Mobile (xếp viền cân đối, không đè câu nói chính giữa)
+  const MOBILE_LAYOUT = [
+    { left: -2, top: 3,  w: 92,  h: 124, rot: -6 },
+    { left: 68, top: 4,  w: 98,  h: 130, rot: 6  },
+    { left: 33, top: 1,  w: 88,  h: 118, rot: -2 },
+    { left: 76, top: 22, w: 94,  h: 126, rot: 5  },
+    { left: -7, top: 24, w: 90,  h: 122, rot: -5 },
+    { left: -6, top: 66, w: 96,  h: 128, rot: 5  },
+    { left: 74, top: 68, w: 92,  h: 124, rot: -5 },
+    { left: 2,  top: 82, w: 98,  h: 132, rot: -4 },
+    { left: 36, top: 84, w: 92,  h: 124, rot: 4  },
+    { left: 70, top: 81, w: 88,  h: 120, rot: 3  }
+  ];
+
   const vw = () => window.innerWidth;
   const vh = () => window.innerHeight;
+  const isMobile = () => window.innerWidth < 768;
+
   const px = (layout) => ({
     x: layout.left / 100 * vw(),
     y: layout.top  / 100 * vh(),
@@ -76,17 +92,21 @@ function initWanderLoader() {
     if (stackWrap) stackWrap.appendChild(card);
     stackCards.push(card);
 
-    // Hoạt ảnh quăng bài bay vào
+    // Hoạt ảnh quăng bài bay vào (Tinh chỉnh nhẹ trên Mobile không bị giật hay tràn viền)
+    const mobile = isMobile();
     const fromSide = (i % 2 === 0) ? 1 : -1;
-    const fromX = fromSide * 130;
-    const fromY = -40 + Math.random() * 20;
-    const fromRot = fromSide * 55;
+    const fromX = fromSide * (mobile ? 65 : 130);
+    const fromY = (mobile ? -20 : -40) + Math.random() * 18;
+    const fromRot = fromSide * (mobile ? 32 : 55);
+    const scaleOff = mobile ? 0.7 : 1;
+    const targetX = off.x * scaleOff;
+    const targetY = off.y * scaleOff;
 
     if (card.animate) {
       card.animate([
         { transform:`translate(${fromX}px, ${fromY}px) rotate(${fromRot}deg) scale(0.7)`, opacity: 0 },
-        { transform:`translate(${off.x * 0.6}px, ${off.y * 0.6}px) rotate(${off.rot * 1.4}deg) scale(1.06)`, opacity: 1, offset: 0.65 },
-        { transform:`translate(${off.x}px, ${off.y}px) rotate(${off.rot}deg) scale(1)`, opacity: 1 }
+        { transform:`translate(${targetX * 0.6}px, ${targetY * 0.6}px) rotate(${off.rot * 1.3}deg) scale(1.05)`, opacity: 1, offset: 0.65 },
+        { transform:`translate(${targetX}px, ${targetY}px) rotate(${off.rot}deg) scale(1)`, opacity: 1 }
       ], {
         duration: stepTime + 100,
         easing: 'cubic-bezier(.25,.85,.35,1.1)',
@@ -114,11 +134,15 @@ function initWanderLoader() {
 
   // ---------- Bước 2: Ảnh bay tỏa ra (bloom) về vị trí moodboard ----------
   function bloom(){
-    const originX = vw()/2 - 85;
-    const originY = vh()/2 - 105;
+    const mobile = isMobile();
+    const activeLayout = mobile ? MOBILE_LAYOUT : DESKTOP_LAYOUT;
+    const frameW = mobile ? 125 : 170;
+    const frameH = mobile ? 160 : 210;
+    const originX = vw() / 2 - frameW / 2;
+    const originY = vh() / 2 - frameH / 2;
 
     IMAGES.forEach((src, idx) => {
-      const target = px(LAYOUT[idx % LAYOUT.length]);
+      const target = px(activeLayout[idx % activeLayout.length]);
       const tile = document.createElement('div');
       tile.className = 'tile';
       tile.style.backgroundImage = `url('${src}')`;
@@ -131,24 +155,24 @@ function initWanderLoader() {
       const dx = target.x - originX;
       const dy = target.y - originY;
 
-      // Độ cong đường bay
+      // Độ cong đường bay (êm ái và không bay vọt ra khỏi màn hình điện thoại)
       const arcSide = (idx % 2 === 0 ? 1 : -1);
-      const arcBend = 90 + Math.random() * 70;
+      const arcBend = (mobile ? 45 : 90) + Math.random() * (mobile ? 35 : 70);
       const midX = dx * 0.5 + arcSide * arcBend * (dy >= 0 ? 0.4 : -0.4);
-      const midY = dy * 0.5 - (120 + Math.random() * 60);
+      const midY = dy * 0.5 - ((mobile ? 65 : 120) + Math.random() * (mobile ? 30 : 60));
 
-      const flipRot = target.rot + arcSide * (140 + Math.random() * 100);
-      const delay = 80 + idx * 60;
+      const flipRot = target.rot + arcSide * (mobile ? 75 : 140) + Math.random() * (mobile ? 50 : 100);
+      const delay = (mobile ? 50 : 80) + idx * (mobile ? 45 : 60);
 
       if (tile.animate) {
         tile.animate([
           { transform:`translate(0px,0px) rotate(0deg) scale(0.4)`,               opacity: 0,  offset: 0 },
           { transform:`translate(${midX*0.35}px,${midY*0.35}px) rotate(${flipRot*0.3}deg) scale(0.75)`, opacity: 1, offset: 0.18 },
-          { transform:`translate(${midX}px,${midY}px) rotate(${flipRot}deg) scale(1.12)`,   opacity: 1, offset: 0.55 },
-          { transform:`translate(${dx*0.94}px,${dy*0.94}px) rotate(${target.rot*0.9}deg) scale(1.04)`, opacity: 1, offset: 0.86 },
+          { transform:`translate(${midX}px,${midY}px) rotate(${flipRot}deg) scale(1.1)`,   opacity: 1, offset: 0.55 },
+          { transform:`translate(${dx*0.94}px,${dy*0.94}px) rotate(${target.rot*0.9}deg) scale(1.03)`, opacity: 1, offset: 0.86 },
           { transform:`translate(${dx}px,${dy}px) rotate(${target.rot}deg) scale(1)`,       opacity: 1, offset: 1 }
         ], {
-          duration: 1200,
+          duration: mobile ? 1000 : 1200,
           delay: delay,
           easing: 'cubic-bezier(.22,.7,.2,1)',
           fill: 'forwards'
@@ -249,15 +273,6 @@ function initWanderLoader() {
 
   window.addEventListener('scroll', onWindowScroll, { passive: true });
   updateScrollPipeline();
-
-  // Xử lý mở/đóng menu trên mobile
-  const mobileNavToggle = document.getElementById('mobile-nav-toggle');
-  const mobileNavMenu   = document.getElementById('mobile-nav-menu');
-  if (mobileNavToggle && mobileNavMenu) {
-    mobileNavToggle.addEventListener('click', () => {
-      mobileNavMenu.classList.toggle('hidden');
-    });
-  }
 
   // Khởi tạo bộ điều khiển Testimonials Slider
   const testiTrack   = document.getElementById('testimonials-track');

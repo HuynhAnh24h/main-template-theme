@@ -2,19 +2,61 @@
 /**
  * Template Part: Section Loading & Intro Quote (On The Rock)
  * Description: Khối giao diện loader, hiệu ứng quăng ảnh, board ảnh không gian và câu nói thương hiệu nổi trên ảnh.
+ * 
+ * Arguments ($args):
+ * - quote_text (string)
+ * - images (array)
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Thoát nếu truy cập trực tiếp
 }
 
-// Nhận dữ liệu truyền từ front-page.php
+$front_page_id = get_option('page_on_front');
+
+// 1. Cấu hình Câu nói mở đầu (Intro Quote)
 $quote_text = ! empty($args['quote_text']) ? $args['quote_text'] : '';
 if (empty($quote_text)) {
-    $quote_text = "Một quán cocktail bar ở Đà Lạt,\ncủa người Đà Lạt, dành cho những ai\nmuốn một trãi nghiệm Đà Lạt thú vị.";
+    $raw_intro = function_exists('get_field') ? get_field('home_intro_quote', $front_page_id) : '';
+    if (empty($raw_intro) && function_exists('get_field')) {
+        $raw_intro = get_field('home_reveal_title', $front_page_id);
+    }
+    if (!empty($raw_intro) && strpos($raw_intro, 'Ánh sáng') === false) {
+        $clean_intro = preg_replace('/<br\s*\/?>/i', "\n", $raw_intro);
+        $quote_text = trim(strip_tags($clean_intro));
+    } else {
+        $quote_text = "Một quán cocktail bar ở Đà Lạt,\ncủa người Đà Lạt, dành cho những ai\nmuốn một trãi nghiệm Đà Lạt thú vị.";
+    }
 }
 
+// 2. Cấu hình 10 hình ảnh cho Loading & Moodboard
 $images = isset($args['images']) ? $args['images'] : array();
+if (empty($images)) {
+    $theme_uri = get_template_directory_uri();
+    $fallback_images = array(
+        $theme_uri . '/assets/images/atmosphere-1.jpg',
+        $theme_uri . '/assets/images/atmosphere-2.jpg',
+        $theme_uri . '/assets/images/atmosphere-3.jpg',
+        $theme_uri . '/assets/images/atmosphere-4.jpg',
+        $theme_uri . '/assets/images/atmosphere-5.jpg',
+        $theme_uri . '/assets/images/atmosphere-6.jpg',
+        $theme_uri . '/assets/images/atmosphere-7.jpg',
+        $theme_uri . '/assets/images/atmosphere-8.jpg',
+        $theme_uri . '/assets/images/atmosphere-9.jpg',
+        'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1000&auto=format&fit=crop'
+    );
+
+    for ($i = 1; $i <= 10; $i++) {
+        $img_arr = function_exists('get_field') ? get_field('home_reveal_image_' . $i, $front_page_id) : null;
+        if (!empty($img_arr) && is_array($img_arr)) {
+            $images[] = $img_arr['url'];
+        } elseif (!empty($img_arr) && is_string($img_arr)) {
+            $images[] = $img_arr;
+        } else {
+            $images[] = $fallback_images[$i - 1];
+        }
+    }
+}
 ?>
 
 <!-- 1. Cung cấp dữ liệu hình ảnh cho JS cục bộ -->

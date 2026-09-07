@@ -1,271 +1,165 @@
-# Bộ Mã Nguồn WordPress Theme Chuẩn Chỉnh (Tailwind CSS v4 & Vite & Lucide Icons)
+# On The Rock — Luxury Cocktail Bar & Lounge WordPress Theme
 
-Mã nguồn này được thiết kế và cấu trúc theo các tiêu chuẩn lập trình hiện đại. Dự án tích hợp bộ build công cụ siêu tốc **Vite** để quản lý assets, tự động biên dịch **Tailwind CSS v4**, phân tách JavaScript riêng biệt cho từng trang để tối ưu hóa hiệu suất tải trang, và tích hợp thư viện **Lucide Icons** linh hoạt ở cả Server-side (PHP) lẫn Client-side (JS).
+Mã nguồn theme WordPress cao cấp dành riêng cho **On The Rock Cocktail Bar & Lounge**. Thiết kế theo phong cách sang trọng **Noir & Champagne Gold**, tối ưu hóa trải nghiệm thị giác với hiệu ứng chuyển động mượt mà, bộ công cụ build siêu tốc **Vite**, **Tailwind CSS v4**, hệ thống quản lý thực đơn đa tầng **Menu TheRocks**, tính năng đặt bàn trực tuyến gửi email chuẩn bảo mật cao và tích hợp bộ font chữ đặc trưng **MRCH-NewYork** & **SVN-Gilroy**.
 
 ---
 
-## 1. Cấu trúc thư mục (Directory Structure)
+## 1. Hướng Dẫn Sử Dụng Font Chữ Mới (Custom Typography)
 
-Thư mục theme được chia thành các phần phân cấp rõ ràng để bất kỳ ai đọc vào cũng có thể nắm bắt và triển khai ngay lập tức:
+Theme đã được tích hợp sẵn 2 bộ font chữ chuẩn định dạng vector sắc nét, hỗ trợ tiếng Việt đầy đủ. Các tệp font được lưu trữ tại `assets/fonts/` và tự động tối ưu hóa khi build qua Vite.
+
+### A. Danh Sách Các Class CSS Sẵn Có
+
+| Tên Class CSS | Độ dày (Font Weight) | Kiểu chữ & Đặc điểm | Vị trí khuyên dùng |
+| :--- | :---: | :--- | :--- |
+| **`.MRCH-NewYork`** *(hoặc `.mrch-newyork`)* | **400 (Regular)** | Font nghệ thuật Serif cổ điển sang trọng, các nét uốn lượn phong cách Editorial | Tiêu đề lớn, Tên quán, Tên dòng Signature Cocktails |
+| **`.SVN-Gilroy-Light`** *(hoặc `.SVN-Gilroy`)* | **300 (Light)** | Nét mảnh thanh lịch, hiện đại, hỗ trợ tiếng Việt có dấu đầy đủ | Đoạn văn mô tả, thực đơn, lời giới thiệu |
+| **`.SVN-Gilroy-Medium`** | **500 (Medium)** | Nét vừa vặn, độ tương phản cao, dễ đọc trên di động | Nhãn thông tin, thành phần cocktail |
+| **`.SVN-Gilroy-SemiBold`** | **600 (SemiBold)** | Nét đậm vừa tinh tế | Tiêu đề danh mục, nút bấm, giá tiền |
+| **`.SVN-Gilroy-Bold`** | **800 (Heavy)** | Nét đậm dày ấn tượng, dứt khoát | Tiêu đề phụ, số thứ tự, nút hành động chính |
+
+> **Mẹo hữu ích**: Nếu bạn vô tình viết có dấu cách như `class="SVN-Gilroy Light"`, hệ thống đã hỗ trợ sẵn class `.SVN-Gilroy` nên chữ vẫn nhận đúng font!
+
+### B. Cách Sử Dụng Trong HTML / PHP
+
+Chỉ cần gán class tương ứng vào bất kỳ thẻ HTML nào:
+
+```html
+<!-- Sử dụng font nghệ thuật MRCH-NewYork cho tiêu đề -->
+<h1 class="MRCH-NewYork text-4xl text-[#caa875] tracking-wide">
+    ON THE ROCKS COCKTAIL BAR
+</h1>
+
+<!-- Sử dụng font SVN-Gilroy Light (nét mảnh) cho đoạn văn -->
+<p class="SVN-Gilroy-Light text-sm text-[#caa875]/80 leading-relaxed">
+    Thưởng thức những ly cocktail thủ công trong không gian ấm cúng và đầy cảm hứng.
+</p>
+
+<!-- Sử dụng font SVN-Gilroy SemiBold cho giá tiền hoặc nút bấm -->
+<span class="SVN-Gilroy-SemiBold text-lg text-[#caa875]">320.000đ</span>
+```
+
+### C. Sử Dụng Qua Tailwind CSS v4
+
+Theme cũng đã đăng ký biến font trong `@theme` tại `src/css/main.css`:
+* `font-mrch`: Áp dụng font MRCH-NewYork (`--font-mrch`)
+* `font-gilroy`: Áp dụng họ font SVN-Gilroy (`--font-gilroy`)
+
+---
+
+## 2. Cấu Trúc Thư Mục (Directory Structure)
 
 ```text
-theme-ecommerce-store/
+on-the-rock-theme/
 ├── assets/                       # Thư mục tài nguyên tĩnh
-│   ├── dist/                     # [TỰ ĐỘNG SINH BỞI VITE] Chứa CSS & JS sau khi biên dịch
-│   │   ├── css/
-│   │   │   └── style.css         # CSS cuối đã tối ưu hóa và nén
-│   │   └── js/
-│   │       ├── main.js           # JS chạy chung cho toàn site (chứa Lucide core)
-│   │       ├── home.js           # JS riêng cho Trang chủ (front-page)
-│   │       ├── about.js          # JS riêng cho Trang Giới thiệu
-│   │       ├── contact.js        # JS riêng cho Trang Liên hệ
-│   │       ├── category-all.js   # JS riêng cho Trang Tổng hợp danh mục
-│   │       ├── category.js       # JS riêng cho Trang danh mục sản phẩm (WooCommerce)
-│   │       ├── product.js        # JS riêng cho Trang cửa hàng (WooCommerce)
-│   │       ├── product-detail.js # JS riêng cho Chi tiết sản phẩm (WooCommerce)
-│   │       ├── blog.js           # JS riêng cho Trang tin tức (Blog index)
-│   │       ├── category-blog.js  # JS riêng cho Danh mục tin tức (Category blog)
-│   │       ├── blog-detail.js    # JS riêng cho Chi tiết bài viết (Single post)
-│   │       ├── cart.js           # JS riêng cho Giỏ hàng (WooCommerce Cart)
-│   │       ├── checkout.js       # JS riêng cho Thanh toán (WooCommerce Checkout)
-│   │       ├── my-account.js     # JS riêng cho Tài khoản (WooCommerce Account)
-│   │       ├── search.js         # JS riêng cho Trang Tìm kiếm
-│   │       └── page.js           # JS riêng cho các trang mặc định
-│   ├── icons/                    # Thư mục chứa các icon SVG tải server-side (PHP)
-│   └── images/                   # Hình ảnh tĩnh của dự án
+│   ├── dist/                     # [TỰ ĐỘNG SINH BỞI VITE] Chứa CSS, JS & Fonts đã biên dịch
+│   │   ├── assets/               # Các tệp font đã được Vite hash và đóng gói
+│   │   ├── css/style.css         # CSS nén cuối cùng
+│   │   └── js/                   # JS riêng biệt cho từng trang
+│   ├── fonts/                    # Nguồn font gốc (MRCH-NewYork.ttf, SVN-Gilroy bộ các độ dày)
+│   ├── icons/                    # Icon SVG hệ thống
+│   └── images/                   # Hình ảnh tĩnh và icon email Retina PNG
 │
-├── src/                          # THƯ MỤC NGUỒN CHƯA BIÊN DỊCH (DEVELOPMENT)
-│   ├── css/
-│   │   └── main.css              # File CSS chính, cấu hình Tailwind v4 & theme colors
-│   └── js/
-│       ├── main.js               # JS chính khởi tạo Lucide và logic toàn trang
-│       └── pages/                # Từng tệp tương tác riêng biệt cho mỗi page
-│           ├── home.js
-│           ├── about.js
-│           ├── contact.js
-│           ├── category-all.js
-│           ├── category.js
-│           ├── product.js
-│           ├── product-detail.js
-│           ├── blog.js
-│           ├── category-blog.js
-│           ├── blog-detail.js
-│           ├── cart.js
-│           ├── checkout.js
-│           ├── my-account.js
-│           ├── search.js
-│           └── page.js
+├── inc/                          # Module tính năng mở rộng của Theme
+│   ├── admin-menu-therocks.php   # Quản trị Menu TheRocks: 4 bước hướng dẫn, WP Media, Demo 3 kiểu
+│   ├── cpt-booking.php           # CPT Đặt Bàn, Mailer thông báo khách đặt, template thiệp VIP
+│   └── smtp-mailer.php           # Cấu hình SMTP gửi mail thực tế qua Gmail/Hosting
 │
-├── template-parts/               # Các phần giao diện PHP chia nhỏ tái sử dụng
-│   ├── components/               # Components nhỏ (Thẻ sản phẩm, tin tức,...)
-│   │   ├── product-card.php
-│   │   ├── blog-card.php
-│   │   └── breadcrumb.php
-│   └── sections/                 # Các khối giao diện lớn (Hero, Flash Sale,...)
-│       ├── section-hero.php
-│       ├── section-flash-sale.php
-│       ├── section-about.php
-│       ├── section-contact.php
-│       └── section-blog-grid.php
+├── src/                          # THƯ MỤC MÃ NGUỒN CHƯA BIÊN DỊCH (DEVELOPMENT)
+│   ├── css/main.css              # File CSS nguồn: @font-face, Tailwind v4, Liquid Glass, Slider CSS
+│   └── js/                       # Mã nguồn JavaScript (ES Modules)
+│       ├── main.js               # Khởi tạo toàn cục, Header scroll, Liquid Glass
+│       └── pages/
+│           ├── home.js           # Xử lý Wander Loader, Parallax, Testimonials
+│           ├── menu.js           # Xử lý Accordion, Tabs, Slider ảnh Kiểu 1, Sticky Sidebar Kiểu 2
+│           └── booking.js        # Xử lý tương tác form đặt bàn trực tuyến & AJAX
 │
-├── theme-pages/                  # Thư mục gom toàn bộ các tệp giao diện (theme pages)
-│   ├── page-about.php            # Giao diện Giới thiệu
-│   ├── page-contact.php          # Giao diện Liên hệ
-│   ├── page-category-all.php     # Giao diện Tổng hợp danh mục
-│   ├── page-cart.php             # Giao diện Giỏ hàng WooCommerce
-│   ├── page-checkout.php         # Giao diện Thanh toán WooCommerce
-│   ├── page-my-account.php       # Giao diện Tài khoản WooCommerce
-│   ├── front-page.php            # Template Trang chủ chính thức
-│   ├── archive-product.php       # Template trang Cửa hàng (WooCommerce Shop)
-│   ├── single-product.php        # Template trang Chi tiết sản phẩm (WooCommerce Single)
-│   ├── taxonomy-product_cat.php  # Template trang Danh mục sản phẩm (WooCommerce Category)
-│   ├── home.php                  # Template trang Danh sách tin tức Blog
-│   ├── category.php              # Template trang Danh mục Blog
-│   ├── single.php                # Template trang Chi tiết bài viết Blog
-│   ├── page.php                  # Template trang thông tin tĩnh mặc định (General Page)
-│   ├── 404.php                   # Template trang lỗi 404
-│   └── search.php                # Template trang kết quả tìm kiếm
+├── template-parts/               # Các phân đoạn giao diện PHP tái sử dụng
+│   ├── components/               # Header, Footer, Nút bấm
+│   │   ├── site-header.php       # Thanh điều hướng cố định kính mờ (Liquid Glass)
+│   │   ├── site-footer.php       # Chân trang sang trọng
+│   │   └── button.php            # Nút bấm hiệu ứng kính lỏng
+│   └── sections/
+│       ├── home/                 # Các khối Trang Chủ (Hero, Wander Loading, Moments, Team, Testimonials)
+│       ├── menu/                 # Các khối Trang Menu
+│       │   ├── section-menu-page.php     # Hero 2 ảnh & Accordion danh mục
+│       │   ├── layout-1-showcase.php     # Kiểu 1: Showcase Card, Nốt vị, Nền rượu & Slider ảnh
+│       │   ├── layout-2-sidebar.php      # Kiểu 2: Sticky Sidebar bám theo màn hình
+│       │   └── layout-3-columns.php      # Kiểu 3: Danh sách cột theo dòng rượu Classic
+│       └── booking/              # Form đặt bàn và không gian Lounge
 │
-├── custom-fields/                # Thư mục chứa cấu hình Advanced Custom Fields (ACF)
-│   ├── acf-setup.php             # Bộ nạp tự động (Autoloader) các cấu hình Custom Fields
-│   └── acf-home-fields.php       # Khai báo cấu hình Custom Fields cho Trang chủ (Slider)
+├── theme-pages/                  # Page Templates WordPress
+│   ├── front-page.php            # Template Trang Chủ chính thức
+│   ├── page-menu.php             # Template Trang Thực Đơn
+│   ├── page-booking.php          # Template Trang Đặt Bàn
+│   ├── page-contact.php          # Template Trang Liên Hệ
+│   └── 404.php                   # Trang thông báo 404
 │
-├── index.php                     # Mẫu trang dự phòng chính (Fallback, Bắt buộc ở Root)
-├── header.php                    # Đầu trang dùng chung (Sticky header, Bắt buộc ở Root)
-├── footer.php                    # Chân trang dùng chung (Multi-column, Bắt buộc ở Root)
-├── functions.php                 # File cấu hình WordPress (Enqueue & Custom Loader, Bắt buộc ở Root)
-├── style.css                     # File metadata khai báo theme (Bắt buộc ở Root)
-│
-├── package.json                  # Node Scripts & Dependencies
-├── vite.config.js                # Cấu hình Vite (định nghĩa entrypoints map)
-└── watcher.js                    # File watcher tùy biến tránh lỗi treo trên Windows
+├── screenshot.png                # Ảnh đại diện chính thức của theme trong WP Admin (1200x900)
+├── screenshot.jpg                # Phiên bản JPG dự phòng
+├── functions.php                 # Enqueue scripts/styles, Theme support, Auto Module Loader
+├── style.css                     # Metadata khai báo theme On The Rock
+├── vite.config.js                # Cấu hình Vite với base: './'
+└── watcher.js                    # File watcher cho môi trường Windows
 ```
 
 ---
 
-## 2. Hướng dẫn khởi chạy và phát triển (Development Workflow)
+## 3. Các Tính Năng Nổi Bật Của Theme
 
-Để bắt đầu làm việc với theme, hãy mở terminal tại thư mục theme và thực hiện các bước sau:
+### A. Hệ Thống Quản Lý Thực Đơn "Menu TheRocks" (`inc/admin-menu-therocks.php`)
+* **Cấu trúc 3 cấp linh hoạt**: Menu Cha (Level 1) &rarr; Menu Con (Level 2) &rarr; Món ăn/Đồ uống (Level 3).
+* **Tích hợp WordPress Media Library**: Nút *Chọn từ Thư viện Media* có sẵn cho cả Menu Cha, Menu Con và từng Món, hỗ trợ chọn ảnh trực quan hoặc tải lên từ máy tính.
+* **Trình xem Demo 3 Kiểu trực quan**: Xem trước wireframe đồ họa mô phỏng thực tế của cả 3 kiểu hiển thị:
+  * **Kiểu 1**: Showcase Card & Slider Ảnh lớn (Cocktail Signature).
+  * **Kiểu 2**: Sticky Sidebar bám dính khi cuộn trang (Menu nhiều nhóm món).
+  * **Kiểu 3**: Danh sách cột chia theo dòng rượu Classic (Bảng giá rượu vang/spirits).
+* **Auto-Select thông minh**: Bấm chọn kiểu ngay trong Modal Demo sẽ tự động điền vào form đang mở và phát sáng viền vàng xác nhận.
+
+### B. Hệ Thống Đặt Bàn & Gửi Email Chuẩn VIP Lounge (`inc/cpt-booking.php`)
+* **CPT Đặt Bàn**: Quản lý toàn bộ danh sách khách đặt bàn, trạng thái *Chờ duyệt / Đã xác nhận / Hoàn thành / Hủy*.
+* **Bảo vệ toàn vẹn dữ liệu**: Vô hiệu hóa tính năng tạo đơn thủ công trong admin (`create_posts => do_not_allow`), đảm bảo 100% đơn đặt đều đến từ khách hàng thật ngoài website.
+* **Email Thông Báo Tức Thì (SMTP)**:
+  * Phối màu **Noir & Champagne Gold** cao cấp như một bức thiệp mời VIP.
+  * **Khắc phục triệt để lỗi ô vuông rỗng `□`**: Sử dụng icon PNG Retina độ phân giải cao (`assets/images/email-icons/`), tương thích 100% với Gmail, Outlook, Apple Mail.
+  * Tích hợp nút **Gọi cho khách ngay** và nút **Xem trong Dashboard** tiện dụng.
+
+### C. Trình Diễn Slider Ảnh Cocktail Khổ Lớn (Layout 1)
+* Hai nút điều hướng **Prev (`<`)** và **Next (`>`)** căn giữa hoàn hảo theo chiều dọc (`top: 50%`, `transform: translateY(-50%)`).
+* Thiết kế nút tròn kính đen mờ `44px x 44px` viền vàng sâm panh, hiệu ứng hover phóng to phát sáng êm dịu.
+* Thanh **Dots capsule chỉ báo vị trí ảnh** ở góc dưới.
+* Hỗ trợ **cảm ứng vuốt (Swipe Touch)** trên màn hình điện thoại.
+
+---
+
+## 4. Quy Trình Khởi Chạy & Biên Dịch (Workflow)
+
+Yêu cầu môi trường: **Node.js v18+** (Khuyên dùng Node v20 trở lên) và **XAMPP / LocalWP**.
 
 ### Bước 1: Cài đặt thư viện
 ```bash
 npm install
 ```
 
-### Bước 2: Chạy chế độ theo dõi phát triển (Watch / Development Mode)
-Lệnh này sẽ khởi chạy bộ theo dõi tệp tự động được viết tối ưu bằng Node.js (`watcher.js`). Nó sẽ lắng nghe các thay đổi trong thư mục `src/` và tự động kích hoạt tiến trình biên dịch lại siêu tốc bằng Vite chỉ trong ~300ms, giúp tránh mọi hiện tượng treo cứng của Watcher mặc định trên môi trường Windows:
+### Bước 2: Chạy chế độ Watch khi lập trình (Development)
 ```bash
 npm run watch
+# Hoặc: npm run dev
 ```
-*(Hoặc dùng `npm run dev` nếu bạn muốn chạy máy chủ phát triển Vite).*
 
 ### Bước 3: Biên dịch sản phẩm (Production Build)
-Trước khi đưa website lên môi trường thực tế (Staging/Production), hãy chạy lệnh này để tối ưu hóa tối đa, nén CSS/JS và dọn dẹp các mã dư thừa:
 ```bash
 npm run build
 ```
+*Vite sẽ tự động tối ưu hóa CSS, đóng gói JavaScript theo trang và đưa toàn bộ font vào thư mục `assets/dist/`.*
 
 ---
 
-## 3. Cơ chế hoạt động của Bản đồ JS (JS Map System)
-
-Để tối ưu hóa hiệu năng, website chỉ tải đúng tệp JavaScript cần thiết cho trang đó. Cơ chế này hoạt động tự động thông qua hai phần:
-
-1. **Đăng ký đầu vào trong `vite.config.js`**:
-   Toàn bộ các tệp trong `src/js/pages/` được đăng ký làm các cổng vào độc lập (`input`). Khi build, Vite sẽ tách chúng thành từng tệp riêng trong `assets/dist/js/`.
-2. **Nhúng thông minh trong `functions.php`**:
-   Mã nguồn sử dụng cấu trúc điều kiện của WordPress để dò tìm trang hiện hành (ví dụ: `is_front_page()`, `is_page_template()`, `is_singular('product')`,...) và thực hiện nhúng (enqueue) tệp JS tương ứng:
-   ```php
-   if (is_front_page()) {
-       $page_script = 'home';
-   } elseif (is_page_template('templates/page-about.php')) {
-       $page_script = 'about';
-   }
-   // Tự động nhúng tệp '/assets/dist/js/home.js' nếu có sự ăn khớp
-   ```
-
-**Cách thêm trang có JS riêng:**
-1. Tạo tệp JS mới trong `src/js/pages/ten-trang.js`.
-2. Khai báo tệp này trong đối tượng `input` tại `vite.config.js`.
-3. Trong `functions.php` (hàm `theme_scripts()`), thêm một điều kiện `elseif` để gán `$page_script = 'ten-trang'`.
+## 5. Tối Ưu Hóa Hiệu Năng & SEO
+1. **Font Display Swap**: Mọi font chữ tùy biến đều sử dụng `font-display: swap` để tránh hiện tượng chặn hiển thị văn bản (FOIT).
+2. **ES Modules & Asynchronous Loading**: Toàn bộ script theme được tải với thuộc tính `type="module"` và `defer="defer"`, không gây nghẽn tiến trình phân tích HTML.
+3. **Lazy Loading & Async Image Decoding**: Mọi ảnh hiển thị trên website đều tự động được bổ sung thuộc tính `loading="lazy"` và `decoding="async"`.
 
 ---
 
-## 4. Tái sử dụng Components & Sections trong PHP
-
-### A. Nhúng Components nhỏ (truyền biến tùy biến)
-WordPress hỗ trợ truyền tham số cho các tệp giao diện con. Bạn có thể tái sử dụng thẻ sản phẩm ở bất kỳ đâu như sau:
-```php
-// Nhúng sản phẩm mặc định
-get_template_part('template-parts/components/product-card');
-
-// Nhúng sản phẩm cụ thể và truyền thêm class Tailwind
-get_template_part('template-parts/components/product-card', null, [
-    'product_id' => 45,
-    'class'      => 'shadow-lg border-blue-200'
-]);
-```
-
-### B. Nhúng các Sections lớn
-```php
-// Nhúng khối Flash Sale ở trang chủ hoặc trang khuyến mãi
-get_template_part('template-parts/sections/section-flash-sale');
-
-// Nhúng khối Blog nổi bật
-get_template_part('template-parts/sections/section-blog-grid');
-```
-
----
-
-## 5. Hướng dẫn sử dụng Icon (Lucide Icons)
-
-Bạn có hai giải pháp sử dụng icon cực kỳ thuận tiện:
-
-### Giải pháp 1: Server-side Rendering (Tốt nhất cho SEO & Tốc độ tải)
-Sử dụng hàm Helper PHP `get_svg_icon()` đã được khai báo sẵn trong `functions.php`. Hàm này sẽ đọc trực tiếp mã SVG từ thư mục `assets/icons/` và nhúng inline vào mã HTML:
-```php
-<?php echo get_svg_icon('shopping-cart', 'w-5 h-5 text-lc-blue hover:scale-110 transition'); ?>
-```
-*Để sử dụng thêm icon mới ở server-side, chỉ cần lên trang chủ [lucide.dev](https://lucide.dev/), tải tệp SVG của icon đó về và bỏ vào thư mục `assets/icons/`.*
-
-### Giải pháp 2: Client-side Rendering (Nhanh chóng & Tiện lợi)
-Bạn chỉ cần viết thẻ HTML trống với thuộc tính `data-lucide`. Khi trang web tải xong, thư viện Lucide JS khởi tạo trong `src/js/main.js` sẽ tự động tìm và thay thế thành mã SVG:
-```html
-<i data-lucide="phone" class="w-6 h-6 text-lc-orange"></i>
-<i data-lucide="user" class="w-5 h-5 text-gray-400"></i>
-```
-
----
-
-## 6. Tùy chỉnh màu sắc và cấu hình Tailwind CSS v4
-
-Trong Tailwind CSS v4, chúng ta **không sử dụng `tailwind.config.js` làm nơi lưu cấu hình chính** nữa. Thay vào đó, toàn bộ cấu hình màu sắc, font chữ và các biến theme được định nghĩa trực tiếp trong tệp CSS nguồn bằng các biến CSS chuẩn:
-
-Mở tệp `src/css/main.css`:
-```css
-@import "tailwindcss";
-
-@theme {
-  --color-lc-blue: #0052cc;     /* Xanh chủ đạo Long Châu */
-  --color-lc-darkblue: #003b99;
-  --color-lc-orange: #f58220;   /* Màu cam */
-  --color-lc-red: #e11b22;      /* Màu giá giảm */
-  --color-lc-bg: #f0f2f5;       /* Nền xám nhạt */
-}
-```
-Sau đó, bạn có thể thoải mái sử dụng các class Tailwind bình thường trên giao diện như: `bg-lc-blue`, `text-lc-orange`, `border-lc-red`, `bg-lc-bg`. Khi chạy `npm run build`, Vite sẽ tự biên dịch và nén chúng vào tệp `assets/dist/css/style.css`.
-
----
-
-## 7. Hướng dẫn cài đặt và thiết lập Theme trên WordPress
-
-Để cài đặt và cấu hình thành công theme **24hCoding** trên website WordPress của bạn, hãy làm theo các bước hướng dẫn chi tiết dưới đây:
-
-### Bước 1: Chuẩn bị tệp cài đặt (Theme Package)
-1. Hãy chắc chắn rằng bạn đã chạy biên dịch production assets ít nhất một lần để tạo thư mục `/assets/dist/`:
-   ```bash
-   npm run build
-   ```
-2. Nén toàn bộ thư mục theme `theme-ecommerce-store` thành tệp tin định dạng `.zip` (ví dụ: `theme-ecommerce-store.zip`). *Lưu ý: Bạn có thể loại bỏ thư mục `node_modules/` và tệp `package-lock.json` trước khi nén để giảm dung lượng file nén.*
-
-### Bước 2: Tải lên và Kích hoạt Theme
-1. Đăng nhập vào trang quản trị WordPress (Admin Dashboard).
-2. Đi tới mục **Giao diện (Appearance)** -> **Giao diện (Themes)**.
-3. Nhấp vào nút **Thêm mới (Add New)** ở phía trên, sau đó chọn **Tải giao diện lên (Upload Theme)**.
-4. Chọn tệp nén `.zip` bạn vừa chuẩn bị ở Bước 1 và nhấn **Cài đặt ngay (Install Now)**.
-5. Sau khi cài đặt hoàn tất, nhấp vào liên kết **Kích hoạt (Activate)** để bắt đầu sử dụng theme.
-
-### Bước 3: Cấu hình Menu điều hướng (Navigation Menu)
-1. Trong Admin Dashboard, đi tới **Giao diện (Appearance)** -> **Menu**.
-2. Nhấp vào liên kết **Tạo menu mới (Create a new menu)**, đặt tên cho menu (ví dụ: *Primary Menu*) và thêm các liên kết trang bạn muốn hiển thị.
-3. Ở cuối trang cấu hình menu, trong phần **Vị trí hiển thị (Display location)**, hãy tích chọn vào mục **Primary Menu (Header)**.
-4. Nhấn **Lưu menu (Save Menu)**.
-
-### Bước 4: Thiết lập các Trang WooCommerce chính (Nếu sử dụng WooCommerce)
-Theme đã được thiết kế sẵn các Page Templates tùy biến gọn gàng để tối ưu trải nghiệm WooCommerce. Hãy gán các trang này trong trang quản trị:
-1. Tạo 3 trang tĩnh mới lần lượt đặt tên: *Giỏ hàng (Cart)*, *Thanh toán (Checkout)*, *Tài khoản của tôi (My Account)*.
-2. Tại cột bên phải cấu hình trang (Page Attributes -> Template), hãy chọn đúng mẫu giao diện tương ứng:
-   * Trang Giỏ hàng -> Chọn template **Cart Page Template** (nhận từ file `theme-pages/page-cart.php`).
-   * Trang Thanh toán -> Chọn template **Checkout Page Template** (nhận từ file `theme-pages/page-checkout.php`).
-   * Trang Tài khoản -> Chọn template **My Account Page Template** (nhận từ file `theme-pages/page-my-account.php`).
-3. Đi tới **WooCommerce** -> **Cài đặt (Settings)** -> Tab **Nâng cao (Advanced)**, chọn đúng các trang tĩnh bạn vừa tạo trên cho các mục tương ứng và nhấn Lưu.
-
----
-
-## 8. Các kỹ thuật tối ưu hóa hiệu năng (Performance Optimizations)
-
-Theme được tích hợp sẵn các kỹ thuật tối ưu hóa tải trang sâu trong nhân (core) giúp đạt điểm số xanh trên Google PageSpeed Insights (Lighthouse):
-
-### 1. Tải trễ hình ảnh (Image Lazy Loading & Async Decoding)
-* **Lazy Loading**: Hệ thống tự động lọc nội dung các bài viết, sản phẩm và áp thuộc tính `loading="lazy"` cho mọi thẻ `<img>`. Trình duyệt sẽ chỉ tải hình ảnh khi người dùng cuộn đến gần, tiết kiệm băng thông và tăng tốc FCP (First Contentful Paint).
-* **Async Decoding**: Mọi hình ảnh đính kèm (WordPress Attachments) và hình ảnh chèn tay được gắn thêm thuộc tính `decoding="async"`. Trình duyệt sẽ xử lý giải mã hình ảnh bất đồng bộ ở luồng phụ (background thread) giúp luồng chính (main thread) không bị gián đoạn, tránh giật lag khi cuộn trang.
-
-### 2. Tải bất đồng bộ JavaScript (Defer JavaScript)
-* Bộ lọc `script_loader_tag` tự động chuyển đổi tất cả các thẻ script tải tài nguyên của theme, WooCommerce và các thư viện bên ngoài thành dạng `defer="defer"`.
-* Điều này đảm bảo toàn bộ cấu trúc HTML được tải và hiển thị hoàn chỉnh trước khi JS được thực thi, cải thiện chỉ số **TBT (Total Blocking Time)** và **LCP (Largest Contentful Paint)**.
-
-### 3. DNS Prefetch & Preconnect các tài nguyên ngoài
-* Để giảm độ trễ DNS của các thư viện dùng chung, hệ thống tự động chèn các chỉ thị kết nối sớm (`preconnect` và `dns-prefetch`) cho các máy chủ lưu trữ font chữ và CDN phổ biến:
-  * Google Fonts (`fonts.googleapis.com`, `fonts.gstatic.com`)
-  * CDNs (`unpkg.com`)
-* Trình duyệt sẽ thực hiện phân giải DNS và thiết lập bắt tay TLS với các server này trước khi tải file, giảm thời gian chờ tải tài nguyên bổ sung.
+© Bản quyền giao diện thuộc về **On The Rock Cocktail Bar & Lounge** — Được xây dựng và phát triển bởi **Huỳnh Anh**.

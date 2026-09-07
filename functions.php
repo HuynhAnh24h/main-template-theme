@@ -102,30 +102,12 @@ function theme_scripts(){
         $page_script = 'menu';
     } elseif (is_page_template('theme-pages/page-booking.php') || is_page('booking')) {
         $page_script = 'booking';
-    } elseif (is_page_template('theme-pages/page-about.php')) {
-        $page_script = 'about';
     } elseif (is_page_template('theme-pages/page-contact.php') || is_page('contact')) {
         $page_script = 'contact';
-    } elseif (is_page_template('theme-pages/page-category-all.php')) {
-        $page_script = 'category-all';
-    } elseif (is_product_category() || is_tax('product_cat')) {
-        $page_script = 'category';
-    } elseif (is_post_type_archive('product') || (function_exists('is_shop') && is_shop())) {
-        $page_script = 'product';
-    } elseif (is_singular('product')) {
-        $page_script = 'product-detail';
     } elseif (is_home()) {
         $page_script = 'blog';
-    } elseif (is_category()) {
-        $page_script = 'category-blog';
     } elseif (is_single()) {
         $page_script = 'blog-detail';
-    } elseif (function_exists('is_cart') && is_cart()) {
-        $page_script = 'cart';
-    } elseif (function_exists('is_checkout') && is_checkout()) {
-        $page_script = 'checkout';
-    } elseif (function_exists('is_account_page') && is_account_page()) {
-        $page_script = 'my-account';
     } elseif (is_search()) {
         $page_script = 'search';
     } elseif (is_page()) {
@@ -191,31 +173,28 @@ function theme_custom_template_loader($template) {
     // 1. Ánh xạ các trang đặc biệt sử dụng Conditional Tags của WordPress
     if ( is_front_page() ) {
         $template_file = 'front-page.php';
+    } elseif ( is_page_template('theme-pages/page-menu.php') || is_page('menu') ) {
+        $template_file = 'page-menu.php';
+    } elseif ( is_page_template('theme-pages/page-booking.php') || is_page('booking') ) {
+        $template_file = 'page-booking.php';
+    } elseif ( is_page_template('theme-pages/page-contact.php') || is_page('contact') ) {
+        $template_file = 'page-contact.php';
     } elseif ( is_home() ) {
         $template_file = 'home.php';
     } elseif ( is_single() ) {
-        if ( is_singular('product') ) {
-            $template_file = 'single-product.php';
-        } else {
-            $template_file = 'single.php';
-        }
-    } elseif ( is_page() ) {
-        // Nếu trang sử dụng Custom Page Template (ví dụ: theme-pages/page-about.php), WordPress tự nhận đường dẫn đầy đủ
-        $custom_template = get_post_meta( get_the_ID(), '_wp_page_template', true );
-        if ( $custom_template && $custom_template !== 'default' ) {
-            return $template;
-        }
-        $template_file = 'page.php';
-    } elseif ( is_post_type_archive('product') || (function_exists('is_shop') && is_shop()) ) {
-        $template_file = 'archive-product.php';
-    } elseif ( is_tax('product_cat') || is_product_category() ) {
-        $template_file = 'taxonomy-product_cat.php';
+        $template_file = 'single.php';
     } elseif ( is_category() ) {
         $template_file = 'category.php';
     } elseif ( is_search() ) {
         $template_file = 'search.php';
     } elseif ( is_404() ) {
         $template_file = '404.php';
+    } elseif ( is_page() ) {
+        $custom_template = get_post_meta( get_the_ID(), '_wp_page_template', true );
+        if ( $custom_template && $custom_template !== 'default' ) {
+            return $template;
+        }
+        $template_file = 'page.php';
     }
 
     if ( !empty($template_file) ) {
@@ -300,10 +279,6 @@ function theme_resource_hints($urls, $relation_type) {
 }
 add_filter('wp_resource_hints', 'theme_resource_hints', 10, 2);
 
-/**
- * 8. Quản lý Custom Post Type Thực Đơn Bar (CPT & Taxonomy)
- */
-require get_template_directory() . '/inc/cpt-menu.php';
 
 /**
  * 9. Quản lý Custom Fields (ACF Settings)
@@ -315,6 +290,11 @@ require get_template_directory() . '/custom-fields/acf-setup.php';
  * 10. Quản lý Hệ thống Đặt Bàn (Booking CPT & Email Notification)
  */
 require get_template_directory() . '/inc/cpt-booking.php';
+
+/**
+ * 10.b Quản lý Thực đơn đa cấp TheRocks (Menu TheRocks CRUD)
+ */
+require get_template_directory() . '/inc/admin-menu-therocks.php';
 
 /**
  * 11. Tự động khởi tạo trang Đặt Bàn nếu chưa tồn tại

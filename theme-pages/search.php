@@ -37,20 +37,10 @@ get_template_part('template-parts/components/breadcrumb', null, [
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                     <?php
                     while (have_posts()) : the_post();
-                        $post_type = get_post_type();
-                        
-                        if ($post_type === 'product') {
-                            // Nhúng Card sản phẩm
-                            get_template_part('template-parts/components/product-card', null, [
-                                'product_id' => get_the_ID()
-                            ]);
-                        } else {
-                            // Nhúng Card tin tức (Đẩy class rộng 100% cột để grid chia đều)
-                            get_template_part('template-parts/components/blog-card', null, [
-                                'post_id' => get_the_ID(),
-                                'class'   => 'col-span-1 md:col-span-2' // Tin tức hiển thị to hơn một chút trong lưới
-                            ]);
-                        }
+                        get_template_part('template-parts/components/blog-card', null, [
+                            'post_id' => get_the_ID(),
+                            'class'   => 'col-span-1 md:col-span-2'
+                        ]);
                     endwhile;
                     ?>
                 </div>

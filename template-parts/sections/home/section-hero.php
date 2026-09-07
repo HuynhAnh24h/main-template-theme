@@ -21,20 +21,24 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// 1. Phân giải dữ liệu đầu vào
-$bg_image_raw        = ! empty( $args['hero_bg_image'] ) ? $args['hero_bg_image'] : null;
-$hero_title          = ! empty( $args['hero_title'] ) ? $args['hero_title'] : "BESPEAK YOUR\nBESPOKE COCKTAIL";
-$hero_btn_text       = ! empty( $args['hero_btn_text'] ) ? $args['hero_btn_text'] : 'XEM MENU';
-$hero_btn_link       = ! empty( $args['hero_btn_link'] ) ? $args['hero_btn_link'] : '#menu';
-$hero_btn_style      = ! empty( $args['hero_btn_style'] ) ? $args['hero_btn_style'] : 'solid-dark';
+$front_page_id = get_option('page_on_front');
 
-$hero_review_score   = ! empty( $args['hero_review_score'] ) ? $args['hero_review_score'] : '4.7';
-$hero_review_max     = ! empty( $args['hero_review_max'] ) ? $args['hero_review_max'] : '/5';
-$hero_review_title   = ! empty( $args['hero_review_title'] ) ? $args['hero_review_title'] : 'Excellent';
-$hero_review_sub     = ! empty( $args['hero_review_subtitle'] ) ? $args['hero_review_subtitle'] : 'Based on 3 576 reviews';
-$hero_review_link    = ! empty( $args['hero_review_link'] ) ? $args['hero_review_link'] : '#';
+// 1. Phân giải dữ liệu đầu vào (tự nạp từ ACF nếu không truyền tham số)
+$bg_image_raw        = ! empty( $args['hero_bg_image'] ) ? $args['hero_bg_image'] : (function_exists('get_field') ? get_field('hero_bg_image', $front_page_id) : null);
+$hero_title          = ! empty( $args['hero_title'] ) ? $args['hero_title'] : (function_exists('get_field') ? (get_field('hero_title', $front_page_id) ?: "BESPEAK YOUR\nBESPOKE COCKTAIL") : "BESPEAK YOUR\nBESPOKE COCKTAIL");
+$hero_btn_text       = ! empty( $args['hero_btn_text'] ) ? $args['hero_btn_text'] : (function_exists('get_field') ? (get_field('hero_btn_text', $front_page_id) ?: 'XEM MENU') : 'XEM MENU');
 
-$hero_marquee_text   = ! empty( $args['hero_marquee_text'] ) ? $args['hero_marquee_text'] : 'ON THE ROCKS COCKTAIL BAR';
+$raw_hero_btn        = ! empty( $args['hero_btn_link'] ) ? $args['hero_btn_link'] : (function_exists('get_field') ? get_field('hero_btn_link', $front_page_id) : '');
+$hero_btn_link       = (empty($raw_hero_btn) || in_array($raw_hero_btn, array('#menu', '#', ''))) ? home_url('/menu/') : (function_exists('otr_url') ? otr_url($raw_hero_btn) : $raw_hero_btn);
+$hero_btn_style      = ! empty( $args['hero_btn_style'] ) ? $args['hero_btn_style'] : (function_exists('get_field') ? (get_field('hero_btn_style', $front_page_id) ?: 'solid-dark') : 'solid-dark');
+
+$hero_review_score   = ! empty( $args['hero_review_score'] ) ? $args['hero_review_score'] : (function_exists('get_field') ? (get_field('hero_review_score', $front_page_id) ?: '4.7') : '4.7');
+$hero_review_max     = ! empty( $args['hero_review_max'] ) ? $args['hero_review_max'] : (function_exists('get_field') ? (get_field('hero_review_max', $front_page_id) ?: '/5') : '/5');
+$hero_review_title   = ! empty( $args['hero_review_title'] ) ? $args['hero_review_title'] : (function_exists('get_field') ? (get_field('hero_review_title', $front_page_id) ?: 'Excellent') : 'Excellent');
+$hero_review_sub     = ! empty( $args['hero_review_subtitle'] ) ? $args['hero_review_subtitle'] : (function_exists('get_field') ? (get_field('hero_review_subtitle', $front_page_id) ?: 'Based on 3 576 reviews') : 'Based on 3 576 reviews');
+$hero_review_link    = ! empty( $args['hero_review_link'] ) ? $args['hero_review_link'] : (function_exists('get_field') ? (get_field('hero_review_link', $front_page_id) ?: '#') : '#');
+
+$hero_marquee_text   = ! empty( $args['hero_marquee_text'] ) ? $args['hero_marquee_text'] : (function_exists('get_field') ? (get_field('hero_marquee_text', $front_page_id) ?: 'ON THE ROCKS COCKTAIL BAR') : 'ON THE ROCKS COCKTAIL BAR');
 
 // Xử lý ảnh nền (có fallback ảnh Unsplash chuẩn quầy bar cocktail nếu chưa cấu hình)
 $bg_image_url = 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1920&auto=format&fit=crop';
@@ -57,12 +61,12 @@ if ( is_array( $bg_image_raw ) && ! empty( $bg_image_raw['url'] ) ) {
     </div>
 
     <!-- 2. Nội dung chính giữa màn hình (Title bên trái, Đánh giá Google bên phải) -->
-    <div class="relative z-10 flex-1 flex items-center px-6 sm:px-10 md:px-16 lg:px-20 pt-28 md:pt-36 pb-12">
-        <div class="max-w-7xl w-full mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-12">
+    <div class="relative z-10 flex-1 flex items-center px-4 sm:px-10 md:px-16 lg:px-20 pt-24 sm:pt-28 md:pt-36 pb-10 sm:pb-12">
+        <div class="max-w-7xl w-full mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-10 sm:gap-12">
             
             <!-- Cột bên trái: Tiêu đề Hero & Nút Xem Menu -->
             <div class="max-w-2xl">
-                <h1 class="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[88px] font-normal tracking-wide text-[#caa875] leading-[1.05] uppercase drop-shadow-md">
+                <h1 class="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[88px] font-normal tracking-wide text-[#caa875] leading-[1.06] uppercase drop-shadow-md">
                     <?php echo nl2br( esc_html( $hero_title ) ); ?>
                 </h1>
 

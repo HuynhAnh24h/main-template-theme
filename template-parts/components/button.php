@@ -25,21 +25,25 @@ $addon       = isset($args['addon']) ? $args['addon'] : '';
 $extra_class = isset($args['extra_class']) ? $args['extra_class'] : '';
 
 // 1. Ánh xạ class Tailwind CSS dựa trên Kiểu nút bấm (Style)
-$base_class = 'inline-flex items-center justify-center transition-all duration-300 uppercase font-semibold text-xs tracking-wider ';
+$is_text_link = ($style === 'text-link');
+$base_class   = $is_text_link 
+    ? 'inline-flex items-center justify-center transition-all duration-300 ' 
+    : 'btn-liquid-glass inline-flex items-center justify-center transition-all duration-300 uppercase font-semibold text-xs tracking-wider select-none cursor-pointer ';
+
 $style_classes = array(
-    'outline' => 'px-6 py-2.5 rounded-full border border-[#685942] text-[#c6a26c] hover:border-[#caa875] hover:text-[#caa875]',
+    'outline' => 'px-6 py-2.5 rounded-full border border-[#685942] text-[#c6a26c] hover:border-[#caa875] hover:text-white',
     
-    'arrow' => 'w-10 h-10 rounded-full border border-[#685942] text-[#c6a26c] hover:border-[#caa875] hover:text-[#caa875] hover:scale-105',
+    'arrow' => 'w-10 h-10 rounded-full border border-[#685942] text-[#c6a26c] hover:border-[#caa875] hover:text-white hover:scale-105',
     
     'text-link' => 'gap-1 text-[#c6a26c] hover:text-[#caa875] border-b border-transparent hover:border-current pb-0.5 normal-case font-normal',
     
-    'solid-dark' => 'px-8 py-3 rounded-full bg-[#4a2c07] text-[#c6a26c] hover:bg-[#5c3709] hover:text-[#caa875] shadow-lg shadow-black/10 hover:-translate-y-0.5',
+    'solid-dark' => 'px-8 py-3 rounded-full bg-[#2b2014] text-[#caa875] hover:text-white border border-[#caa875]/40 hover:border-[#caa875] shadow-lg shadow-black/30',
     
-    'solid-light' => 'px-8 py-3 rounded-full bg-[#caa875] text-[#111] hover:bg-[#d8b887] shadow-lg shadow-black/10 hover:-translate-y-0.5',
+    'solid-light' => 'btn-liquid-gold px-8 py-3 rounded-full bg-[#caa875] text-[#111] hover:bg-[#d8b887] shadow-lg shadow-black/20',
     
-    'solid-gold' => 'px-8 py-3 rounded-full bg-[#caa875] text-[#222] hover:bg-[#b59363] shadow-lg shadow-black/10 hover:-translate-y-0.5',
+    'solid-gold' => 'btn-liquid-gold px-8 py-3 rounded-full bg-[#caa875] text-[#1a1208] hover:text-[#080604] border border-[#caa875]/80 shadow-lg shadow-black/20',
     
-    'solid-black' => 'px-8 py-3 rounded-full bg-black border border-[#caa875] text-[#caa875] hover:bg-[#caa875] hover:text-black',
+    'solid-black' => 'px-8 py-3 rounded-full bg-[#120c07] border border-[#caa875]/60 text-[#caa875] hover:text-white shadow-lg',
 );
 
 $chosen_style_class = isset($style_classes[$style]) ? $style_classes[$style] : $style_classes['solid-gold'];
@@ -52,11 +56,16 @@ if ($style === 'arrow') :
         ?>
         <div class="inline-flex items-center gap-3 <?php echo esc_attr($extra_class); ?>">
             <!-- Nút chữ Outline -->
-            <a href="<?php echo esc_url($link); ?>" class="inline-flex items-center justify-center px-6 py-2.5 rounded-full border border-[#685942] text-[#c6a26c] hover:border-[#caa875] hover:text-[#caa875] text-xs font-semibold uppercase tracking-wider transition-all duration-300" target="<?php echo esc_attr($target); ?>">
-                <?php echo esc_html($text); ?>
+            <a href="<?php echo esc_url($link); ?>" class="btn-liquid-glass inline-flex items-center justify-center px-6 py-2.5 rounded-full border border-[#685942] text-[#c6a26c] hover:border-[#caa875] hover:text-white text-xs font-semibold uppercase tracking-wider transition-all duration-300" target="<?php echo esc_attr($target); ?>">
+                <span class="btn-roll-wrap">
+                    <span class="btn-roll-text">
+                        <span><?php echo esc_html($text); ?></span>
+                        <span aria-hidden="true"><?php echo esc_html($text); ?></span>
+                    </span>
+                </span>
             </a>
             <!-- Nút tròn mũi tên -->
-            <a href="<?php echo esc_url($link); ?>" class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#685942] text-[#c6a26c] hover:border-[#caa875] hover:text-[#caa875] hover:scale-105 transition-all duration-300" target="<?php echo esc_attr($target); ?>" title="<?php echo esc_attr($text); ?>">
+            <a href="<?php echo esc_url($link); ?>" class="btn-liquid-glass inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#685942] text-[#c6a26c] hover:border-[#caa875] hover:text-white hover:scale-105 transition-all duration-300" target="<?php echo esc_attr($target); ?>" title="<?php echo esc_attr($text); ?>">
                 <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </a>
         </div>
@@ -81,7 +90,12 @@ elseif ($style === 'text-link') :
 else :
 ?>
     <a href="<?php echo esc_url($link); ?>" class="<?php echo esc_attr($final_class); ?>" target="<?php echo esc_attr($target); ?>">
-        <?php echo esc_html($text); ?>
+        <span class="btn-roll-wrap">
+            <span class="btn-roll-text">
+                <span><?php echo esc_html($text); ?></span>
+                <span aria-hidden="true"><?php echo esc_html($text); ?></span>
+            </span>
+        </span>
     </a>
 <?php
 endif;

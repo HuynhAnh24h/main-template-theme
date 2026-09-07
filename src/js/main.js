@@ -1,5 +1,11 @@
 import { createIcons, icons } from 'lucide';
 
+// Expose globally for dynamic components & alerts
+window.lucide = {
+    createIcons: (options = {}) => createIcons({ icons, ...options }),
+    icons
+};
+
 // Khởi tạo các thư viện dùng chung cho toàn site
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Tự động tìm tất cả thẻ có data-lucide và chèn icon SVG tương ứng
@@ -10,16 +16,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileMenu = document.getElementById('mobile-nav-menu') || document.getElementById('mobile-menu');
 
     if (mobileMenuBtn && mobileMenu) {
+        const iconMenu = mobileMenuBtn.querySelector('.mobile-icon-menu');
+        const iconClose = mobileMenuBtn.querySelector('.mobile-icon-close');
+
+        const toggleMenu = (open) => {
+            const shouldOpen = typeof open === 'boolean' ? open : mobileMenu.classList.contains('hidden');
+            if (shouldOpen) {
+                mobileMenu.classList.remove('hidden');
+                mobileMenuBtn.setAttribute('aria-expanded', 'true');
+                if (iconMenu) iconMenu.classList.add('hidden');
+                if (iconClose) iconClose.classList.remove('hidden');
+            } else {
+                mobileMenu.classList.add('hidden');
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                if (iconMenu) iconMenu.classList.remove('hidden');
+                if (iconClose) iconClose.classList.add('hidden');
+            }
+        };
+
         mobileMenuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            mobileMenu.classList.toggle('hidden');
+            e.preventDefault();
+            toggleMenu();
         });
 
         // Đóng menu khi click ra ngoài
         document.addEventListener('click', (e) => {
             if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-                mobileMenu.classList.add('hidden');
+                toggleMenu(false);
             }
+        });
+
+        // Đóng menu khi click bất kỳ link nào trong drawer
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                toggleMenu(false);
+            });
         });
     }
 
@@ -57,19 +89,52 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 5. Header: Đảm bảo luôn cố định chắc chắn & hiệu ứng scroll
+    // 5. Header: Hiệu ứng Liquid Glass toàn diện khi Scroll
     const header = document.getElementById('site-header') || document.querySelector('.site-header');
     if (header) {
         const onHeaderScroll = () => {
             if (window.scrollY > 20) {
-                header.classList.add('shadow-[0_8px_30px_rgba(0,0,0,0.9)]');
+                header.classList.add('is-scrolled', 'liquid-glass');
             } else {
-                header.classList.remove('shadow-[0_8px_30px_rgba(0,0,0,0.9)]');
+                header.classList.remove('is-scrolled', 'liquid-glass');
             }
         };
         window.addEventListener('scroll', onHeaderScroll, { passive: true });
         onHeaderScroll();
     }
+
+    // 6. Hiệu ứng Liquid Glass & Dual Text Roll-up cho Button
+    function initLiquidGlassButtons() {
+        const buttons = document.querySelectorAll('.btn-liquid-glass');
+        buttons.forEach(btn => {
+            if (btn.querySelector('.btn-roll-wrap')) return;
+
+            const childNodes = Array.from(btn.childNodes);
+            let textNode = null;
+
+            for (const node of childNodes) {
+                if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
+                    textNode = node;
+                    break;
+                }
+            }
+
+            if (textNode) {
+                const text = textNode.textContent.trim();
+                const rollWrap = document.createElement('span');
+                rollWrap.className = 'btn-roll-wrap';
+                rollWrap.innerHTML = `
+                    <span class="btn-roll-text">
+                        <span>${text}</span>
+                        <span aria-hidden="true">${text}</span>
+                    </span>
+                `;
+                btn.replaceChild(rollWrap, textNode);
+            }
+        });
+    }
+
+    initLiquidGlassButtons();
 
     console.log('On The Rock Header & Global Javascript Loaded!');
 });
