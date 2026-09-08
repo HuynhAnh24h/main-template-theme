@@ -139,6 +139,13 @@ function otr_get_default_menu_tree() {
                                 array('id' => 'm18', 'name' => 'Smoked Paloma',        'price' => '260k', 'desc' => 'Mezcal, Grapefruit Soda, Smoked Salt'),
                                 array('id' => 'm19', 'name' => 'Dark & Stormy Reserve','price' => '250k', 'desc' => 'Goslings Black Seal Rum, Ginger Beer'),
                                 array('id' => 'm20', 'name' => 'Tommy\'s Margarita',   'price' => '250k', 'desc' => 'Reposado Tequila, Agave Nectar, Fresh Lime'),
+                                array(
+                                    'id'    => 'm_rosita',
+                                    'name'  => 'Rosita',
+                                    'price' => '240k',
+                                    'desc'  => "Jose Cuervo Reposado, Cinzano Rosso & Extra Dry, Campari, Aromatic Bitters, Lime zest\n– Mang mùi hương quyến rũ từ hương nồng cay nhẹ từ tequila và hương thơm của tinh dầu từ vỏ chanh\n– Vị cay nhẹ của rượu nền tequila xen lẫn với vị đắng, ngọt của Campari và Rosso, chút khô từ Dry vermouth, vị đắng có chiều sâu hơn nhờ sự cân bằng tuyệt đối",
+                                    'image' => 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1000&auto=format&fit=crop',
+                                ),
                             ),
                         ),
                         'concon_02_malt' => array(
@@ -171,8 +178,20 @@ function otr_get_default_menu_tree() {
                             'id'    => 'concon_03_citrus',
                             'title' => 'REFRESHING & CITRUS',
                             'items' => array(
-                                array('id' => 'm24', 'name' => 'Foggy Dalat Valley',   'price' => '299k', 'desc' => 'Wild Herb Dalat Gin, Elderflower, Dry Vermouth, Pine Mist'),
-                                array('id' => 'm25', 'name' => 'Sunset Over Truc Lam', 'price' => '299k', 'desc' => 'Campari, Passion Fruit, Wild Honey, Sparkling Wine'),
+                                array(
+                                    'id'    => 'm24',
+                                    'name'  => 'Foggy Dalat Valley',
+                                    'price' => '299k',
+                                    'desc'  => "Wild Herb Dalat Gin, Elderflower, Dry Vermouth, Pine Mist\n– Hương thơm tươi mới từ sương mai và tinh dầu lá thông rừng nhiệt đới Đà Lạt\n– Vị chua thanh thanh từ thảo mộc kết hợp hậu vị ngọt dịu tao nhã của hoa cơm cháy",
+                                    'image' => 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1000&auto=format&fit=crop',
+                                ),
+                                array(
+                                    'id'    => 'm25',
+                                    'name'  => 'Sunset Over Truc Lam',
+                                    'price' => '299k',
+                                    'desc'  => "Campari, Passion Fruit, Wild Honey, Sparkling Wine\n– Hương thơm quyến rũ từ chanh dây tươi và mật ong hoa rừng cao nguyên\n– Sự bùng nổ sảng khoái của bọt sủi tăm cùng vị đắng nhẹ tinh tế đặc trưng của Campari",
+                                    'image' => 'https://images.unsplash.com/photo-1560512823-829485b8bf24?q=80&w=1000&auto=format&fit=crop',
+                                ),
                             ),
                         ),
                         'concon_03_complex' => array(
@@ -255,7 +274,117 @@ function otr_get_therocks_menu_tree() {
         $tree = otr_get_default_menu_tree();
         update_option('otr_menu_therocks_tree', $tree);
     }
+
+    // Đảm bảo có món Rosita trong nhóm concon_02_rum để kiểm tra giao diện Modal chuẩn theo ảnh mẫu
+    if (isset($tree['cha_02']['children']['con_02_02']['sub_children']['concon_02_rum']['items'])) {
+        $has_rosita = false;
+        foreach ($tree['cha_02']['children']['con_02_02']['sub_children']['concon_02_rum']['items'] as $it) {
+            if (!empty($it['name']) && strtolower(trim($it['name'])) === 'rosita') {
+                $has_rosita = true;
+                break;
+            }
+        }
+        if (!$has_rosita) {
+            $tree['cha_02']['children']['con_02_02']['sub_children']['concon_02_rum']['items'][] = array(
+                'id'    => 'm_rosita',
+                'name'  => 'Rosita',
+                'price' => '240k',
+                'desc'  => "Jose Cuervo Reposado, Cinzano Rosso & Extra Dry, Campari, Aromatic Bitters, Lime zest\n– Mang mùi hương quyến rũ từ hương nồng cay nhẹ từ tequila và hương thơm của tinh dầu từ vỏ chanh\n– Vị cay nhẹ của rượu nền tequila xen lẫn với vị đắng, ngọt của Campari và Rosso, chút khô từ Dry vermouth, vị đắng có chiều sâu hơn nhờ sự cân bằng tuyệt đối",
+                'image' => 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1000&auto=format&fit=crop',
+            );
+            update_option('otr_menu_therocks_tree', $tree);
+        }
+    }
+
+    // Tự động bổ sung nốt hương vị đặc trưng cho toàn bộ các món trong thực đơn
+    if (otr_enrich_tree_tasting_notes($tree)) {
+        update_option('otr_menu_therocks_tree', $tree);
+    }
+
     return $tree;
+}
+
+/**
+ * 2.a Bổ sung tự động thành phần & mô tả hương vị đặc trưng cho từng món trong thực đơn
+ */
+function otr_enrich_tree_tasting_notes(&$tree) {
+    $tasting_map = array(
+        'Boulevardier' => "– Vị nồng nàn của rượu Bourbon hòa quyện cùng nốt đắng thanh tao từ Campari\n– Hậu vị ngọt êm của vang Vermouth đỏ kết hợp tinh dầu vỏ cam khơi dậy mọi giác quan",
+        'Godfather' => "– Vị khói êm dịu của whisky mạch nha Scotland hòa cùng hương hạnh nhân ngọt bùi quyến rũ\n– Rót qua khối băng pha lê nguyên khối tạo nên trải nghiệm nhâm nhi sâu lắng và quyền lực",
+        'Highball' => "– Nốt hương thanh khiết, giòn tan từ bọt sủi tăm của dòng soda cao cấp hòa cùng whisky Nhật Bản\n– Hậu vị sảng khoái, tươi mát điểm xuyết tinh dầu vỏ chanh vàng đánh thức vị giác",
+        'Manhattan' => "– Vị cay nồng đặc trưng của lúa mạch đen Rye cân bằng hoàn hảo với nốt ngọt mượt mà của Vermouth\n– Tầng hương thảo mộc phức hợp từ giọt đắng Angostura lưu lại hậu vị quý phái, trường tồn",
+        'Morning Glory Fizz' => "– Lớp bọt kem mịn như nhung mang hương hoa hồi huyền bí từ những giọt absinthe thượng hạng\n– Vị chua thanh thoát từ nước cốt chanh tươi kết hợp cùng nốt khói dịu của rượu nền whisky",
+        'New York Sour' => "– Tầng vang đỏ mượt mà nổi bật trên nền chua ngọt tươi tắn của nước cốt chanh và đường mía\n– Hương gỗ sồi và vani từ rượu bourbon tạo nên sự chuyển tiếp hương vị đa tầng đầy mê hoặc",
+        'Clover Club' => "– Sắc hồng quyến rũ cùng hương thơm ngọt ngào của quả mâm xôi chín mọng tự nhiên\n– Lớp bọt mịn màng như tơ, vị chua thanh thoát hòa quyện cùng nốt thảo mộc tươi mát từ Gin",
+        'Dry Martini' => "– Sự tinh khiết tối thượng với hương bách xù sắc nét và độ khô thanh tao kinh điển\n– Nốt mặn nhẹ từ quả ô liu Tây Ban Nha tôn vinh trọn vẹn bản sắc của ly cocktail huyền thoại",
+        'Gimlet' => "– Vị chua ngọt bùng nổ cân bằng hoàn hảo nhờ siro chanh thủ công do quán tự chưng cất\n– Tầng hương hoa cỏ thảo mộc thanh thoát, mang lại cảm giác giải nhiệt và sảng khoái tức thì",
+        'Gin Fizz' => "– Sự bùng nổ sảng khoái của dòng sủi bọt soda kết hợp vị chua sắc nét của chanh vàng\n– Hậu vị thanh khiết, nhẹ nhàng, là thức uống khai vị hoàn hảo cho một buổi tối thư giãn",
+        'Gin Tonic' => "– Sự cộng hưởng tươi mát giữa vị đắng nhẹ của tonic Địa Trung Hải và tinh dầu lá hương thảo đốt\n– Dòng sủi bọt rực rỡ mang đến cảm giác thư thái, khoáng đạt giữa không gian đêm",
+        'James Bond' => "– Công thức kinh điển Vesper Martini kết hợp cả Gin và Vodka cùng chút rượu khai vị Kina Lillet\n– Vị rượu lạnh buốt, mạnh mẽ và dứt khoát đúng phong thái quý ông điệp viên lịch lãm",
+        'Zacapa Old Fashioned' => "– Vị ngọt sâu của mật mía ủ trên mây từ Guatemala với nốt mật ong, caramen và hạnh nhân\n– Hương thơm ấm áp của gỗ sồi già và tinh dầu cam nướng tạo nên ly cocktail đẳng cấp thượng thừa",
+        'Smoked Paloma' => "– Nốt khói đặc trưng của dòng rượu thủ công Mezcal vùng Oaxaca hòa cùng nước bưởi hồng tươi\n– Viền muối hun khói trên miệng ly kích thích vị giác, mang đến dư vị mặn ngọt cay nồng độc đáo",
+        'Dark & Stormy Reserve' => "– Vị cay nồng bùng nổ của bia gừng thủ công quyện trong dòng rum đen Goslings đậm đà\n– Một sự kết hợp hoang dã, phóng khoáng như cơn bão giữa biển khơi nhiệt đới",
+        'Tommy\'s Margarita' => "– Nốt ngọt tự nhiên từ mật cây thùa agave làm mềm độ cay hăng của rượu tequila ủ sồi\n– Vị chua giòn giã của chanh tươi tạo nên cảm giác tròn đầy, mượt mà khó quên",
+        'Macallan Rob Roy' => "– Hương thơm quả khô, gia vị gỗ sồi sherry danh tiếng của Macallan 12 hòa cùng Vermouth Ý\n– Cấu trúc rượu đầm ấm, sâu lắng với hậu vị kéo dài mang phong thái quý tộc Scotland",
+        'Sazerac XO' => "– Dòng cognac Hennessy XO đắt giá điểm xuyết sương mù rượu ngải cứu Absinthe đầy ma mị\n– Nốt đắng thanh lịch từ thảo mộc Peychaud làm thăng hoa trải nghiệm thưởng thức đỉnh cao",
+        'Sidecar Rare Cask' => "– Sự hòa quyện hoàn hảo giữa rượu mạnh Cognac hảo hạng và hương cam ngọt ngào của Cointreau\n– Viền đường mịn trên miệng ly mang đến sự tương phản ngọt ngào đầy mê hoặc",
+        'Foggy Dalat Valley' => "– Hương thơm tươi mới từ sương mai và tinh dầu lá thông rừng nhiệt đới Đà Lạt\n– Vị chua thanh thanh từ thảo mộc kết hợp hậu vị ngọt dịu tao nhã của hoa cơm cháy",
+        'Sunset Over Truc Lam' => "– Hương thơm quyến rũ từ chanh dây tươi và mật ong hoa rừng cao nguyên\n– Sự bùng nổ sảng khoái của bọt sủi tăm cùng vị đắng nhẹ tinh tế đặc trưng của Campari",
+        'Langbiang Golden Hour' => "– Hương thơm nồng nàn của cà phê Arabica Cầu Đất hòa quyện cùng rum lâu năm và nốt ca cao đậm đà\n– Vị ngọt đắng êm dịu như hoàng hôn buông trên đỉnh Langbiang huyền thoại",
+        'Midnight In The Rocks' => "– Nốt khói than bùn biển đảo Scotland bùng nổ cùng vị đắng bùi của hạt óc chó đen\n– Khói lá hương thảo tỏa ngát tạo nên trải nghiệm thưởng thức đầy bí ẩn và quyền lực",
+    );
+
+    $updated = false;
+    if (!empty($tree) && is_array($tree)) {
+        foreach ($tree as &$cha) {
+            if (!empty($cha['children']) && is_array($cha['children'])) {
+                foreach ($cha['children'] as &$con) {
+                    if (!empty($con['sub_children']) && is_array($con['sub_children'])) {
+                        foreach ($con['sub_children'] as &$concon) {
+                            if (!empty($concon['items']) && is_array($concon['items'])) {
+                                foreach ($concon['items'] as &$it) {
+                                    $name = trim($it['name'] ?? '');
+                                    if (isset($tasting_map[$name])) {
+                                        if (empty($it['desc']) || (strpos($it['desc'], '–') === false && strpos($it['desc'], '-') === false)) {
+                                            $base_ing = !empty($it['desc']) ? trim($it['desc']) : $name;
+                                            $it['desc'] = $base_ing . "\n" . $tasting_map[$name];
+                                            $updated = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return $updated;
+}
+
+/**
+ * 2.b Lấy ảnh đồ uống chất lượng cao cho Modal Chi Tiết Món Ăn / Đồ Uống
+ */
+function otr_get_drink_modal_image($drink, $fallback = '') {
+    if (!empty($drink['image'])) {
+        return $drink['image'];
+    }
+    if (!empty($fallback)) {
+        return $fallback;
+    }
+    $pool = array(
+        'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1000&auto=format&fit=crop', // Rosita ruby noir with orange peel
+        'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1000&auto=format&fit=crop', // Amber whiskey on rock ice
+        'https://images.unsplash.com/photo-1574096079513-d8259312b785?q=80&w=1000&auto=format&fit=crop', // Smoked cocktail glass
+        'https://images.unsplash.com/photo-1560512823-829485b8bf24?q=80&w=1000&auto=format&fit=crop', // Negroni ruby clear ice
+        'https://images.unsplash.com/photo-1527061011665-3652c757a4d4?q=80&w=1000&auto=format&fit=crop', // Old fashioned on volcanic stone
+        'https://images.unsplash.com/photo-1536935338788-846bb9981813?q=80&w=1000&auto=format&fit=crop', // Highball luxury garnish
+        'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?q=80&w=1000&auto=format&fit=crop', // Dark cocktail gold rim
+        'https://images.unsplash.com/photo-1609951651556-5334e2706168?q=80&w=1000&auto=format&fit=crop', // Martini luxury noir
+    );
+    $name = !empty($drink['name']) ? $drink['name'] : 'cocktail';
+    $idx = abs(crc32($name)) % count($pool);
+    return $pool[$idx];
 }
 
 /**

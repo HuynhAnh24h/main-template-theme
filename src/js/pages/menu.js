@@ -300,6 +300,140 @@ function initMenuPage() {
       }
     }, { passive: true });
   }
+
+  // ================= 7. MODAL CHI TIẾT MÓN ĂN / ĐỒ UỐNG (KIỂU 2 & KIỂU 3) ================= //
+  const modal = document.getElementById('menu-item-modal');
+  if (modal) {
+    const modalImg = document.getElementById('menu-modal-img');
+    const modalCategory = document.getElementById('menu-modal-category');
+    const modalPrice = document.getElementById('menu-modal-price');
+    const modalTitle = document.getElementById('menu-modal-title');
+    const modalIngredients = document.getElementById('menu-modal-ingredients');
+    const modalContent = document.getElementById('menu-modal-content');
+    const closeButtons = modal.querySelectorAll('.menu-modal-close-btn');
+    const modalContentCard = modal.querySelector('.menu-modal-card');
+
+    const escapeHtml = (str) => {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    };
+
+    const openModal = (data) => {
+      if (modalTitle) modalTitle.textContent = data.name || 'Thưởng Thức Tại On The Rock';
+      if (modalPrice) modalPrice.textContent = data.price || '';
+      if (modalCategory) modalCategory.textContent = data.category ? `✦ ${data.category}` : '✦ ON THE ROCK';
+
+      if (modalImg) {
+        modalImg.src = data.image || 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1000&auto=format&fit=crop';
+        modalImg.alt = data.name || 'Cocktail Detail';
+      }
+
+      // Xử lý nạp thành phần nguyên liệu & mô tả hương vị đặc trưng
+      const descText = (data.desc || '').trim();
+      const lines = descText ? descText.split(/\r?\n/).map((l) => l.trim()).filter(Boolean) : [];
+      let ingredientsText = '';
+      const contentLines = [];
+
+      lines.forEach((line) => {
+        if (line.startsWith('–') || line.startsWith('-')) {
+          contentLines.push(line);
+        } else if (!ingredientsText) {
+          ingredientsText = line;
+        } else {
+          contentLines.push(line);
+        }
+      });
+
+      if (!ingredientsText) {
+        ingredientsText = (data.name || 'On The Rock Cocktail') + ' Artisanal Blend';
+      }
+
+      if (contentLines.length === 0) {
+        contentLines.push('– Vị rượu êm đầm, cân bằng giữa các nốt thảo mộc tự nhiên và hậu vị sâu lắng đặc trưng của On The Rock.');
+        contentLines.push('– Khơi gợi cảm xúc tinh tế qua từng tầng hương thơm và dư vị nồng ấm kéo dài.');
+      }
+
+      // 1. Gán thành phần nguyên liệu
+      if (modalIngredients) {
+        modalIngredients.textContent = ingredientsText;
+      }
+
+      // 2. Gán mô tả hương vị đặc trưng
+      if (modalContent) {
+        modalContent.innerHTML = '';
+        contentLines.forEach((note) => {
+          const p = document.createElement('p');
+          p.className = 'leading-relaxed text-xs sm:text-[13px] text-[#caa875]/90 font-sans font-light';
+          const formatted = (note.startsWith('–') || note.startsWith('-'))
+            ? '– ' + note.replace(/^[–\-]\s*/, '')
+            : '– ' + note;
+          p.textContent = formatted;
+          modalContent.appendChild(p);
+        });
+      }
+
+      // Kích hoạt hiển thị modal với hiệu ứng êm ái
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.classList.add('opacity-100', 'pointer-events-auto');
+      if (modalContentCard) {
+        modalContentCard.classList.remove('scale-95', 'translate-y-3');
+        modalContentCard.classList.add('scale-100', 'translate-y-0');
+      }
+      document.body.classList.add('overflow-hidden');
+    };
+
+    const closeModal = () => {
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modal.classList.remove('opacity-100', 'pointer-events-auto');
+      if (modalContentCard) {
+        modalContentCard.classList.add('scale-95', 'translate-y-3');
+        modalContentCard.classList.remove('scale-100', 'translate-y-0');
+      }
+      document.body.classList.remove('overflow-hidden');
+    };
+
+    // Bắt sự kiện click vào các món có class .menu-item-clickable
+    document.addEventListener('click', (e) => {
+      const item = e.target.closest('.menu-item-clickable');
+      if (item) {
+        e.preventDefault();
+        const data = {
+          name: item.getAttribute('data-name') || '',
+          price: item.getAttribute('data-price') || '',
+          desc: item.getAttribute('data-desc') || '',
+          image: item.getAttribute('data-image') || '',
+          category: item.getAttribute('data-category') || '',
+        };
+        openModal(data);
+      }
+    });
+
+    // Đóng khi bấm các nút đóng
+    closeButtons.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeModal();
+      });
+    });
+
+    // Đóng khi click ngoài vùng modal card
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Đóng khi bấm phím Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('opacity-0')) {
+        closeModal();
+      }
+    });
+  }
 }
 
 if (document.readyState !== "loading") {

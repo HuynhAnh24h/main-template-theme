@@ -76,9 +76,9 @@ if ( empty( $testimonials ) ) {
     <div class="max-w-[1520px] mx-auto relative z-10">
         
         <!-- Tiêu đề Section & Nút điều hướng Slider -->
-        <div class="flex items-center justify-between mb-12 md:mb-16">
+        <div class="flex items-center justify-between mb-8 md:mb-16">
             
-            <!-- Khoảng đệm cân xứng bên trái -->
+            <!-- Khoảng đệm cân xứng bên trái (Desktop) -->
             <div class="w-16 hidden md:block"></div>
 
             <!-- Tiêu đề chính căn giữa -->
@@ -86,14 +86,14 @@ if ( empty( $testimonials ) ) {
                 <?php echo esc_html( $section_title ); ?>
             </h2>
 
-            <!-- Nút Prev / Next Slider -->
-            <div class="flex items-center gap-2.5 shrink-0">
-                <button id="testi-prev-btn" class="btn-liquid-glass w-8 h-8 md:w-9 md:h-9 rounded-full border border-[#caa875]/40 text-[#caa875] flex items-center justify-center cursor-pointer shadow-md" aria-label="Trước">
+            <!-- Nút Prev / Next Slider trên Desktop (Ẩn trên mobile vì chuyển xuống dưới theo yêu cầu) -->
+            <div class="hidden md:flex items-center gap-2.5 shrink-0">
+                <button id="testi-prev-btn" class="testi-prev-btn btn-liquid-glass w-8 h-8 md:w-9 md:h-9 rounded-full border border-[#caa875]/40 text-[#caa875] flex items-center justify-center cursor-pointer shadow-md" aria-label="Trước">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
                     </svg>
                 </button>
-                <button id="testi-next-btn" class="btn-liquid-glass w-8 h-8 md:w-9 md:h-9 rounded-full border border-[#caa875]/40 text-[#caa875] flex items-center justify-center cursor-pointer shadow-md" aria-label="Sau">
+                <button id="testi-next-btn" class="testi-next-btn btn-liquid-glass w-8 h-8 md:w-9 md:h-9 rounded-full border border-[#caa875]/40 text-[#caa875] flex items-center justify-center cursor-pointer shadow-md" aria-label="Sau">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
                     </svg>
@@ -110,19 +110,20 @@ if ( empty( $testimonials ) ) {
 
             <div id="testimonials-track" class="flex overflow-x-auto scroll-smooth scrollbar-none snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none py-2">
                 <?php foreach ( $testimonials as $index => $item ) : ?>
-                    <div class="testi-slide shrink-0 w-[84%] sm:w-[48%] md:w-[33.333%] xl:w-[20%] snap-start border-r border-dashed border-[#caa875]/25 px-5 sm:px-6 md:px-7 flex flex-col justify-between min-h-[300px] md:min-h-[340px]">
+                    <!-- Trên mobile: w-full (100% chỉ hiện đúng 1 review 1 lần), snap-center cân đối -->
+                    <div class="testi-slide shrink-0 w-full sm:w-[48%] md:w-[33.333%] xl:w-[20%] snap-center sm:snap-start border-r-0 sm:border-r border-dashed border-[#caa875]/25 px-6 sm:px-6 md:px-7 flex flex-col justify-between min-h-[260px] sm:min-h-[300px] md:min-h-[340px]">
                         
                         <!-- Lời nhận xét -->
-                        <div class="text-xs sm:text-[13px] leading-[1.72] text-[#c7beb2] font-light tracking-wide pr-1 select-text">
+                        <div class="text-[13px] sm:text-[13px] leading-[1.8] text-[#c7beb2] font-light tracking-wide pr-1 select-text">
                             <?php echo wp_kses_post( nl2br( $item['quote'] ) ); ?>
                         </div>
 
                         <!-- Tên khách hàng & Số sao -->
                         <div class="mt-8 pt-4">
-                            <div class="font-medium text-sm text-[#f4efe8] tracking-wide select-text">
+                            <div class="font-medium text-sm sm:text-base text-[#f4efe8] tracking-wide select-text">
                                 <?php echo esc_html( $item['author'] ); ?>
                             </div>
-                            <div class="flex items-center gap-1 text-[#caa875] text-xs mt-1.5 select-none" title="<?php echo esc_attr( $item['stars'] ); ?> sao">
+                            <div class="flex items-center gap-1 text-[#caa875] text-xs sm:text-sm mt-1.5 select-none" title="<?php echo esc_attr( $item['stars'] ); ?> sao">
                                 <?php for ( $s = 0; $s < 5; $s++ ) : ?>
                                     <span><?php echo $s < $item['stars'] ? '★' : '☆'; ?></span>
                                 <?php endfor; ?>
@@ -133,6 +134,28 @@ if ( empty( $testimonials ) ) {
                 <?php endforeach; ?>
             </div>
 
+        </div>
+
+        <!-- Cụm điều hướng Prev / Dots / Next hiển thị ở DƯỚI trên mobile theo yêu cầu của bạn -->
+        <div class="flex md:hidden items-center justify-center gap-4 mt-8 select-none">
+            <button class="testi-prev-btn btn-liquid-glass w-10 h-10 rounded-full border border-[#caa875]/40 text-[#caa875] flex items-center justify-center cursor-pointer shadow-md" aria-label="Trước">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </button>
+
+            <!-- Dots chỉ báo các review trên mobile -->
+            <div id="testi-dots" class="flex items-center gap-2 px-2">
+                <?php foreach ( $testimonials as $idx => $t ) : ?>
+                    <button class="testi-dot w-2 h-2 rounded-full bg-[#caa875]/30 transition-all duration-300 cursor-pointer <?php echo $idx === 0 ? 'is-active !w-6 !bg-[#caa875] !rounded-[4px]' : ''; ?>" data-index="<?php echo $idx; ?>" aria-label="Review <?php echo $idx + 1; ?>"></button>
+                <?php endforeach; ?>
+            </div>
+
+            <button class="testi-next-btn btn-liquid-glass w-10 h-10 rounded-full border border-[#caa875]/40 text-[#caa875] flex items-center justify-center cursor-pointer shadow-md" aria-label="Sau">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
+                </svg>
+            </button>
         </div>
 
     </div>

@@ -54,19 +54,29 @@ if ( ! empty( $single_con ) ) {
                             <?php if (empty($col['drinks'])): ?>
                                 <div class="py-3 text-xs text-[#caa875]/50 italic">Đang cập nhật đồ uống...</div>
                             <?php else: ?>
-                                <?php foreach ( $col['drinks'] as $drink ) : ?>
-                                    <div class="flex items-center justify-between py-3 sm:py-3.5 group hover:bg-[#caa875]/5 px-1 sm:px-2 rounded transition-colors duration-200">
-                                        <div>
-                                            <span class="text-[#d8c19d] text-sm sm:text-[15px] font-normal tracking-wide group-hover:text-white transition-colors">
-                                                <?php echo esc_html( $drink['name'] ); ?>
+                                <?php foreach ( $col['drinks'] as $drink ) : 
+                                    $drink_img = function_exists('otr_get_drink_modal_image') ? otr_get_drink_modal_image($drink, $single_con['image'] ?? ($parent_cha['image'] ?? '')) : ($drink['image'] ?? '');
+                                ?>
+                                    <div class="menu-item-clickable group cursor-pointer flex items-center justify-between py-3 sm:py-3.5 hover:bg-[#caa875]/10 px-2 sm:px-3 rounded-lg border-b border-[#caa875]/10 hover:border-[#caa875]/30 transition-all duration-300"
+                                         data-name="<?php echo esc_attr( $drink['name'] ); ?>"
+                                         data-price="<?php echo esc_attr( $drink['price'] ); ?>"
+                                         data-desc="<?php echo esc_attr( $drink['desc'] ?? '' ); ?>"
+                                         data-image="<?php echo esc_url( $drink_img ); ?>"
+                                         data-category="<?php echo esc_attr( $col['spirit'] ?? $con_title ); ?>">
+                                         <div class="pr-2 flex items-center gap-2">
+                                             <span class="text-[#d8c19d] text-sm sm:text-[15px] font-normal tracking-wide group-hover:text-white transition-colors">
+                                                 <?php echo esc_html( $drink['name'] ); ?>
+                                             </span>
+                                             <span class="opacity-0 group-hover:opacity-100 transition-all duration-300 text-[#caa875] text-xs transform -translate-x-1 group-hover:translate-x-0">✦</span>
+                                         </div>
+                                        <div class="flex items-center gap-2 shrink-0 ml-4">
+                                            <span class="text-[#caa875] text-xs sm:text-sm tracking-wider font-medium font-serif">
+                                                <?php echo esc_html( $drink['price'] ); ?>
                                             </span>
-                                            <?php if (!empty($drink['desc'])): ?>
-                                                <div class="text-[#caa875]/55 text-xs mt-0.5"><?php echo esc_html($drink['desc']); ?></div>
-                                            <?php endif; ?>
+                                            <svg class="w-3.5 h-3.5 text-[#caa875]/40 group-hover:text-[#caa875] group-hover:translate-x-0.5 transition-all duration-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                            </svg>
                                         </div>
-                                        <span class="text-[#caa875] text-xs sm:text-sm tracking-wider font-medium font-serif shrink-0 ml-4">
-                                            <?php echo esc_html( $drink['price'] ); ?>
-                                        </span>
                                     </div>
                                 <?php endforeach; ?>
                             <?php endif; ?>

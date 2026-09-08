@@ -90,10 +90,10 @@ if ( empty( $members ) ) {
 
     </div>
 
-    <!-- 2. Dàn 5 Thành Viên Đội Ngũ (Team Grid) -->
-    <div class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-0">
+    <!-- 2. Dàn Thành Viên Đội Ngũ (Team Grid - 2 người 1 hàng trên mobile theo yêu cầu) -->
+    <div class="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-0">
         <?php foreach ( $members as $idx => $member ) : ?>
-            <div class="relative w-full h-[480px] sm:h-[540px] md:h-[600px] lg:h-[680px] overflow-hidden group cursor-pointer bg-[#0c0906] border-r border-dashed border-[#caa875]/20 last:border-r-0">
+            <div class="relative w-full h-[260px] sm:h-[340px] md:h-[480px] lg:h-[680px] overflow-hidden group cursor-pointer bg-[#0c0906] border-b border-dashed border-[#caa875]/20 lg:border-b-0 border-r lg:border-r border-[#caa875]/20 [&:nth-child(2n)]:border-r-0 md:[&:nth-child(2n)]:border-r-0 lg:[&:nth-child(2n)]:border-r lg:last:border-r-0">
                 
                 <!-- Ảnh chân dung thành viên -->
                 <img src="<?php echo esc_url( $member['photo'] ); ?>" 
@@ -105,17 +105,32 @@ if ( empty( $members ) ) {
                 <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none group-hover:opacity-75 transition-opacity duration-500"></div>
 
                 <!-- Tên & Chức vụ thành viên ở góc dưới bên trái -->
-                <div class="absolute bottom-8 left-6 md:left-7 right-4 z-10 select-none">
-                    <div class="font-serif text-lg sm:text-xl md:text-2xl lg:text-[25px] text-[#caa875] uppercase tracking-wider font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-tight">
+                <div class="absolute bottom-3.5 sm:bottom-5 md:bottom-8 left-3 sm:left-5 md:left-7 right-2 sm:right-4 z-10 select-none">
+                    <div class="font-serif text-sm sm:text-base md:text-xl lg:text-[25px] text-[#caa875] uppercase tracking-wider font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-tight">
                         <?php echo esc_html( $member['name'] ); ?>
                     </div>
-                    <div class="font-serif text-xs sm:text-sm text-[#caa875]/80 uppercase tracking-[0.22em] font-light mt-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                    <div class="font-serif text-[10px] sm:text-xs md:text-sm text-[#caa875]/80 uppercase tracking-[0.16em] sm:tracking-[0.22em] font-light mt-0.5 sm:mt-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] truncate">
                         <?php echo esc_html( $member['role'] ); ?>
                     </div>
                 </div>
 
             </div>
         <?php endforeach; ?>
+
+        <?php if ( count( $members ) % 2 !== 0 ) : ?>
+            <!-- Thẻ Thương Hiệu lấp đầy ô chẵn hàng cuối trên mobile/tablet để cân đối 2 người 1 hàng -->
+            <div class="relative w-full h-[260px] sm:h-[340px] md:h-[480px] lg:hidden flex flex-col items-center justify-center text-center p-5 sm:p-6 bg-[#0a0705] border-b border-dashed border-[#caa875]/20 select-none group">
+                <svg class="w-10 h-10 sm:w-14 sm:h-14 text-[#caa875] opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 mb-2 sm:mb-3" viewBox="0 0 100 100" fill="none">
+                    <circle cx="50" cy="50" r="46" stroke="#caa875" stroke-width="1.5" stroke-dasharray="2 2"/>
+                    <circle cx="50" cy="50" r="41" stroke="#caa875" stroke-width="0.75"/>
+                    <text x="50" y="32" font-family="'Fraunces', serif" font-size="9" fill="#caa875" text-anchor="middle" letter-spacing="3">ON THE ROCKS</text>
+                    <text x="50" y="62" font-family="'Fraunces', serif" font-size="28" font-weight="600" fill="#caa875" text-anchor="middle" letter-spacing="2">OTR</text>
+                    <text x="50" y="78" font-family="'Fraunces', serif" font-size="7" fill="#caa875" text-anchor="middle" letter-spacing="4">TEAM</text>
+                </svg>
+                <span class="font-serif text-xs sm:text-sm tracking-[0.22em] text-[#caa875] uppercase font-medium">ON THE ROCKS</span>
+                <span class="font-serif text-[9px] sm:text-[11px] tracking-[0.25em] text-[#caa875]/60 uppercase mt-1">THE ART OF COCKTAIL</span>
+            </div>
+        <?php endif; ?>
     </div>
 
     <!-- 3. Dải Marquee Chạy Ngang Phía Dưới (Bottom Ticker - Chạy liên tục không khoảng nghỉ) -->

@@ -191,4 +191,7 @@ $menu_tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_me
         <div class="w-full border-t border-dashed border-[#caa875]/30"></div>
     </div>
 
+    <!-- MODAL CHI TIẾT MÓN ĂN / ĐỒ UỐNG DÀNH CHO KIỂU 2 & KIỂU 3 -->
+    <?php get_template_part('template-parts/sections/menu/modal-item-detail'); ?>
+
 </section>

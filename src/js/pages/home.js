@@ -274,28 +274,121 @@ function initWanderLoader() {
   window.addEventListener('scroll', onWindowScroll, { passive: true });
   updateScrollPipeline();
 
-  // Khởi tạo bộ điều khiển Testimonials Slider
-  const testiTrack   = document.getElementById('testimonials-track');
-  const testiPrevBtn = document.getElementById('testi-prev-btn');
-  const testiNextBtn = document.getElementById('testi-next-btn');
+  // Khởi tạo bộ điều khiển Testimonials Slider (Tự động chuyển slide 3s & Điều hướng)
+  const testiTrack = document.getElementById('testimonials-track');
+  const testiPrevBtns = document.querySelectorAll('.testi-prev-btn, #testi-prev-btn');
+  const testiNextBtns = document.querySelectorAll('.testi-next-btn, #testi-next-btn');
+  const testiDots = document.querySelectorAll('.testi-dot');
 
   if (testiTrack) {
-    const getScrollAmount = () => {
+    const getSlideWidth = () => {
       const firstSlide = testiTrack.querySelector('.testi-slide');
       return firstSlide ? firstSlide.offsetWidth : 320;
     };
 
-    if (testiNextBtn) {
-      testiNextBtn.addEventListener('click', () => {
-        testiTrack.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+    // Hàm cập nhật trạng thái Dots chỉ báo
+    const updateDots = () => {
+      const slideWidth = getSlideWidth();
+      if (slideWidth <= 0 || testiDots.length === 0) return;
+      const currentIndex = Math.round(testiTrack.scrollLeft / slideWidth);
+      testiDots.forEach((dot, idx) => {
+        if (idx === currentIndex) {
+          dot.classList.add('is-active', '!w-6', '!bg-[#caa875]', '!rounded-[4px]');
+          dot.classList.remove('bg-[#caa875]/30');
+        } else {
+          dot.classList.remove('is-active', '!w-6', '!bg-[#caa875]', '!rounded-[4px]');
+          dot.classList.add('bg-[#caa875]/30');
+        }
       });
-    }
+    };
 
-    if (testiPrevBtn) {
-      testiPrevBtn.addEventListener('click', () => {
-        testiTrack.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+    // Hàm chuyển sang slide kế tiếp (tự động quay vòng về đầu khi hết slide)
+    const nextSlide = () => {
+      const slideWidth = getSlideWidth();
+      const maxScroll = testiTrack.scrollWidth - testiTrack.clientWidth;
+      if (testiTrack.scrollLeft >= maxScroll - 15) {
+        testiTrack.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        testiTrack.scrollBy({ left: slideWidth, behavior: 'smooth' });
+      }
+    };
+
+    // Hàm lùi về slide trước
+    const prevSlide = () => {
+      const slideWidth = getSlideWidth();
+      if (testiTrack.scrollLeft <= 15) {
+        const maxScroll = testiTrack.scrollWidth - testiTrack.clientWidth;
+        testiTrack.scrollTo({ left: maxScroll, behavior: 'smooth' });
+      } else {
+        testiTrack.scrollBy({ left: -slideWidth, behavior: 'smooth' });
+      }
+    };
+
+    // Tự động chuyển slide mỗi khoảng 3s theo yêu cầu của bạn
+    let autoSlideInterval = null;
+    let resumeTimeout = null;
+
+    const startAutoSlide = () => {
+      stopAutoSlide();
+      autoSlideInterval = setInterval(nextSlide, 3000);
+    };
+
+    const stopAutoSlide = () => {
+      if (autoSlideInterval) {
+        clearInterval(autoSlideInterval);
+        autoSlideInterval = null;
+      }
+      if (resumeTimeout) {
+        clearTimeout(resumeTimeout);
+        resumeTimeout = null;
+      }
+    };
+
+    const restartAutoSlideDelayed = (delayMs = 2500) => {
+      stopAutoSlide();
+      resumeTimeout = setTimeout(startAutoSlide, delayMs);
+    };
+
+    // Bắt đầu chạy tự động
+    startAutoSlide();
+
+    // Gắn sự kiện cho các nút Prev / Next (cả Desktop và Mobile)
+    testiNextBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        nextSlide();
+        restartAutoSlideDelayed(3500);
       });
-    }
+    });
+
+    testiPrevBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        prevSlide();
+        restartAutoSlideDelayed(3500);
+      });
+    });
+
+    // Gắn sự kiện click cho các Dots
+    testiDots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const targetIdx = parseInt(dot.getAttribute('data-index') || '0', 10);
+        const slideWidth = getSlideWidth();
+        testiTrack.scrollTo({ left: targetIdx * slideWidth, behavior: 'smooth' });
+        restartAutoSlideDelayed(3500);
+      });
+    });
+
+    // Lắng nghe sự kiện cuộn để đồng bộ Dots
+    testiTrack.addEventListener('scroll', () => {
+      updateDots();
+    }, { passive: true });
+
+    // Tạm dừng tự động khi rê chuột vào hoặc khi người dùng đang xem
+    testiTrack.addEventListener('mouseenter', stopAutoSlide);
+    testiTrack.addEventListener('mouseleave', () => restartAutoSlideDelayed(1500));
+
+    // Hỗ trợ chạm vuốt trên Mobile / Tablet
+    testiTrack.addEventListener('touchstart', stopAutoSlide, { passive: true });
+    testiTrack.addEventListener('touchend', () => restartAutoSlideDelayed(2500), { passive: true });
 
     // Hỗ trợ kéo lướt bằng chuột (Mouse Drag)
     let isDown = false;
@@ -304,12 +397,16 @@ function initWanderLoader() {
 
     testiTrack.addEventListener('mousedown', (e) => {
       isDown = true;
+      stopAutoSlide();
       startX = e.pageX - testiTrack.offsetLeft;
       scrollStart = testiTrack.scrollLeft;
     });
 
     testiTrack.addEventListener('mouseleave', () => { isDown = false; });
-    testiTrack.addEventListener('mouseup', () => { isDown = false; });
+    testiTrack.addEventListener('mouseup', () => {
+      isDown = false;
+      restartAutoSlideDelayed(2500);
+    });
 
     testiTrack.addEventListener('mousemove', (e) => {
       if (!isDown) return;

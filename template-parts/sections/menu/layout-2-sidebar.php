@@ -86,21 +86,31 @@ if ( ! empty( $single_con ) ) {
                         <p class="text-xs text-[#caa875]/50 italic">Chưa có món trong nhóm này.</p>
                     <?php else: ?>
                         <div class="grid grid-cols-1 gap-4">
-                            <?php foreach ( $cat['items'] as $drink ) : ?>
-                                <div class="flex items-start justify-between py-3.5 px-3 rounded hover:bg-[#caa875]/5 transition-colors border-b border-[#caa875]/10">
-                                    <div>
-                                        <h4 class="font-serif text-[#d8c19d] text-base font-normal tracking-wide">
+                            <?php foreach ( $cat['items'] as $drink ) : 
+                                $drink_img = function_exists('otr_get_drink_modal_image') ? otr_get_drink_modal_image($drink, $cat['image'] ?? '') : ($drink['image'] ?? '');
+                            ?>
+                                <div class="menu-item-clickable group cursor-pointer flex items-center justify-between py-3.5 px-3 rounded-xl hover:bg-[#caa875]/10 border-b border-[#caa875]/10 hover:border-[#caa875]/30 transition-all duration-300"
+                                     data-name="<?php echo esc_attr( $drink['name'] ); ?>"
+                                     data-price="<?php echo esc_attr( $drink['price'] ); ?>"
+                                     data-desc="<?php echo esc_attr( $drink['desc'] ?? '' ); ?>"
+                                     data-image="<?php echo esc_url( $drink_img ); ?>"
+                                     data-category="<?php echo esc_attr( $cat['name'] ?? $con_title ); ?>">
+                                    <div class="pr-3 flex items-center gap-2">
+                                        <h4 class="font-serif text-[#d8c19d] text-base font-normal tracking-wide group-hover:text-white transition-colors">
                                             <?php echo esc_html( $drink['name'] ); ?>
                                         </h4>
-                                        <?php if ( ! empty( $drink['desc'] ) ) : ?>
-                                            <p class="text-xs text-[#caa875]/65 mt-1 font-sans font-light max-w-md">
-                                                <?php echo esc_html( $drink['desc'] ); ?>
-                                            </p>
-                                        <?php endif; ?>
+                                        <span class="opacity-0 group-hover:opacity-100 transition-all duration-300 text-[#caa875] text-xs transform -translate-x-1 group-hover:translate-x-0">✦</span>
                                     </div>
-                                    <span class="font-serif text-[#caa875] text-sm sm:text-base font-medium shrink-0 ml-4">
-                                        <?php echo esc_html( $drink['price'] ); ?>
-                                    </span>
+                                    <div class="flex items-center gap-2.5 shrink-0 ml-4">
+                                        <span class="font-serif text-[#caa875] text-sm sm:text-base font-medium">
+                                            <?php echo esc_html( $drink['price'] ); ?>
+                                        </span>
+                                        <div class="w-6 h-6 rounded-full bg-white/0 group-hover:bg-[#caa875]/15 border border-transparent group-hover:border-[#caa875]/30 flex items-center justify-center transition-all duration-300">
+                                            <svg class="w-3.5 h-3.5 text-[#caa875]/40 group-hover:text-[#caa875] group-hover:translate-x-0.5 transition-all duration-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                            </svg>
+                                        </div>
+                                    </div>
                                 </div>
                             <?php endforeach; ?>
                         </div>
@@ -158,15 +168,27 @@ $tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_menu_tr
                                         <h4 class="text-xs uppercase text-[#caa875]/60 mb-2"><?php echo esc_html($concon['title']); ?></h4>
                                         <?php if (!empty($concon['items'])): ?>
                                             <div class="grid grid-cols-1 gap-3">
-                                                <?php foreach ($concon['items'] as $it): ?>
-                                                    <div class="flex items-start justify-between py-2 border-b border-[#caa875]/10">
-                                                        <div>
-                                                            <div class="text-[#d8c19d] text-sm"><?php echo esc_html($it['name']); ?></div>
-                                                            <?php if (!empty($it['desc'])): ?><div class="text-xs text-[#caa875]/50"><?php echo esc_html($it['desc']); ?></div><?php endif; ?>
-                                                        </div>
-                                                        <span class="text-[#caa875] font-serif text-sm ml-4"><?php echo esc_html($it['price']); ?></span>
-                                                    </div>
-                                                <?php endforeach; ?>
+                                                 <?php foreach ($concon['items'] as $it): 
+                                                     $it_img = function_exists('otr_get_drink_modal_image') ? otr_get_drink_modal_image($it, $con['image'] ?? ($cha['image'] ?? '')) : ($it['image'] ?? '');
+                                                 ?>
+                                                      <div class="menu-item-clickable group cursor-pointer flex items-center justify-between py-2.5 px-2.5 rounded-lg hover:bg-[#caa875]/10 border-b border-[#caa875]/10 hover:border-[#caa875]/30 transition-all duration-300"
+                                                           data-name="<?php echo esc_attr($it['name']); ?>"
+                                                           data-price="<?php echo esc_attr($it['price']); ?>"
+                                                           data-desc="<?php echo esc_attr($it['desc'] ?? ''); ?>"
+                                                           data-image="<?php echo esc_url($it_img); ?>"
+                                                           data-category="<?php echo esc_attr($concon['title'] ?? $con['title']); ?>">
+                                                          <div class="pr-2 flex items-center gap-2">
+                                                              <div class="text-[#d8c19d] text-sm group-hover:text-white transition-colors"><?php echo esc_html($it['name']); ?></div>
+                                                              <span class="opacity-0 group-hover:opacity-100 transition-all duration-300 text-[#caa875] text-xs">✦</span>
+                                                          </div>
+                                                         <div class="flex items-center gap-2 shrink-0 ml-4">
+                                                             <span class="text-[#caa875] font-serif text-sm"><?php echo esc_html($it['price']); ?></span>
+                                                             <svg class="w-3.5 h-3.5 text-[#caa875]/40 group-hover:text-[#caa875] group-hover:translate-x-0.5 transition-all duration-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                                             </svg>
+                                                         </div>
+                                                     </div>
+                                                 <?php endforeach; ?>
                                             </div>
                                         <?php endif; ?>
                                     </div>

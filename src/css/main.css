@@ -372,7 +372,7 @@ h1.otr-quote-title {
   visibility: visible !important;
 }
 
-/* ================= LIQUID GLASS HEADER (ALWAYS FIXED TOP) ================= */
+/* ================= LIQUID GLASS HEADER (ALWAYS FIXED TOP - APPLE iOS SYSTEM) ================= */
 #site-header {
   position: fixed !important;
   top: 0 !important;
@@ -380,12 +380,13 @@ h1.otr-quote-title {
   right: 0 !important;
   width: 100% !important;
   z-index: 9999 !important;
-  padding-top: 0.9rem !important;
-  padding-bottom: 0.9rem !important;
-  background: linear-gradient(180deg, rgba(16, 11, 7, 0.65) 0%, rgba(10, 7, 4, 0.25) 100%) !important;
-  backdrop-filter: blur(12px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
-  border-bottom: 1px solid rgba(202, 168, 117, 0.12) !important;
+  padding-top: 0.85rem !important;
+  padding-bottom: 0.85rem !important;
+  background: linear-gradient(180deg, rgba(16, 12, 8, 0.45) 0%, rgba(10, 7, 5, 0.15) 100%) !important;
+  backdrop-filter: blur(20px) saturate(180%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) contrast(105%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25) !important;
   transition: padding 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
@@ -398,15 +399,55 @@ h1.otr-quote-title {
 #site-header.liquid-glass,
 #site-header.is-scrolled,
 #site-header.site-header--scrolled {
-  padding-top: 0.6rem !important;
-  padding-bottom: 0.6rem !important;
-  background: linear-gradient(180deg, rgba(24, 16, 9, 0.58) 0%, rgba(14, 9, 5, 0.7) 100%) !important;
-  backdrop-filter: blur(28px) saturate(220%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(220%) !important;
-  border-bottom: 1px solid rgba(202, 168, 117, 0.38) !important;
-  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.75),
-              inset 0 1px 1px 0 rgba(255, 255, 255, 0.2),
-              inset 0 -1px 1px 0 rgba(202, 168, 117, 0.18) !important;
+  padding-top: 0.55rem !important;
+  padding-bottom: 0.55rem !important;
+  background: linear-gradient(180deg, rgba(20, 15, 10, 0.72) 0%, rgba(12, 9, 6, 0.84) 100%) !important;
+  backdrop-filter: blur(32px) saturate(200%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) contrast(105%) !important;
+  border-bottom: 1px solid rgba(202, 168, 117, 0.28) !important;
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.75),
+              inset 0 1px 0.5px 0 rgba(255, 255, 255, 0.22),
+              inset 0 -1px 0 0 rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Nút Đặt Bàn Trước trên Header chuẩn iOS Capsule Liquid Glass */
+.site-header__booking-btn {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(28, 20, 13, 0.75) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  border: 1px solid rgba(202, 168, 117, 0.45) !important;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.38),
+              inset 0 -1px 0 0 rgba(0, 0, 0, 0.4),
+              0 4px 16px -2px rgba(0, 0, 0, 0.5) !important;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.site-header__booking-btn:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(202, 168, 117, 0.32) 50%, rgba(32, 22, 14, 0.92) 100%) !important;
+  border-color: rgba(202, 168, 117, 0.88) !important;
+  box-shadow: inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.7),
+              inset 0 -1px 1px 0 rgba(202, 168, 117, 0.35),
+              0 10px 25px -4px rgba(0, 0, 0, 0.75),
+              0 0 18px 2px rgba(202, 168, 117, 0.32) !important;
+  transform: translateY(-1.5px) scale(1.02);
+}
+
+.site-header__booking-btn:active {
+  transform: translateY(0) scale(0.955) !important;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.55),
+              inset 0 -1px 1px 0 rgba(255, 255, 255, 0.15),
+              0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* iOS Frosted Glass Mobile Navigation Sheet */
+#mobile-nav-menu {
+  background: rgba(18, 13, 9, 0.86) !important;
+  backdrop-filter: blur(32px) saturate(200%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) contrast(105%) !important;
+  border: 1px solid rgba(202, 168, 117, 0.3) !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.95),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
+              inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4) !important;
 }
 
 /* Typography chuẩn theo hình ảnh mẫu cho nút Đặt Bàn Trước trên Header */
@@ -526,35 +567,46 @@ body.home {
   animation: fadeIn 0.35s ease forwards;
 }
 
-/* ================= LIQUID GLASS & TEXT ROLL-UP BUTTON ANIMATION ================= */
+/* ================= LIQUID GLASS & TEXT ROLL-UP BUTTON ANIMATION (APPLE iOS SYSTEM) ================= */
 .btn-liquid-glass {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(24, 18, 12, 0.72) !important;
+  backdrop-filter: blur(20px) saturate(190%) contrast(102%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) contrast(102%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.32),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.4),
+    0 6px 20px -3px rgba(0, 0, 0, 0.5) !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
   will-change: transform, box-shadow, background, border-color;
 }
 
-/* Tia sáng quét ngang mặt kính (Specular Light Sheen) - Giảm chói êm dịu */
+/* Tia sáng khúc xạ lướt qua mặt kính (Apple iOS Specular Sheen Sweep) */
 .btn-liquid-glass::before {
   content: '';
   position: absolute;
   top: 0;
   left: -160%;
-  width: 120%;
+  width: 130%;
   height: 100%;
   background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.03) 25%,
-    rgba(255, 255, 255, 0.22) 50%,
-    rgba(202, 168, 117, 0.2) 75%,
-    transparent 100%
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.04) 35%,
+    rgba(255, 255, 255, 0.25) 48%,
+    rgba(202, 168, 117, 0.35) 52%,
+    rgba(255, 255, 255, 0.22) 56%,
+    transparent 75%
   );
-  transform: skewX(-25deg);
-  transition: left 0.75s cubic-bezier(0.2, 1, 0.25, 1);
+  transform: skewX(-20deg);
+  transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
   z-index: 1;
 }
@@ -563,48 +615,85 @@ body.home {
   left: 160%;
 }
 
-/* Trạng thái Kính Lỏng (Liquid Glass) khi Hover - Ánh sáng liquid giảm dịu nhẹ, sang trọng */
+/* Trạng thái Kính Lỏng khi Hover - Tỏa sáng rực rỡ từ bên trong (Internal Glass Glow) */
 .btn-liquid-glass:hover {
   background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(202, 168, 117, 0.26) 45%,
-    rgba(34, 23, 14, 0.85) 100%
+    180deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(202, 168, 117, 0.28) 45%,
+    rgba(28, 20, 14, 0.88) 100%
   ) !important;
-  backdrop-filter: blur(16px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
-  border-color: rgba(202, 168, 117, 0.85) !important;
+  backdrop-filter: blur(26px) saturate(200%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(200%) contrast(105%) !important;
+  border-color: rgba(202, 168, 117, 0.8) !important;
   color: #caa875 !important;
   box-shadow: 
-    0 10px 28px -5px rgba(0, 0, 0, 0.7),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.45),
+    0 12px 30px -4px rgba(0, 0, 0, 0.75),
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.65),
     inset 0 -1px 1px 0 rgba(202, 168, 117, 0.35),
-    0 0 16px 2px rgba(202, 168, 117, 0.26) !important;
-  transform: translateY(-2px);
+    0 0 20px 2px rgba(202, 168, 117, 0.3) !important;
+  transform: translateY(-2px) scale(1.015);
 }
 
+/* Trạng thái Chạm/Bấm kiểu Apple Haptic Spring (Đàn hồi tức thì) */
 .btn-liquid-glass:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(0) scale(0.955) !important;
+  transition: transform 0.12s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.12s ease !important;
   box-shadow: 
-    0 5px 12px -3px rgba(0, 0, 0, 0.65),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.35),
-    0 0 10px 2px rgba(202, 168, 117, 0.2) !important;
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px 0 rgba(0, 0, 0, 0.55),
+    inset 0 -1px 1px 0 rgba(255, 255, 255, 0.15) !important;
 }
 
-/* Biến thể Vàng Kim (Liquid Gold) */
-.btn-liquid-glass.btn-liquid-gold:hover {
+/* Biến thể Kính Vàng Kim iOS (Liquid Gold Special Edition) */
+.btn-liquid-glass.btn-liquid-gold,
+.btn-liquid-gold {
   background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.2) 0%,
-    rgba(224, 192, 142, 0.65) 50%,
-    rgba(202, 168, 117, 0.85) 100%
+    180deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(224, 192, 142, 0.88) 40%,
+    rgba(202, 168, 117, 0.98) 100%
   ) !important;
-  color: #080604 !important;
-  border-color: rgba(255, 255, 255, 0.8) !important;
+  color: #0c0a07 !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
   box-shadow: 
-    0 10px 28px -5px rgba(0, 0, 0, 0.7),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.75),
-    0 0 20px 3px rgba(202, 168, 117, 0.35) !important;
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25),
+    0 8px 24px -3px rgba(0, 0, 0, 0.55),
+    0 0 16px 1px rgba(202, 168, 117, 0.28) !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-liquid-glass.btn-liquid-gold:hover,
+.btn-liquid-gold:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(235, 206, 160, 0.95) 45%,
+    rgba(212, 180, 130, 1) 100%
+  ) !important;
+  color: #060402 !important;
+  border-color: rgba(255, 255, 255, 0.88) !important;
+  box-shadow: 
+    0 14px 32px -4px rgba(0, 0, 0, 0.72),
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2),
+    0 0 26px 4px rgba(202, 168, 117, 0.48) !important;
+  transform: translateY(-2px) scale(1.015);
+}
+
+.btn-liquid-glass.btn-liquid-gold:active,
+.btn-liquid-gold:active {
+  transform: translateY(0) scale(0.955) !important;
+  transition: transform 0.12s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.12s ease !important;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px 0 rgba(0, 0, 0, 0.35),
+    inset 0 -1px 1px 0 rgba(255, 255, 255, 0.4) !important;
 }
 
 /* 2. Text Roll-up Animation (Chữ chạy từ dưới lên trên khi Hover) */
@@ -654,18 +743,24 @@ a.btn-liquid-glass:hover .btn-roll-text {
   width: 44px !important;
   height: 44px !important;
   border-radius: 50% !important;
-  background: rgba(18, 14, 10, 0.82) !important;
-  border: 1px solid rgba(202, 168, 117, 0.45) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(20, 15, 10, 0.78) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
   color: #caa875 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   cursor: pointer !important;
   z-index: 25 !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 10px rgba(202, 168, 117, 0.15) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8),
+              inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
+              inset 0 -1px 0 0 rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
   outline: none !important;
   user-select: none !important;
 }
@@ -691,18 +786,21 @@ a.btn-liquid-glass:hover .btn-roll-text {
 }
 
 .otr-slider-btn:hover {
-  background: #caa875 !important;
-  color: #120e0a !important;
-  border-color: #dfbe8b !important;
-  transform: translateY(-50%) scale(1.1) !important;
-  box-shadow: 0 0 25px rgba(202, 168, 117, 0.55), 0 12px 35px rgba(0, 0, 0, 0.9) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(224, 192, 142, 0.85) 45%, rgba(202, 168, 117, 1) 100%) !important;
+  color: #0c0a07 !important;
+  border-color: rgba(255, 255, 255, 0.8) !important;
+  transform: translateY(-50%) scale(1.08) !important;
+  box-shadow: 0 0 24px 3px rgba(202, 168, 117, 0.45),
+              0 12px 35px rgba(0, 0, 0, 0.9),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 
 .otr-slider-btn:active {
-  transform: translateY(-50%) scale(0.95) !important;
+  transform: translateY(-50%) scale(0.93) !important;
+  transition: transform 0.1s cubic-bezier(0.25, 1, 0.5, 1) !important;
 }
 
-/* Dots chỉ báo ảnh slide */
+/* Dots chỉ báo ảnh slide chuẩn iOS Capsule */
 .otr-slider-dots {
   position: absolute !important;
   bottom: 16px !important;
@@ -712,12 +810,13 @@ a.btn-liquid-glass:hover .btn-roll-text {
   align-items: center !important;
   gap: 8px !important;
   z-index: 20 !important;
-  background: rgba(14, 10, 7, 0.65) !important;
+  background: rgba(14, 10, 7, 0.72) !important;
   padding: 5px 12px !important;
   border-radius: 20px !important;
-  border: 1px solid rgba(202, 168, 117, 0.25) !important;
-  backdrop-filter: blur(6px) !important;
-  -webkit-backdrop-filter: blur(6px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 8px 20px rgba(0, 0, 0, 0.6) !important;
 }
 
 .otr-slider-dot {
@@ -736,7 +835,26 @@ a.btn-liquid-glass:hover .btn-roll-text {
   width: 22px !important;
   border-radius: 5px !important;
   background: #caa875 !important;
-  box-shadow: 0 0 8px rgba(202, 168, 117, 0.6) !important;
+  box-shadow: 0 0 10px rgba(202, 168, 117, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
 }
+
+/* ================= CUSTOM SCROLLBAR CHO MODAL & SIDEBAR ================= */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(14, 10, 7, 0.4);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(202, 168, 117, 0.35);
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(202, 168, 117, 0.7);
+}
+
 
 
