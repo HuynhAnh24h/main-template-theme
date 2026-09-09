@@ -1,229 +1,293 @@
-// JS dành riêng cho trang chủ (Home Page) - Wander Loading Reveal
+// JS dành riêng cho trang chủ (Home Page) - 4-Stage Luxury Loading & Reveal (On The Rock)
 function initWanderLoader() {
-  console.log("Wander Home Page Script Loaded!");
+  console.log("On The Rock 4-Stage Home Loader Initializing...");
 
-  const stackWrap = document.getElementById('stackWrap');
-  const pctNum  = document.getElementById('pctNum');
-  const progressBar = document.getElementById('progressBar');
-  const loader  = document.getElementById('loader');
-  const board   = document.getElementById('board');
-  const wash    = document.getElementById('wash');
-  const home    = document.getElementById('home-wander');
+  const loader       = document.getElementById('loader');
+  const stage1Logo   = document.getElementById('loader-stage1');
+  const stage2Wrap   = document.getElementById('loader-stage2');
+  const stackWrap    = document.getElementById('stackWrap');
+  const progressWrap = document.getElementById('loader-progress-wrap');
+  const progressBar  = document.getElementById('progressBar');
+  const pctNum       = document.getElementById('pctNum');
+  const stage3Logo   = document.getElementById('loader-stage3-logo');
+  const board        = document.getElementById('board');
+  const homeQuote    = document.getElementById('home-quote');
 
-  // Đọc danh sách ảnh truyền từ WordPress qua biến toàn cục (lấy tối đa 10 ảnh)
+  // Đọc danh sách ảnh truyền từ WordPress qua biến toàn cục (10 ảnh)
   const rawImages = window.WanderConfig?.images || [];
   const IMAGES = Array.isArray(rawImages) && rawImages.length > 0 ? rawImages.slice(0, 10) : [];
 
-  if (IMAGES.length === 0) {
-    console.warn("Wander Loader: No images configured.");
+  // Failsafe nếu không có ảnh hoặc loader không tồn tại
+  if (!loader || IMAGES.length === 0) {
     document.body.classList.add('is-loaded');
-    if (home) home.classList.add('reveal');
+    if (homeQuote) homeQuote.classList.add('reveal');
     if (loader) loader.remove();
+    return;
   }
-
-  // Bố cục moodboard trên Desktop & Màn hình lớn
-  const DESKTOP_LAYOUT = [
-    { left: 3,  top: 6,  w: 170, h: 220, rot: -5 },
-    { left: 20, top: 3,  w: 160, h: 210, rot: -7 },
-    { left: 44, top: 1,  w: 165, h: 195, rot: 3  },
-    { left: 65, top: 9,  w: 195, h: 175, rot: -2 },
-    { left: 86, top: 4,  w: 150, h: 215, rot: 6  },
-    { left: 12, top: 54, w: 150, h: 195, rot: -4 },
-    { left: 33, top: 60, w: 195, h: 175, rot: 3  },
-    { left: 56, top: 57, w: 195, h: 175, rot: -3 },
-    { left: 79, top: 52, w: 150, h: 215, rot: 5  },
-    { left: -4, top: 80, w: 165, h: 205, rot: -8 }
-  ];
-
-  // Bố cục moodboard tối ưu riêng cho Mobile (xếp viền cân đối, không đè câu nói chính giữa)
-  const MOBILE_LAYOUT = [
-    { left: -2, top: 3,  w: 92,  h: 124, rot: -6 },
-    { left: 68, top: 4,  w: 98,  h: 130, rot: 6  },
-    { left: 33, top: 1,  w: 88,  h: 118, rot: -2 },
-    { left: 76, top: 22, w: 94,  h: 126, rot: 5  },
-    { left: -7, top: 24, w: 90,  h: 122, rot: -5 },
-    { left: -6, top: 66, w: 96,  h: 128, rot: 5  },
-    { left: 74, top: 68, w: 92,  h: 124, rot: -5 },
-    { left: 2,  top: 82, w: 98,  h: 132, rot: -4 },
-    { left: 36, top: 84, w: 92,  h: 124, rot: 4  },
-    { left: 70, top: 81, w: 88,  h: 120, rot: 3  }
-  ];
 
   const vw = () => window.innerWidth;
   const vh = () => window.innerHeight;
   const isMobile = () => window.innerWidth < 768;
 
-  const px = (layout) => ({
-    x: layout.left / 100 * vw(),
-    y: layout.top  / 100 * vh(),
-    w: layout.w, h: layout.h, rot: layout.rot
-  });
-
-  // ---------- Bước 1: Đếm 1/10 -> 10/10 với hoạt ảnh xấp bài mượt mà ----------
-  let i = 0;
-  const STACK_OFFSET = [
-    { x:-7,  y: 5,  rot:-9  },
-    { x: 6,  y:-4,  rot: 7  },
-    { x:-4,  y:-7,  rot:-5  },
-    { x: 8,  y: 6,  rot: 11 },
-    { x:-9,  y: 2,  rot:-12 },
-    { x: 4,  y:-8,  rot: 6  },
-    { x:-3,  y: 8,  rot:-7  },
-    { x: 9,  y:-5,  rot: 10 },
-    { x:-8,  y:-3,  rot:-10 },
-    { x: 3,  y: 7,  rot: 5  }
+  // Tọa độ 10 ảnh ở Giai đoạn 3 (Desktop): Tỏa ra viền màn hình khớp 100% hình mockup
+  const DESKTOP_STAGE3_LAYOUT = [
+    { left: 0,    top: 1.5,  w: 11.5, h: 32,   rot: -3 }, // 1: Ly rượu chân cao góc trên trái
+    { left: 19.5, top: 8.5,  w: 14,   h: 33.5, rot: -5 }, // 2: Cặp quả cầu disco lệch trái trên
+    { left: 40.5, top: 0,    w: 14,   h: 16,   rot: 0  }, // 3: Bartender pha cocktail xanh giữa trên
+    { left: 60,   top: 12,   w: 15.5, h: 32.5, rot: 6  }, // 4: Bạn nữ bên vách kính lệch phải trên
+    { left: 86.5, top: 3.5,  w: 13.5, h: 31,   rot: -4 }, // 5: Nâng ly cocktail góc trên phải
+    { left: 0,    top: 76,   w: 11,   h: 24,   rot: 5  }, // 6: Chai bourbon góc dưới trái
+    { left: 11.5, top: 49,   w: 15.5, h: 32,   rot: 3  }, // 7: Ly martini bàn tròn đen giữa trái
+    { left: 34.5, top: 66,   w: 14.5, h: 30,   rot: -4 }, // 8: Hai người chơi cờ vua góc dưới trái
+    { left: 64.5, top: 62.5, w: 14,   h: 29,   rot: 0  }, // 9: Bàn cocktail & nến góc dưới phải
+    { left: 86.5, top: 65,   w: 13.5, h: 30,   rot: 4  }  // 10: Menu cocktail góc dưới phải
   ];
 
-  const stackCards = [];
-  const totalSteps = Math.min(10, IMAGES.length);
-  const stepTime = 160; // 160ms mỗi nhịp đếm -> tổng cộng ~1.6s
+  // Tọa độ 10 ảnh ở Giai đoạn 3 (Mobile): Viền tròn cân đối ôm lấy Logo trung tâm
+  const MOBILE_STAGE3_LAYOUT = [
+    { left: -2, top: 2,  w: 86, h: 124, rot: -5 },
+    { left: 72, top: 2,  w: 86, h: 124, rot: 5  },
+    { left: 35, top: 0,  w: 88, h: 95,  rot: 0  },
+    { left: -6, top: 36, w: 84, h: 118, rot: 4  },
+    { left: 78, top: 36, w: 84, h: 118, rot: -4 },
+    { left: -2, top: 72, w: 86, h: 124, rot: -4 },
+    { left: 72, top: 72, w: 86, h: 124, rot: 4  },
+    { left: 35, top: 82, w: 88, h: 100, rot: 0  },
+    { left: 16, top: 54, w: 84, h: 115, rot: 3  },
+    { left: 54, top: 54, w: 84, h: 115, rot: -3 }
+  ];
 
-  function loadStep(){
-    i++;
-    const percent = Math.min(100, Math.round((i / totalSteps) * 100));
+  const getTargetPos = (layout) => {
+    if (isMobile()) {
+      return {
+        x: (layout.left / 100) * vw(),
+        y: (layout.top / 100) * vh(),
+        w: layout.w,
+        h: layout.h,
+        rot: layout.rot
+      };
+    }
+    return {
+      x: (layout.left / 100) * vw(),
+      y: (layout.top / 100) * vh(),
+      w: (layout.w / 100) * vw(),
+      h: (layout.h / 100) * vh(),
+      rot: layout.rot
+    };
+  };
+
+  // Góc nghiêng xấp bài ở Stage 2
+  const STACK_OFFSET = [
+    { x:-7, y: 5,  rot:-9 },
+    { x: 6, y:-4,  rot: 7 },
+    { x:-4, y:-7,  rot:-5 },
+    { x: 8, y: 6,  rot: 11 },
+    { x:-9, y: 2,  rot:-12 },
+    { x: 4, y:-8,  rot: 6 },
+    { x:-3, y: 8,  rot:-7 },
+    { x: 9, y:-5,  rot: 10 },
+    { x:-8, y:-3,  rot:-10 },
+    { x: 3, y: 7,  rot: 5 }
+  ];
+
+  let currentStep = 0;
+  const totalSteps = Math.min(10, IMAGES.length);
+  const stepTime = 230; // Chậm rãi và mượt mà hơn (~2.3s cho 10 ảnh)
+  let isDone = false;
+
+  // ================= BẮT ĐẦU GIAI ĐOẠN 1 (Logo Trung Tâm To Rõ) =================
+  if (stage1Logo) {
+    stage1Logo.classList.add('stage-active');
+  }
+
+  // Giữ Logo trang đầu trong 1400ms để người xem cảm nhận thương hiệu
+  setTimeout(() => {
+    if (isDone) return;
+    if (stage1Logo) {
+      stage1Logo.classList.remove('stage-active');
+      stage1Logo.classList.add('stage-exit');
+    }
+    setTimeout(() => {
+      if (isDone) return;
+      if (stage2Wrap) {
+        stage2Wrap.classList.add('stage-active');
+      }
+      // Bắt đầu quăng bài Stage 2
+      setTimeout(loadStep, 150);
+    }, 200);
+  }, 1400);
+
+  // ================= GIAI ĐOẠN 2: QUĂNG XẤP BÀI VÀO GIỮA =================
+  function loadStep() {
+    if (isDone) return;
+    currentStep++;
+    const percent = Math.min(100, Math.round((currentStep / totalSteps) * 100));
     if (pctNum) pctNum.textContent = percent + '%';
     if (progressBar) progressBar.style.width = percent + '%';
 
-    const off = STACK_OFFSET[(i - 1) % STACK_OFFSET.length];
+    const off = STACK_OFFSET[(currentStep - 1) % STACK_OFFSET.length];
     const card = document.createElement('div');
     card.className = 'photo';
-    card.style.backgroundImage = `url('${IMAGES[i-1]}')`;
-    card.style.zIndex = i;
+    card.style.backgroundImage = `url('${IMAGES[currentStep - 1]}')`;
+    card.style.zIndex = currentStep;
     if (stackWrap) stackWrap.appendChild(card);
-    stackCards.push(card);
 
-    // Hoạt ảnh quăng bài bay vào (Tinh chỉnh nhẹ trên Mobile không bị giật hay tràn viền)
     const mobile = isMobile();
-    const fromSide = (i % 2 === 0) ? 1 : -1;
-    const fromX = fromSide * (mobile ? 65 : 130);
-    const fromY = (mobile ? -20 : -40) + Math.random() * 18;
-    const fromRot = fromSide * (mobile ? 32 : 55);
-    const scaleOff = mobile ? 0.7 : 1;
+    const fromSide = (currentStep % 2 === 0) ? 1 : -1;
+    const fromX = fromSide * (mobile ? 90 : 180);
+    const fromY = (mobile ? -30 : -55) + Math.random() * 25;
+    const fromRot = fromSide * (mobile ? 40 : 60);
+    const scaleOff = mobile ? 0.75 : 1;
     const targetX = off.x * scaleOff;
     const targetY = off.y * scaleOff;
 
     if (card.animate) {
       card.animate([
-        { transform:`translate(${fromX}px, ${fromY}px) rotate(${fromRot}deg) scale(0.7)`, opacity: 0 },
-        { transform:`translate(${targetX * 0.6}px, ${targetY * 0.6}px) rotate(${off.rot * 1.3}deg) scale(1.05)`, opacity: 1, offset: 0.65 },
-        { transform:`translate(${targetX}px, ${targetY}px) rotate(${off.rot}deg) scale(1)`, opacity: 1 }
+        { transform: `translate3d(${fromX}px, ${fromY}px, 0) rotate(${fromRot}deg) scale(0.8)`, opacity: 0 },
+        { transform: `translate3d(${targetX * 0.4}px, ${targetY * 0.4}px, 0) rotate(${off.rot * 1.2}deg) scale(1.03)`, opacity: 1, offset: 0.6 },
+        { transform: `translate3d(${targetX}px, ${targetY}px, 0) rotate(${off.rot}deg) scale(1)`, opacity: 1 }
       ], {
-        duration: stepTime + 100,
-        easing: 'cubic-bezier(.25,.85,.35,1.1)',
+        duration: 480,
+        easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
         fill: 'forwards'
       });
     } else {
+      card.style.transform = `translate3d(${targetX}px, ${targetY}px, 0) rotate(${off.rot}deg)`;
       card.style.opacity = '1';
     }
 
-    if (i < totalSteps){
+    if (currentStep < totalSteps) {
       setTimeout(loadStep, stepTime);
     } else {
-      setTimeout(bloom, 220); // Dừng lại một nhịp ngắn rồi tỏa ảnh
+      // Đã nạp 100% -> Dừng nghỉ 380ms để người xem thấy 100% trọn vẹn rồi bung ảnh
+      setTimeout(startStage3, 380);
     }
   }
 
-  // Khởi chạy
-  if (loader && IMAGES.length > 0) {
-    setTimeout(loadStep, 150);
-  } else {
-    document.body.classList.add('is-loaded');
-    if (home) home.classList.add('reveal');
-    if (loader) loader.remove();
-  }
+  // ================= GIAI ĐOẠN 3: BUNG TỎA RA VIỀN MÀN HÌNH =================
+  function startStage3() {
+    if (isDone) return;
 
-  // ---------- Bước 2: Ảnh bay tỏa ra (bloom) về vị trí moodboard ----------
-  function bloom(){
+    // Chuyển background loader sang trong suốt để ảnh bung thẳng lên nền #intro-brown-bg của #section-intro
+    if (loader) {
+      loader.style.backgroundColor = 'transparent';
+    }
+
+    // 1. Ẩn toàn bộ khối Stage 2 (xấp ảnh + thanh tiến trình) êm ái
+    if (stage2Wrap) {
+      stage2Wrap.classList.remove('stage-active');
+      stage2Wrap.classList.add('stage-exit');
+    }
+    if (progressWrap) {
+      progressWrap.style.opacity = '0';
+    }
+    if (stackWrap) {
+      stackWrap.style.transition = 'opacity 350ms ease';
+      stackWrap.style.opacity = '0';
+    }
+
+    // 2. Hiện Logo OTR ở tâm điểm Giai đoạn 3
+    if (stage3Logo) {
+      setTimeout(() => {
+        stage3Logo.classList.add('stage-active');
+      }, 100);
+    }
+
     const mobile = isMobile();
-    const activeLayout = mobile ? MOBILE_LAYOUT : DESKTOP_LAYOUT;
-    const frameW = mobile ? 125 : 170;
-    const frameH = mobile ? 160 : 210;
-    const originX = vw() / 2 - frameW / 2;
-    const originY = vh() / 2 - frameH / 2;
+    const activeLayout = mobile ? MOBILE_STAGE3_LAYOUT : DESKTOP_STAGE3_LAYOUT;
+    const originX = vw() / 2 - (mobile ? 70 : 92);
+    const originY = vh() / 2 - (mobile ? 95 : 128);
 
     IMAGES.forEach((src, idx) => {
-      const target = px(activeLayout[idx % activeLayout.length]);
+      const target = getTargetPos(activeLayout[idx % activeLayout.length]);
       const tile = document.createElement('div');
       tile.className = 'tile';
       tile.style.backgroundImage = `url('${src}')`;
-      tile.style.width  = target.w + 'px';
+      tile.style.width = target.w + 'px';
       tile.style.height = target.h + 'px';
       tile.style.left = originX + 'px';
-      tile.style.top  = originY + 'px';
+      tile.style.top = originY + 'px';
       if (board) board.appendChild(tile);
 
       const dx = target.x - originX;
       const dy = target.y - originY;
 
-      // Độ cong đường bay (êm ái và không bay vọt ra khỏi màn hình điện thoại)
       const arcSide = (idx % 2 === 0 ? 1 : -1);
-      const arcBend = (mobile ? 45 : 90) + Math.random() * (mobile ? 35 : 70);
-      const midX = dx * 0.5 + arcSide * arcBend * (dy >= 0 ? 0.4 : -0.4);
-      const midY = dy * 0.5 - ((mobile ? 65 : 120) + Math.random() * (mobile ? 30 : 60));
-
-      const flipRot = target.rot + arcSide * (mobile ? 75 : 140) + Math.random() * (mobile ? 50 : 100);
-      const delay = (mobile ? 50 : 80) + idx * (mobile ? 45 : 60);
+      const arcBend = (mobile ? 40 : 80) + Math.random() * (mobile ? 30 : 60);
+      const midX = dx * 0.5 + arcSide * arcBend * (dy >= 0 ? 0.35 : -0.35);
+      const midY = dy * 0.5 - ((mobile ? 50 : 100) + Math.random() * (mobile ? 25 : 50));
+      const flipRot = target.rot + arcSide * (mobile ? 50 : 100) + Math.random() * (mobile ? 30 : 60);
+      const delay = (mobile ? 30 : 50) + idx * (mobile ? 40 : 60);
 
       if (tile.animate) {
         tile.animate([
-          { transform:`translate(0px,0px) rotate(0deg) scale(0.4)`,               opacity: 0,  offset: 0 },
-          { transform:`translate(${midX*0.35}px,${midY*0.35}px) rotate(${flipRot*0.3}deg) scale(0.75)`, opacity: 1, offset: 0.18 },
-          { transform:`translate(${midX}px,${midY}px) rotate(${flipRot}deg) scale(1.1)`,   opacity: 1, offset: 0.55 },
-          { transform:`translate(${dx*0.94}px,${dy*0.94}px) rotate(${target.rot*0.9}deg) scale(1.03)`, opacity: 1, offset: 0.86 },
-          { transform:`translate(${dx}px,${dy}px) rotate(${target.rot}deg) scale(1)`,       opacity: 1, offset: 1 }
+          { transform: `translate3d(0px, 0px, 0) rotate(0deg) scale(0.35)`, opacity: 0, offset: 0 },
+          { transform: `translate3d(${midX * 0.38}px, ${midY * 0.38}px, 0) rotate(${flipRot * 0.3}deg) scale(0.85)`, opacity: 1, offset: 0.22 },
+          { transform: `translate3d(${midX}px, ${midY}px, 0) rotate(${flipRot}deg) scale(1.05)`, opacity: 1, offset: 0.58 },
+          { transform: `translate3d(${dx * 0.96}px, ${dy * 0.96}px, 0) rotate(${target.rot * 0.95}deg) scale(1.01)`, opacity: 1, offset: 0.88 },
+          { transform: `translate3d(${dx}px, ${dy}px, 0) rotate(${target.rot}deg) scale(1)`, opacity: 1, offset: 1 }
         ], {
-          duration: mobile ? 1000 : 1200,
+          duration: mobile ? 1450 : 1750,
           delay: delay,
-          easing: 'cubic-bezier(.22,.7,.2,1)',
+          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
           fill: 'forwards'
         });
       } else {
-        tile.style.transform = `translate(${dx}px, ${dy}px) rotate(${target.rot}deg)`;
+        tile.style.transform = `translate3d(${dx}px, ${dy}px, 0) rotate(${target.rot}deg)`;
         tile.style.opacity = '1';
       }
     });
 
-    // Ẩn khung loader ngay khi ảnh bắt đầu bung ra
-    if (loader) {
-      loader.style.transition = 'opacity 500ms ease';
-      loader.style.opacity = '0';
-      setTimeout(() => {
-        if (loader && loader.parentNode) loader.remove();
-      }, 550);
-    }
-
-    // Lớp phủ ấm hiện dần
-    setTimeout(() => {
-      if (wash) {
-        wash.style.transition = 'opacity 800ms ease';
-        wash.style.opacity = '1';
-      }
-    }, 350);
-
-    // Chữ nội dung trồi lên thanh lịch và mở khóa thanh cuộn trang
-    setTimeout(() => {
-      if (home) {
-        home.classList.add('reveal');
-      }
-      document.body.classList.add('is-loaded');
-    }, 600);
+    // Giữ màn hình Giai đoạn 3 trong khoảng 2.2s để người xem thưởng thức trọn vẹn bố cục
+    setTimeout(startStage4, 2200);
   }
 
-  // Failsafe: Đảm bảo sau tối đa 3.2 giây chữ LUÔN LUÔN HIỂN THỊ trong mọi tình huống
-  setTimeout(() => {
-    if (home && !home.classList.contains('reveal')) {
-      home.classList.add('reveal');
-    }
-    document.body.classList.add('is-loaded');
-    if (wash) wash.style.opacity = '1';
-    if (loader && loader.parentNode) {
-      loader.style.opacity = '0';
-      setTimeout(() => {
-        if (loader && loader.parentNode) loader.remove();
-      }, 400);
-    }
-  }, 3200);
+  // ================= GIAI ĐOẠN 4: CHUYỂN SANG MÀN NHUNG ĐEN & CÂU QUOTE (ẢNH STAGE 3 Ở LẠI LÀM NỀN) =================
+  function startStage4() {
+    if (isDone) return;
+    isDone = true;
 
+    // 1. Kích hoạt chuyển cảnh mượt mà ở Section Intro:
+    // - Nền nâu #intro-brown-bg mờ dần, chuyển sang nền nhung đen
+    // - 10 ảnh ở Stage 3 ở lại làm Background nghệ thuật cho Section Intro
+    // - Lớp phủ Vignette #intro-wash hiện lên nhẹ nhàng để tôn câu slogan
+    const introSection = document.getElementById('section-intro');
+    if (introSection) {
+      introSection.classList.add('is-revealed');
+    }
+
+    // 2. Làm mờ nhẹ nhàng Logo Stage 3 ở trung tâm
+    if (stage3Logo) {
+      stage3Logo.classList.remove('stage-active');
+      stage3Logo.classList.add('stage-exit');
+    }
+
+    // 3. Kích hoạt hiệu ứng xuất hiện cho câu quote ở Stage 4
+    if (homeQuote) {
+      homeQuote.classList.add('reveal');
+    }
+
+    // 4. Mờ dần khung loader cố định và ẩn đi sau 2.0s
+    if (loader) {
+      loader.classList.add('is-fading');
+      setTimeout(() => {
+        if (loader) loader.style.display = 'none';
+      }, 2000);
+    }
+
+    // 5. Mở khóa cuộn trang
+    document.body.classList.add('is-loaded');
+  }
+
+  // Failsafe Timeout: Tối đa 8.5s tự động mở khóa
+  setTimeout(() => {
+    if (!isDone) {
+      startStage4();
+    }
+  }, 8500);
+}
+
+function initHomePageFeatures() {
   // Lắng nghe cuộn trang tối ưu hiệu năng (60-120fps) với Liquid Glass Header & Fixed Parallax
   const siteHeader     = document.getElementById('site-header');
   const heroBgParallax = document.querySelector('.hero-bg-parallax');
@@ -433,8 +497,13 @@ function initWanderLoader() {
 }
 
 // Chạy an toàn bất kể thời điểm script được tải (chạy ngay nếu sẵn sàng hoặc đợi DOMContentLoaded)
-if (document.readyState !== "loading") {
+function initHome() {
   initWanderLoader();
+  initHomePageFeatures();
+}
+
+if (document.readyState !== "loading") {
+  initHome();
 } else {
-  document.addEventListener("DOMContentLoaded", initWanderLoader);
+  document.addEventListener("DOMContentLoaded", initHome);
 }

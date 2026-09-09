@@ -61,13 +61,7 @@ if ( empty( $members ) ) {
                 </span>
                 
                 <!-- Logo Monogram OTR làm dấu phân cách -->
-                <svg class="w-7 h-7 md:w-9 md:h-9 text-[#caa875] shrink-0 inline-block opacity-90" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="46" stroke="#caa875" stroke-width="1.5" stroke-dasharray="2 2"/>
-                    <circle cx="50" cy="50" r="41" stroke="#caa875" stroke-width="0.75"/>
-                    <text x="50" y="32" font-family="'Fraunces', serif" font-size="9" fill="#caa875" text-anchor="middle" letter-spacing="3">ON THE ROCKS</text>
-                    <text x="50" y="62" font-family="'Fraunces', serif" font-size="28" font-weight="600" fill="#caa875" text-anchor="middle" letter-spacing="2">OTR</text>
-                    <text x="50" y="78" font-family="'Fraunces', serif" font-size="7" fill="#caa875" text-anchor="middle" letter-spacing="4">BAR</text>
-                </svg>
+                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/otr-monogram-icon.png' ); ?>" alt="OTR Icon" class="w-6 h-6 md:w-8 md:h-8 object-contain shrink-0 inline-block opacity-90 mx-3 md:mx-4">
             <?php endfor; ?>
         </div>
 
@@ -78,13 +72,7 @@ if ( empty( $members ) ) {
                     <?php echo esc_html( $marquee_text ); ?>
                 </span>
                 
-                <svg class="w-7 h-7 md:w-9 md:h-9 text-[#caa875] shrink-0 inline-block opacity-90" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="46" stroke="#caa875" stroke-width="1.5" stroke-dasharray="2 2"/>
-                    <circle cx="50" cy="50" r="41" stroke="#caa875" stroke-width="0.75"/>
-                    <text x="50" y="32" font-family="'Fraunces', serif" font-size="9" fill="#caa875" text-anchor="middle" letter-spacing="3">ON THE ROCKS</text>
-                    <text x="50" y="62" font-family="'Fraunces', serif" font-size="28" font-weight="600" fill="#caa875" text-anchor="middle" letter-spacing="2">OTR</text>
-                    <text x="50" y="78" font-family="'Fraunces', serif" font-size="7" fill="#caa875" text-anchor="middle" letter-spacing="4">BAR</text>
-                </svg>
+                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/otr-monogram-icon.png' ); ?>" alt="OTR Icon" class="w-6 h-6 md:w-8 md:h-8 object-contain shrink-0 inline-block opacity-90 mx-3 md:mx-4">
             <?php endfor; ?>
         </div>
 
@@ -109,7 +97,7 @@ if ( empty( $members ) ) {
                     <div class="font-serif text-sm sm:text-base md:text-xl lg:text-[25px] text-[#caa875] uppercase tracking-wider font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-tight">
                         <?php echo esc_html( $member['name'] ); ?>
                     </div>
-                    <div class="font-serif text-[10px] sm:text-xs md:text-sm text-[#caa875]/80 uppercase tracking-[0.16em] sm:tracking-[0.22em] font-light mt-0.5 sm:mt-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] truncate">
+                    <div class="font-sans text-[10px] sm:text-xs md:text-sm text-[#caa875]/80 uppercase tracking-[0.16em] sm:tracking-[0.22em] font-light mt-0.5 sm:mt-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] truncate">
                         <?php echo esc_html( $member['role'] ); ?>
                     </div>
                 </div>
@@ -133,43 +121,7 @@ if ( empty( $members ) ) {
         <?php endif; ?>
     </div>
 
-    <!-- 3. Dải Marquee Chạy Ngang Phía Dưới (Bottom Ticker - Chạy liên tục không khoảng nghỉ) -->
-    <div class="ticker-wrapper w-full overflow-hidden whitespace-nowrap bg-black py-4 md:py-6 border-t border-b border-dashed border-[#caa875]/25 select-none flex">
-        
-        <!-- Track 1 -->
-        <div class="flex shrink-0 items-center animate-marquee">
-            <?php for ( $k = 0; $k < 4; $k++ ) : ?>
-                <span class="font-serif text-lg sm:text-xl md:text-2xl lg:text-[26px] tracking-[0.25em] text-[#caa875] uppercase px-6 md:px-10 font-normal">
-                    <?php echo esc_html( $marquee_text ); ?>
-                </span>
-                
-                <svg class="w-7 h-7 md:w-9 md:h-9 text-[#caa875] shrink-0 inline-block opacity-90" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="46" stroke="#caa875" stroke-width="1.5" stroke-dasharray="2 2"/>
-                    <circle cx="50" cy="50" r="41" stroke="#caa875" stroke-width="0.75"/>
-                    <text x="50" y="32" font-family="'Fraunces', serif" font-size="9" fill="#caa875" text-anchor="middle" letter-spacing="3">ON THE ROCKS</text>
-                    <text x="50" y="62" font-family="'Fraunces', serif" font-size="28" font-weight="600" fill="#caa875" text-anchor="middle" letter-spacing="2">OTR</text>
-                    <text x="50" y="78" font-family="'Fraunces', serif" font-size="7" fill="#caa875" text-anchor="middle" letter-spacing="4">BAR</text>
-                </svg>
-            <?php endfor; ?>
-        </div>
-
-        <!-- Track 2 (Clone nối tiếp để chạy vô tận 100% liền mạch) -->
-        <div class="flex shrink-0 items-center animate-marquee" aria-hidden="true">
-            <?php for ( $k = 0; $k < 4; $k++ ) : ?>
-                <span class="font-serif text-lg sm:text-xl md:text-2xl lg:text-[26px] tracking-[0.25em] text-[#caa875] uppercase px-6 md:px-10 font-normal">
-                    <?php echo esc_html( $marquee_text ); ?>
-                </span>
-                
-                <svg class="w-7 h-7 md:w-9 md:h-9 text-[#caa875] shrink-0 inline-block opacity-90" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="46" stroke="#caa875" stroke-width="1.5" stroke-dasharray="2 2"/>
-                    <circle cx="50" cy="50" r="41" stroke="#caa875" stroke-width="0.75"/>
-                    <text x="50" y="32" font-family="'Fraunces', serif" font-size="9" fill="#caa875" text-anchor="middle" letter-spacing="3">ON THE ROCKS</text>
-                    <text x="50" y="62" font-family="'Fraunces', serif" font-size="28" font-weight="600" fill="#caa875" text-anchor="middle" letter-spacing="2">OTR</text>
-                    <text x="50" y="78" font-family="'Fraunces', serif" font-size="7" fill="#caa875" text-anchor="middle" letter-spacing="4">BAR</text>
-                </svg>
-            <?php endfor; ?>
-        </div>
-
-    </div>
+    <!-- 3. Dải Marquee Chạy Ngang Phía Dưới (Bottom Ticker) -->
+    <?php get_template_part( 'template-parts/components/marquee-team-ticker' ); ?>
 
 </section>

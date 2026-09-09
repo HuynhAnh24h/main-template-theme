@@ -72,48 +72,7 @@ for ($i = 1; $i <= 5; $i++) {
         </div>
     </div>
 
-    <!-- Dải Marquee Chạy Chữ Liên Tục: MEET THE ON THE ROCK TEAM -->
-    <div class="otr-marquee-wrapper relative w-full overflow-hidden border-t border-b border-[#caa875]/20 py-4 md:py-5 bg-gradient-to-r from-[#0a0705] via-[#120d09] to-[#0a0705]">
-        <div class="otr-marquee-content flex items-center whitespace-nowrap will-change-transform">
-            <?php 
-            // Lặp lại nhiều lần để tạo chuỗi chạy vô tận
-            for ($k = 0; $k < 10; $k++): 
-            ?>
-                <div class="flex items-center gap-6 sm:gap-10 pr-6 sm:pr-10 select-none">
-                    <span class="font-serif text-sm sm:text-base md:text-lg lg:text-xl uppercase tracking-[0.25em] text-[#caa875] font-light">
-                        <?php echo esc_html($marquee_text); ?>
-                    </span>
-                    
-                    <!-- Monogram OTR biểu tượng giữa các câu -->
-                    <div class="w-6 h-6 sm:w-7 sm:h-7 text-[#caa875]/80 flex-shrink-0">
-                        <svg viewBox="0 0 100 100" fill="none" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="50" cy="50" r="46" stroke="#caa875" stroke-width="2"/>
-                            <text x="50" y="58" font-family="'Fraunces', Georgia, serif" font-size="28" font-weight="600" fill="#caa875" text-anchor="middle" letter-spacing="2">OTR</text>
-                        </svg>
-                    </div>
-                </div>
-            <?php endfor; ?>
-        </div>
-    </div>
-
 </section>
 
-<style>
-/* Hiệu ứng chạy chữ vô tận cho Marquee */
-.otr-marquee-content {
-    display: flex;
-    width: max-content;
-    animation: otrMarqueeScroll 28s linear infinite;
-}
-.otr-marquee-wrapper:hover .otr-marquee-content {
-    animation-play-state: paused;
-}
-@keyframes otrMarqueeScroll {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
-}
-</style>
+<!-- Dải Marquee Chạy Chữ Vô Tận Trước Footer ("MEET THE ON THE ROCK TEAM") -->
+<?php get_template_part( 'template-parts/components/marquee-team-ticker' ); ?>

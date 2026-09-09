@@ -54,10 +54,10 @@ function otr_url($path_or_url) {
 // 2. Nhúng CSS/JS thông minh (Biên dịch qua Vite) vào theme
 function theme_scripts(){
     
-    // 0. Nhúng Google Font Roboto chuẩn quốc tế
+    // 0. Nhúng Google Fonts (Roboto, Cormorant Garamond & Playfair Display hỗ trợ tiếng Việt)
     wp_enqueue_style(
-        'theme-font-roboto',
-        'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap',
+        'theme-font-google',
+        'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&subset=vietnamese,latin&display=swap',
         array(),
         null
     );
@@ -104,7 +104,7 @@ function theme_scripts(){
         $page_script = 'booking';
     } elseif (is_page_template('theme-pages/page-contact.php') || is_page('contact')) {
         $page_script = 'contact';
-    } elseif (is_home()) {
+    } elseif (is_page_template('theme-pages/page-blog.php') || is_page_template('page-blog.php') || is_page('blog') || is_page('blog-event') || is_home() || is_category() || is_archive()) {
         $page_script = 'blog';
     } elseif (is_single()) {
         $page_script = 'blog-detail';
@@ -179,6 +179,8 @@ function theme_custom_template_loader($template) {
         $template_file = 'page-booking.php';
     } elseif ( is_page_template('theme-pages/page-contact.php') || is_page('contact') ) {
         $template_file = 'page-contact.php';
+    } elseif ( is_page_template('theme-pages/page-blog.php') || is_page_template('page-blog.php') || is_page('blog') || is_page('blog-event') ) {
+        $template_file = 'page-blog.php';
     } elseif ( is_home() ) {
         $template_file = 'home.php';
     } elseif ( is_single() ) {
@@ -331,3 +333,64 @@ function otr_auto_create_contact_page() {
     }
 }
 add_action('after_setup_theme', 'otr_auto_create_contact_page');
+
+/**
+ * 13. Shortcode: [otr_voucher]
+ * Hiển thị thẻ vé voucher sự kiện phong cách On The Rock x DayM
+ */
+function otr_voucher_shortcode( $atts ) {
+    $atts = shortcode_atts( array(
+        'date_start' => '21 AUG',
+        'date_end'   => '30 SEP',
+        'year'       => '2026',
+        'title'      => 'Voucher: OTR x DayM Collaboration',
+        'desc'       => 'Giảm giá 50% cho 01 sản phẩm bất kỳ tại cửa hàng DayM.',
+        'qty'        => 'Số lượng: 100 voucher.',
+    ), $atts, 'otr_voucher' );
+
+    ob_start();
+    ?>
+    <div class="otr-voucher-card my-8 relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#2a2219] via-[#221b13] to-[#1a140e] border border-[#caa875]/35 p-5 md:p-6 shadow-2xl transition-all duration-300 hover:border-[#caa875]/60 group">
+        <div class="flex flex-col sm:flex-row items-center gap-5 sm:gap-6">
+            <!-- Phần cuống vé (Ticket Stub) -->
+            <div class="shrink-0 w-full sm:w-auto flex sm:flex-col items-center justify-center gap-2 sm:gap-0.5 bg-[#f5ebd7] text-[#1c1712] rounded-xl px-5 py-3 sm:py-4 text-center select-none shadow-md">
+                <span class="text-sm sm:text-base font-black tracking-wider uppercase leading-none"><?php echo esc_html( $atts['date_start'] ); ?></span>
+                <span class="text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#5a4833] leading-none"><?php echo esc_html( $atts['date_end'] ); ?></span>
+                <span class="text-lg sm:text-2xl font-black tracking-tight text-[#1c1712] leading-tight mt-1 sm:mt-1.5"><?php echo esc_html( $atts['year'] ); ?></span>
+            </div>
+
+            <!-- Đường kẻ đục lỗ nét đứt (Perforated Line) -->
+            <div class="hidden sm:block w-px self-stretch border-r border-dashed border-[#caa875]/40 mx-1"></div>
+            <div class="block sm:hidden w-full h-px border-b border-dashed border-[#caa875]/40 my-1"></div>
+
+            <!-- Phần thân vé (Ticket Body) -->
+            <div class="grow text-left">
+                <h4 class="font-bold text-base sm:text-lg md:text-xl text-[#f4efe8] mb-1.5 group-hover:text-[#caa875] transition-colors leading-snug font-mrch">
+                    <?php echo esc_html( $atts['title'] ); ?>
+                </h4>
+                <p class="text-xs sm:text-sm text-stone-300 font-light leading-relaxed mb-1">
+                    <?php echo esc_html( $atts['desc'] ); ?>
+                </p>
+                <?php if ( ! empty( $atts['qty'] ) ) : ?>
+                    <span class="inline-block text-[11px] sm:text-xs text-[#caa875]/90 font-medium">
+                        <?php echo esc_html( $atts['qty'] ); ?>
+                    </span>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode( 'otr_voucher', 'otr_voucher_shortcode' );
+
+/**
+ * Tự động thêm class 'is-loaded' vào body cho tất cả các trang con (Menu, Blog, Contact, Booking,...)
+ * Đảm bảo cuộn trang bình thường và hiển thị header ngay từ phía server HTML.
+ */
+add_filter( 'body_class', function ( $classes ) {
+    if ( ! is_front_page() ) {
+        $classes[] = 'is-loaded';
+    }
+    return $classes;
+} );

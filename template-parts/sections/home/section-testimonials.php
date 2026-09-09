@@ -81,8 +81,8 @@ if ( empty( $testimonials ) ) {
             <!-- Khoảng đệm cân xứng bên trái (Desktop) -->
             <div class="w-16 hidden md:block"></div>
 
-            <!-- Tiêu đề chính căn giữa -->
-            <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-[38px] font-normal tracking-[0.22em] text-[#caa875] uppercase text-center flex-1">
+            <!-- Tiêu đề chính căn giữa: Font SVN-Gilroy chuẩn thiết kế -->
+            <h2 class="font-sans text-lg sm:text-xl md:text-2xl lg:text-[24px] font-normal tracking-[0.3em] text-[#caa875] uppercase text-center flex-1 select-none">
                 <?php echo esc_html( $section_title ); ?>
             </h2>
 

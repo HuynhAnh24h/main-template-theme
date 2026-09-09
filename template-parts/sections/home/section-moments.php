@@ -71,19 +71,19 @@ if ( empty( $items ) ) {
     <div class="max-w-[1440px] mx-auto px-6 sm:px-10 md:px-16 mb-10 md:mb-14">
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
             
-            <!-- Tiêu đề 2 dòng màu vàng kim -->
-            <div class="font-serif text-base sm:text-lg md:text-xl lg:text-2xl tracking-[0.2em] text-[#caa875] uppercase leading-relaxed font-normal select-none">
+            <!-- Tiêu đề 2 dòng màu vàng kim: Font SVN-Gilroy chuẩn thiết kế -->
+            <div class="font-sans text-base sm:text-lg md:text-xl lg:text-2xl tracking-[0.2em] text-[#caa875] uppercase leading-relaxed font-light select-none">
                 <div><?php echo esc_html( $title_1 ); ?></div>
                 <div><?php echo esc_html( $title_2 ); ?></div>
             </div>
 
             <!-- Các liên kết Mạng Xã Hội -->
-            <div class="flex items-center gap-6 md:gap-8 shrink-0 pb-1">
+            <div class="flex items-center gap-6 md:gap-8 shrink-0 pb-1 font-sans">
                 <?php if ( ! empty( $instagram_url ) ) : ?>
                     <a href="<?php echo esc_url( $instagram_url ); ?>" 
                        target="_blank" 
                        rel="noopener noreferrer"
-                       class="font-serif text-sm md:text-base tracking-[0.22em] text-[#caa875] underline underline-offset-4 hover:text-[#e8cda2] transition-colors duration-300 uppercase">
+                       class="font-sans text-sm md:text-base tracking-[0.22em] text-[#caa875] underline underline-offset-4 hover:text-[#e8cda2] transition-colors duration-300 uppercase">
                         INSTAGRAM
                     </a>
                 <?php endif; ?>
@@ -92,7 +92,7 @@ if ( empty( $items ) ) {
                     <a href="<?php echo esc_url( $facebook_url ); ?>" 
                        target="_blank" 
                        rel="noopener noreferrer"
-                       class="font-serif text-sm md:text-base tracking-[0.22em] text-[#caa875] underline underline-offset-4 hover:text-[#e8cda2] transition-colors duration-300 uppercase">
+                       class="font-sans text-sm md:text-base tracking-[0.22em] text-[#caa875] underline underline-offset-4 hover:text-[#e8cda2] transition-colors duration-300 uppercase">
                         FACEBOOK
                     </a>
                 <?php endif; ?>

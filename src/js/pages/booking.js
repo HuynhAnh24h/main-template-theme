@@ -33,30 +33,237 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 2. Xử lý đồng bộ Ngày Đặt Bàn
-    const datePicker = document.getElementById('booking_date_picker');
-    const dateDisplay = document.getElementById('booking_date_display');
+    // Helper Modal Transition Functions
+    const openModal = (modalEl) => {
+        if (!modalEl) return;
+        modalEl.classList.remove('opacity-0', 'pointer-events-none');
+        modalEl.classList.add('opacity-100');
+        const card = modalEl.querySelector('div');
+        if (card) {
+            card.classList.remove('scale-95');
+            card.classList.add('scale-100');
+        }
+    };
 
-    if (datePicker && dateDisplay) {
-        datePicker.addEventListener('change', (e) => {
-            const rawVal = e.target.value; // YYYY-MM-DD
-            if (rawVal) {
-                const parts = rawVal.split('-');
-                if (parts.length === 3) {
-                    const selectedFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
-                    
-                    const now = new Date();
-                    const todayFormatted = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
-                    
-                    if (selectedFormatted === todayFormatted) {
-                        dateDisplay.value = `${selectedFormatted} ( hôm nay )`;
-                    } else {
-                        dateDisplay.value = selectedFormatted;
-                    }
+    const closeModal = (modalEl) => {
+        if (!modalEl) return;
+        modalEl.classList.remove('opacity-100');
+        modalEl.classList.add('opacity-0', 'pointer-events-none');
+        const card = modalEl.querySelector('div');
+        if (card) {
+            card.classList.remove('scale-100');
+            card.classList.add('scale-95');
+        }
+    };
+
+    // 2. Xử lý Popup Chọn Số Lượng Khách (Khớp 100% Mockup)
+    const guestsWrapper = document.getElementById('booking_guests_wrapper');
+    const guestsDisplay = document.getElementById('booking_guests_display');
+    const guestsHiddenInput = document.getElementById('booking_guests');
+    const guestsModal = document.getElementById('otr-guests-modal');
+    const guestOptions = document.querySelectorAll('.otr-guest-option');
+
+    if (guestsWrapper && guestsModal) {
+        guestsWrapper.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeModal(calendarModal);
+            openModal(guestsModal);
+        });
+
+        guestOptions.forEach(opt => {
+            opt.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const chosen = opt.getAttribute('data-guests');
+                if (chosen) {
+                    if (guestsDisplay) guestsDisplay.value = chosen;
+                    if (guestsHiddenInput) guestsHiddenInput.value = chosen;
+
+                    // Cập nhật trạng thái active
+                    guestOptions.forEach(o => {
+                        o.classList.remove('text-[#f5efe6]', 'font-normal');
+                        o.classList.add('text-[#d8cebe]', 'font-light');
+                    });
+                    opt.classList.remove('text-[#d8cebe]', 'font-light');
+                    opt.classList.add('text-[#f5efe6]', 'font-normal');
                 }
+                closeModal(guestsModal);
+            });
+        });
+
+        guestsModal.addEventListener('click', (e) => {
+            if (e.target === guestsModal) {
+                closeModal(guestsModal);
             }
         });
     }
+
+    // 3. Xử lý Popup Lịch Chọn Ngày (Custom Calendar Date Picker Khớp 100% Mockup)
+    const dateWrapper = document.getElementById('booking_date_wrapper');
+    const dateDisplay = document.getElementById('booking_date_display');
+    const datePicker = document.getElementById('booking_date_picker');
+    const calendarModal = document.getElementById('otr-calendar-modal');
+    const calMonthYear = document.getElementById('cal-month-year');
+    const calDaysGrid = document.getElementById('cal-days-grid');
+    const calPrevBtn = document.getElementById('cal-prev-month');
+    const calNextBtn = document.getElementById('cal-next-month');
+
+    const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    const today = new Date();
+    const todayZero = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+    let selectedDate = new Date(todayZero);
+    let viewYear = selectedDate.getFullYear();
+    let viewMonth = selectedDate.getMonth();
+
+    const renderCalendar = () => {
+        if (!calMonthYear || !calDaysGrid) return;
+
+        // Cập nhật tiêu đề tháng & năm (VD: "August, 2026")
+        calMonthYear.textContent = `${monthNames[viewMonth]}, ${viewYear}`;
+
+        // Kiểm tra nút Prev (không cho lùi về trước tháng hiện tại)
+        if (calPrevBtn) {
+            const isCurrentMonthOrPast = (viewYear < today.getFullYear()) || 
+                (viewYear === today.getFullYear() && viewMonth <= today.getMonth());
+            if (isCurrentMonthOrPast) {
+                calPrevBtn.classList.add('opacity-20', 'pointer-events-none');
+            } else {
+                calPrevBtn.classList.remove('opacity-20', 'pointer-events-none');
+            }
+        }
+
+        calDaysGrid.innerHTML = '';
+
+        // Tính ngày bắt đầu trong tuần (Thứ Hai làm ngày đầu tiên: Mo=0, Tu=1... Su=6)
+        const firstDayOfWeek = new Date(viewYear, viewMonth, 1).getDay();
+        const startOffset = (firstDayOfWeek + 6) % 7;
+
+        // Các ô trống trước ngày 1
+        for (let i = 0; i < startOffset; i++) {
+            const emptyCell = document.createElement('div');
+            emptyCell.className = 'w-8 h-8 sm:w-9 sm:h-9';
+            calDaysGrid.appendChild(emptyCell);
+        }
+
+        // Tổng số ngày trong tháng
+        const totalDays = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+        for (let d = 1; d <= totalDays; d++) {
+            const dPadded = String(d).padStart(2, '0');
+            const cellDate = new Date(viewYear, viewMonth, d);
+            cellDate.setHours(0, 0, 0, 0);
+
+            const isPast = cellDate < todayZero;
+            const isSelected = selectedDate && (cellDate.getTime() === selectedDate.getTime());
+
+            if (isSelected) {
+                // Ngày đang được chọn: Badge tròn nền sáng, chữ tối (y hệt mẫu ngày 12 trong mockup)
+                const selBadge = document.createElement('div');
+                selBadge.className = 'w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#f4efe8] text-[#1a140e] font-bold flex items-center justify-center mx-auto shadow-md select-none text-xs sm:text-sm';
+                selBadge.textContent = dPadded;
+                calDaysGrid.appendChild(selBadge);
+            } else if (isPast) {
+                // Ngày đã qua trong quá khứ: Làm mờ, không bấm được
+                const pastCell = document.createElement('div');
+                pastCell.className = 'w-8 h-8 sm:w-9 sm:h-9 text-neutral-600 opacity-25 flex items-center justify-center mx-auto font-light pointer-events-none select-none text-xs sm:text-sm';
+                pastCell.textContent = dPadded;
+                calDaysGrid.appendChild(pastCell);
+            } else {
+                // Ngày có thể chọn trong tương lai
+                const dayBtn = document.createElement('button');
+                dayBtn.type = 'button';
+                dayBtn.className = 'cal-day-btn w-8 h-8 sm:w-9 sm:h-9 rounded-full text-[#d8cebe] hover:bg-[#caa875]/20 hover:text-white flex items-center justify-center mx-auto transition-all cursor-pointer font-light select-none text-xs sm:text-sm';
+                dayBtn.textContent = dPadded;
+                dayBtn.setAttribute('data-day', d);
+
+                dayBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectedDate = new Date(viewYear, viewMonth, d);
+                    selectedDate.setHours(0, 0, 0, 0);
+
+                    const dayStr = String(d).padStart(2, '0');
+                    const monthStr = String(viewMonth + 1).padStart(2, '0');
+                    const yyyy = viewYear;
+
+                    // Cập nhật input hiển thị
+                    if (dateDisplay) {
+                        if (selectedDate.getTime() === todayZero.getTime()) {
+                            dateDisplay.value = `${dayStr}/${monthStr}/${yyyy} ( hôm nay )`;
+                        } else {
+                            dateDisplay.value = `${dayStr}/${monthStr}/${yyyy}`;
+                        }
+                    }
+
+                    // Cập nhật hidden input gửi AJAX
+                    if (datePicker) {
+                        datePicker.value = `${yyyy}-${monthStr}-${dayStr}`;
+                    }
+
+                    renderCalendar();
+                    setTimeout(() => closeModal(calendarModal), 120);
+                });
+
+                calDaysGrid.appendChild(dayBtn);
+            }
+        }
+    };
+
+    if (dateWrapper && calendarModal) {
+        dateWrapper.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeModal(guestsModal);
+            // Đồng bộ lại view tháng theo ngày đã chọn
+            if (selectedDate) {
+                viewYear = selectedDate.getFullYear();
+                viewMonth = selectedDate.getMonth();
+            }
+            renderCalendar();
+            openModal(calendarModal);
+        });
+
+        if (calPrevBtn) {
+            calPrevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                viewMonth--;
+                if (viewMonth < 0) {
+                    viewMonth = 11;
+                    viewYear--;
+                }
+                renderCalendar();
+            });
+        }
+
+        if (calNextBtn) {
+            calNextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                viewMonth++;
+                if (viewMonth > 11) {
+                    viewMonth = 0;
+                    viewYear++;
+                }
+                renderCalendar();
+            });
+        }
+
+        calendarModal.addEventListener('click', (e) => {
+            if (e.target === calendarModal) {
+                closeModal(calendarModal);
+            }
+        });
+    }
+
+    // Đóng bất kỳ modal nào khi bấm phím Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal(guestsModal);
+            closeModal(calendarModal);
+            closeModal(successModal);
+        }
+    });
 
     // 3. Xử lý Submit Form qua AJAX
     const submitBtn = document.getElementById('otr_booking_submit_btn');
@@ -146,23 +353,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function closeModal() {
+    function closeSuccessModal() {
         if (!successModal) return;
-        successModal.classList.add('opacity-0', 'pointer-events-none');
-        const dialog = successModal.querySelector('div');
-        if (dialog) {
-            dialog.classList.remove('scale-100');
-            dialog.classList.add('scale-95');
-        }
+        closeModal(successModal);
     }
 
     if (modalCloseBtn) {
-        modalCloseBtn.addEventListener('click', closeModal);
+        modalCloseBtn.addEventListener('click', closeSuccessModal);
     }
     if (successModal) {
         successModal.addEventListener('click', (e) => {
             if (e.target === successModal) {
-                closeModal();
+                closeSuccessModal();
             }
         });
     }

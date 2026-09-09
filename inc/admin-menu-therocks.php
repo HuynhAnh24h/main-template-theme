@@ -703,15 +703,15 @@ function otr_render_menu_therocks_page() {
                 <p style="font-weight: 600;">
                     <?php 
                     switch ($msg) {
-                        case 'saved_cha':   echo '✓ Đã lưu thông tin Menu Cha thành công!'; break;
-                        case 'deleted_cha': echo '✓ Đã xóa Menu Cha!'; break;
-                        case 'saved_con':   echo '✓ Đã lưu Menu Con thành công!'; break;
-                        case 'deleted_con': echo '✓ Đã xóa Menu Con!'; break;
-                        case 'saved_concon':echo '✓ Đã lưu Menu Con Con (Nhóm Cột) thành công!'; break;
-                        case 'deleted_concon': echo '✓ Đã xóa Menu Con Con!'; break;
-                        case 'saved_item':  echo '✓ Đã lưu món thực đơn thành công!'; break;
-                        case 'deleted_item':echo '✓ Đã xóa món!'; break;
-                        case 'reset':       echo '✓ Đã khôi phục thực đơn gốc của On The Rock thành công!'; break;
+                        case 'saved_cha':   echo 'Đã lưu thông tin Menu Cha thành công!'; break;
+                        case 'deleted_cha': echo 'Đã xóa Menu Cha!'; break;
+                        case 'saved_con':   echo 'Đã lưu Menu Con thành công!'; break;
+                        case 'deleted_con': echo 'Đã xóa Menu Con!'; break;
+                        case 'saved_concon':echo 'Đã lưu Menu Con Con (Nhóm Cột) thành công!'; break;
+                        case 'deleted_concon': echo 'Đã xóa Menu Con Con!'; break;
+                        case 'saved_item':  echo 'Đã lưu món thực đơn thành công!'; break;
+                        case 'deleted_item':echo 'Đã xóa món!'; break;
+                        case 'reset':       echo 'Đã khôi phục thực đơn gốc của On The Rock thành công!'; break;
                     }
                     ?>
                 </p>

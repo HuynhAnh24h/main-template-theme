@@ -87,7 +87,7 @@ $brand_title = ! empty( $args['brand_title'] ) ? $args['brand_title'] : ( get_fi
 $copyright   = ! empty( $args['copyright'] )   ? $args['copyright']   : ( get_field( 'footer_copyright', $front_page_id ) ?: '@2026 ON THE ROCK' );
 ?>
 
-<footer id="site-footer" class="w-full bg-[#36230d] text-[#caa875] pt-16 md:pt-24 pb-8 overflow-hidden font-serif select-none">
+<footer id="site-footer" class="w-full bg-[#36230d] text-[#caa875] pt-16 md:pt-24 pb-8 overflow-hidden font-sans select-none">
     
     <!-- 1. KHỐI 4 CỘT THÔNG TIN: Giới hạn trong container tiêu chuẩn để căn chỉnh thẳng hàng, dễ đọc -->
     <div class="max-w-[1440px] mx-auto px-6 sm:px-10 md:px-14 lg:px-16 mb-14 md:mb-20">
@@ -95,12 +95,15 @@ $copyright   = ! empty( $args['copyright'] )   ? $args['copyright']   : ( get_fi
             
             <!-- Cột 1: DANH MỤC -->
             <div>
-                <h4 class="text-[#caa875]/60 text-[11px] md:text-xs font-semibold tracking-[0.22em] uppercase mb-4 md:mb-5">
+                <h4 class="text-[#caa875]/60 text-[11px] md:text-xs font-semibold tracking-[0.22em] uppercase mb-4 md:mb-5 font-sans">
                     <?php echo esc_html( $col1_title ); ?>
                 </h4>
-                <nav class="flex flex-col gap-2.5 md:gap-3 text-xs md:text-sm tracking-[0.08em] uppercase font-normal">
+                <nav class="flex flex-col gap-2.5 md:gap-3 text-xs md:text-sm tracking-[0.08em] uppercase font-light font-sans">
                     <a href="<?php echo esc_url( $menu_url ); ?>" class="hover:text-white hover:translate-x-1.5 transition-all duration-300 w-fit inline-block">
                         <?php echo esc_html( $menu_text ); ?>
+                    </a>
+                    <a href="<?php echo esc_url( home_url( '/blog/' ) ); ?>" class="hover:text-white hover:translate-x-1.5 transition-all duration-300 w-fit inline-block">
+                        BLOG &amp; EVENT
                     </a>
                     <a href="<?php echo esc_url( $contact_url ); ?>" class="hover:text-white hover:translate-x-1.5 transition-all duration-300 w-fit inline-block">
                         <?php echo esc_html( $contact_text ); ?>
@@ -113,10 +116,10 @@ $copyright   = ! empty( $args['copyright'] )   ? $args['copyright']   : ( get_fi
 
             <!-- Cột 2: MẠNG XÃ HỘI -->
             <div>
-                <h4 class="text-[#caa875]/60 text-[11px] md:text-xs font-semibold tracking-[0.22em] uppercase mb-4 md:mb-5">
+                <h4 class="text-[#caa875]/60 text-[11px] md:text-xs font-semibold tracking-[0.22em] uppercase mb-4 md:mb-5 font-sans">
                     <?php echo esc_html( $col2_title ); ?>
                 </h4>
-                <div class="flex flex-col gap-2.5 md:gap-3 text-xs md:text-sm tracking-[0.08em] uppercase font-normal">
+                <div class="flex flex-col gap-2.5 md:gap-3 text-xs md:text-sm tracking-[0.08em] uppercase font-light font-sans">
                     <a href="<?php echo esc_url( $facebook_url ); ?>" target="_blank" rel="noopener noreferrer" class="underline underline-offset-[5px] decoration-1 decoration-[#caa875]/50 hover:decoration-white hover:text-white transition-all duration-300 w-fit">
                         <?php echo esc_html( $facebook_text ); ?>
                     </a>
@@ -131,10 +134,10 @@ $copyright   = ! empty( $args['copyright'] )   ? $args['copyright']   : ( get_fi
 
             <!-- Cột 3: ĐẾN VÀ TRẢI NGHIỆM -->
             <div>
-                <h4 class="text-[#caa875]/60 text-[11px] md:text-xs font-semibold tracking-[0.22em] uppercase mb-4 md:mb-5">
+                <h4 class="text-[#caa875]/60 text-[11px] md:text-xs font-semibold tracking-[0.22em] uppercase mb-4 md:mb-5 font-sans">
                     <?php echo esc_html( $col3_title ); ?>
                 </h4>
-                <div class="flex flex-col gap-2.5 md:gap-3 text-xs md:text-sm tracking-[0.08em] uppercase font-normal">
+                <div class="flex flex-col gap-2.5 md:gap-3 text-xs md:text-sm tracking-[0.08em] uppercase font-light font-sans">
                     <p class="leading-relaxed">
                         <?php echo esc_html( $hours_days ); ?>
                     </p>
@@ -154,10 +157,10 @@ $copyright   = ! empty( $args['copyright'] )   ? $args['copyright']   : ( get_fi
 
             <!-- Cột 4: LIÊN HỆ -->
             <div>
-                <h4 class="text-[#caa875]/60 text-[11px] md:text-xs font-semibold tracking-[0.22em] uppercase mb-4 md:mb-5">
+                <h4 class="text-[#caa875]/60 text-[11px] md:text-xs font-semibold tracking-[0.22em] uppercase mb-4 md:mb-5 font-sans">
                     <?php echo esc_html( $col4_title ); ?>
                 </h4>
-                <div class="flex flex-col gap-2.5 md:gap-3 text-xs md:text-sm tracking-[0.08em] uppercase font-normal">
+                <div class="flex flex-col gap-2.5 md:gap-3 text-xs md:text-sm tracking-[0.08em] uppercase font-light font-sans">
                     <a href="mailto:<?php echo esc_attr( $email ); ?>" class="underline underline-offset-[5px] decoration-1 decoration-[#caa875]/50 hover:decoration-white hover:text-white transition-all duration-300 w-fit">
                         <?php echo esc_html( $email ); ?>
                     </a>
@@ -173,7 +176,7 @@ $copyright   = ! empty( $args['copyright'] )   ? $args['copyright']   : ( get_fi
     <!-- 2. CHỮ THƯƠNG HIỆU KHỔNG LỒ: TRÀN TOÀN BỘ MÀN HÌNH (Full Width Edge-to-Edge) -->
     <div class="w-full overflow-hidden select-none px-3 sm:px-6 md:px-8 mb-6 sm:mb-8 md:mb-10 text-center">
         <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="inline-block transition-opacity duration-300 hover:opacity-85 cursor-pointer" title="<?php echo esc_attr( $brand_title ); ?>">
-            <h2 class="w-full block font-serif font-light text-[#caa875] uppercase leading-[0.88] tracking-[0.03em] sm:tracking-[0.05em] text-[11.5vw] whitespace-nowrap">
+            <h2 class="footer-brand-title w-full block font-mrch font-normal text-[#caa875] uppercase leading-[0.88] tracking-[0.03em] sm:tracking-[0.05em] text-[11.5vw] whitespace-nowrap">
                 <?php echo esc_html( $brand_title ); ?>
             </h2>
         </a>
@@ -181,9 +184,10 @@ $copyright   = ! empty( $args['copyright'] )   ? $args['copyright']   : ( get_fi
 
     <!-- 3. VIỀN NÉT ĐỨT & BẢN QUYỀN: TRÀN TOÀN BỘ MÀN HÌNH -->
     <div class="w-full border-t border-dashed border-[#caa875]/25 pt-6 md:pt-7 text-center px-4">
-        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="inline-block text-[10px] md:text-xs tracking-[0.25em] text-[#caa875]/60 hover:text-[#caa875] uppercase font-serif transition-colors duration-200">
+        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="inline-block text-[10px] md:text-xs tracking-[0.25em] text-[#caa875]/60 hover:text-[#caa875] uppercase font-sans transition-colors duration-200">
             <?php echo esc_html( $copyright ); ?>
         </a>
     </div>
 
 </footer>
+

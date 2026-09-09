@@ -109,13 +109,13 @@ if ( is_array( $bg_image_raw ) && ! empty( $bg_image_raw['url'] ) ) {
                         </div>
 
                         <!-- Hàng dưới: Điểm số 4.7/5 & Chữ Excellent / Based on reviews -->
-                        <div class="mt-3 flex items-baseline justify-between gap-4">
-                            <div class="flex items-baseline font-serif">
-                                <span class="text-4xl md:text-5xl font-bold tracking-tight text-[#28211b]"><?php echo esc_html( $hero_review_score ); ?></span>
-                                <span class="text-xs font-semibold text-[#5a4d3f] ml-0.5"><?php echo esc_html( $hero_review_max ); ?></span>
+                        <div class="mt-3 flex items-baseline justify-between gap-4 font-sans">
+                            <div class="flex items-baseline">
+                                <span class="text-4xl md:text-5xl font-bold tracking-tight text-[#28211b] font-sans"><?php echo esc_html( $hero_review_score ); ?></span>
+                                <span class="text-xs font-semibold text-[#5a4d3f] ml-0.5 font-sans"><?php echo esc_html( $hero_review_max ); ?></span>
                             </div>
 
-                            <div class="text-right">
+                            <div class="text-right font-sans">
                                 <div class="font-bold text-xs md:text-sm text-[#28211b]"><?php echo esc_html( $hero_review_title ); ?></div>
                                 <div class="text-[10px] md:text-xs text-[#5a4d3f] mt-0.5"><?php echo esc_html( $hero_review_sub ); ?></div>
                             </div>
@@ -136,7 +136,7 @@ if ( is_array( $bg_image_raw ) && ! empty( $bg_image_raw['url'] ) ) {
                     <span class="font-serif text-xs md:text-sm tracking-[0.25em] text-[#caa875] uppercase px-4 whitespace-nowrap">
                         <?php echo esc_html( $hero_marquee_text ); ?>
                     </span>
-                    <span class="text-[#caa875] px-2 text-xs opacity-70">✦</span>
+                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/otr-monogram-icon.png' ); ?>" alt="OTR Icon" class="w-4 h-4 md:w-5 md:h-5 object-contain inline-block mx-3 shrink-0 opacity-85">
                 <?php endfor; ?>
             </div>
             <!-- Nhân bản track thứ 2 để chạy tiếp nối không vết cắt (Seamless Infinite Loop) -->
@@ -145,7 +145,7 @@ if ( is_array( $bg_image_raw ) && ! empty( $bg_image_raw['url'] ) ) {
                     <span class="font-serif text-xs md:text-sm tracking-[0.25em] text-[#caa875] uppercase px-4 whitespace-nowrap">
                         <?php echo esc_html( $hero_marquee_text ); ?>
                     </span>
-                    <span class="text-[#caa875] px-2 text-xs opacity-70">✦</span>
+                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/otr-monogram-icon.png' ); ?>" alt="OTR Icon" class="w-4 h-4 md:w-5 md:h-5 object-contain inline-block mx-3 shrink-0 opacity-85">
                 <?php endfor; ?>
             </div>
         </div>

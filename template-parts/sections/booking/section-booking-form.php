@@ -76,24 +76,18 @@ $today_value   = date_i18n('Y-m-d');
             <!-- Hàng 2: Số lượng khách & Ngày đặt bàn -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                    <label for="booking_guests" class="block text-xs uppercase tracking-wider text-[#caa875]/90 mb-2 font-medium">
+                    <label for="booking_guests_display" class="block text-xs uppercase tracking-wider text-[#caa875]/90 mb-2 font-medium">
                         Số lượng khách
                     </label>
-                    <div class="relative">
-                        <select 
-                            id="booking_guests" 
-                            name="guests" 
-                            class="w-full bg-[#1b1b1b] text-neutral-200 rounded-full px-6 py-3.5 border border-[#2d2d2d] focus:border-[#caa875] focus:bg-[#222222] focus:outline-none appearance-none transition-all duration-200 text-sm md:text-base cursor-pointer pr-14"
+                    <div class="relative cursor-pointer" id="booking_guests_wrapper">
+                        <input 
+                            type="text" 
+                            id="booking_guests_display" 
+                            readonly 
+                            value="2 khách" 
+                            class="w-full bg-[#1b1b1b] text-neutral-200 rounded-full px-6 py-3.5 border border-[#2d2d2d] focus:border-[#caa875] focus:bg-[#222222] focus:outline-none transition-all duration-200 text-sm md:text-base cursor-pointer pr-14 select-none"
                         >
-                            <option value="1 khách">1 khách</option>
-                            <option value="2 khách" selected>2 khách</option>
-                            <option value="3 khách">3 khách</option>
-                            <option value="4 khách">4 khách</option>
-                            <option value="5 khách">5 khách</option>
-                            <option value="6 - 8 khách">6 - 8 khách (Nhóm vừa)</option>
-                            <option value="8 - 12 khách">8 - 12 khách (Nhóm lớn)</option>
-                            <option value="12+ khách">12+ khách (Tiệc riêng / Event)</option>
-                        </select>
+                        <input type="hidden" id="booking_guests" name="guests" value="2 khách">
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-6 text-neutral-400">
                             <!-- Icon 2 người / Users -->
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,7 +101,7 @@ $today_value   = date_i18n('Y-m-d');
                     <label for="booking_date_display" class="block text-xs uppercase tracking-wider text-[#caa875]/90 mb-2 font-medium">
                         Ngày đặt bàn
                     </label>
-                    <div class="relative">
+                    <div class="relative cursor-pointer" id="booking_date_wrapper">
                         <input 
                             type="text" 
                             id="booking_date_display" 
@@ -116,12 +110,10 @@ $today_value   = date_i18n('Y-m-d');
                             class="w-full bg-[#1b1b1b] text-neutral-200 rounded-full px-6 py-3.5 border border-[#2d2d2d] focus:border-[#caa875] focus:bg-[#222222] focus:outline-none transition-all duration-200 text-sm md:text-base cursor-pointer pr-14 select-none"
                         >
                         <input 
-                            type="date" 
+                            type="hidden" 
                             id="booking_date_picker" 
                             name="booking_date" 
                             value="<?php echo esc_attr($today_value); ?>" 
-                            min="<?php echo esc_attr($today_value); ?>"
-                            class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                         >
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-6 text-neutral-400">
                             <!-- Icon Lịch / Calendar -->
@@ -199,6 +191,75 @@ $today_value   = date_i18n('Y-m-d');
 
     </div>
 </section>
+
+<!-- Custom Guest Count Modal (Khớp 100% Mockup) -->
+<div id="otr-guests-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/65 backdrop-blur-[2px] opacity-0 pointer-events-none transition-all duration-300">
+    <div class="relative w-full max-w-[320px] bg-[#18130e] border border-[#caa875]/20 rounded-[24px] py-6 px-4 text-center shadow-[0_25px_60px_rgba(0,0,0,0.95)] transform scale-95 transition-all duration-300 select-none">
+        <div class="flex flex-col space-y-1">
+            <button type="button" data-guests="1 khách" class="otr-guest-option w-full py-2.5 px-3 text-[#d8cebe] text-lg font-light tracking-wide rounded-xl hover:text-white hover:bg-white/5 transition-all cursor-pointer">
+                1 khách
+            </button>
+            <button type="button" data-guests="2 khách" class="otr-guest-option w-full py-2.5 px-3 text-[#f5efe6] text-lg font-normal tracking-wide rounded-xl hover:text-white hover:bg-white/5 transition-all cursor-pointer">
+                2 khách
+            </button>
+            <button type="button" data-guests="3 khách" class="otr-guest-option w-full py-2.5 px-3 text-[#d8cebe] text-lg font-light tracking-wide rounded-xl hover:text-white hover:bg-white/5 transition-all cursor-pointer">
+                3 khách
+            </button>
+            <button type="button" data-guests="4 khách" class="otr-guest-option w-full py-2.5 px-3 text-[#d8cebe] text-lg font-light tracking-wide rounded-xl hover:text-white hover:bg-white/5 transition-all cursor-pointer">
+                4 khách
+            </button>
+            <button type="button" data-guests="5 khách" class="otr-guest-option w-full py-2.5 px-3 text-[#d8cebe] text-lg font-light tracking-wide rounded-xl hover:text-white hover:bg-white/5 transition-all cursor-pointer">
+                5 khách
+            </button>
+            <button type="button" data-guests="6 khách" class="otr-guest-option w-full py-2.5 px-3 text-[#d8cebe] text-lg font-light tracking-wide rounded-xl hover:text-white hover:bg-white/5 transition-all cursor-pointer">
+                6 khách
+            </button>
+            <button type="button" data-guests="7+ khách" class="otr-guest-option w-full py-2 px-3 text-[#d8cebe]/70 text-sm font-light tracking-wide rounded-xl hover:text-white hover:bg-white/5 transition-all cursor-pointer">
+                7+ khách (Nhóm lớn)
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Calendar Date Picker Modal (Khớp 100% Mockup) -->
+<div id="otr-calendar-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/65 backdrop-blur-[2px] opacity-0 pointer-events-none transition-all duration-300">
+    <div class="relative w-full max-w-[340px] bg-[#18130e] border border-[#caa875]/20 rounded-[24px] p-6 shadow-[0_25px_60px_rgba(0,0,0,0.95)] transform scale-95 transition-all duration-300 select-none">
+        
+        <!-- Header: Prev Button, Month Year, Next Button -->
+        <div class="flex items-center justify-between mb-5 px-1">
+            <button type="button" id="cal-prev-month" class="w-8 h-8 flex items-center justify-center text-[#d8cebe] hover:text-[#caa875] transition-colors rounded-full hover:bg-white/5 cursor-pointer" aria-label="Tháng trước">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <div id="cal-month-year" class="font-sans font-medium text-base text-[#f5efe6] tracking-wide">
+                August, 2026
+            </div>
+            <button type="button" id="cal-next-month" class="w-8 h-8 flex items-center justify-center text-[#d8cebe] hover:text-[#caa875] transition-colors rounded-full hover:bg-white/5 cursor-pointer" aria-label="Tháng sau">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Day Names Row (Mo Tu We Th Fr Sa Su) -->
+        <div class="grid grid-cols-7 gap-1 text-center mb-4">
+            <span class="text-xs font-medium text-[#e8ded1]">Mo</span>
+            <span class="text-xs font-medium text-[#e8ded1]">Tu</span>
+            <span class="text-xs font-medium text-[#e8ded1]">We</span>
+            <span class="text-xs font-medium text-[#e8ded1]">Th</span>
+            <span class="text-xs font-medium text-[#e8ded1]">Fr</span>
+            <span class="text-xs font-medium text-[#e8ded1]">Sa</span>
+            <span class="text-xs font-medium text-[#e8ded1]">Su</span>
+        </div>
+
+        <!-- Days Grid (01, 02, ... 31) -->
+        <div id="cal-days-grid" class="grid grid-cols-7 gap-y-3 gap-x-1 text-center text-xs sm:text-sm">
+            <!-- Dynamic days rendered by JS -->
+        </div>
+
+    </div>
+</div>
 
 <!-- Luxury Modal Thông Báo Đặt Bàn Thành Công -->
 <div id="otr-success-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">

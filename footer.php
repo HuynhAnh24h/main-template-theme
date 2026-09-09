@@ -3,6 +3,9 @@
 <?php endif; ?>
 
 <?php
+// Gọi dải chữ chạy Marquee ("MEET THE ON THE ROCK TEAM") trước Footer nếu trang chưa có
+get_template_part( 'template-parts/components/marquee-team-ticker' );
+
 // Gọi component chân trang On The Rock
 get_template_part( 'template-parts/footer/site-footer' );
 ?>

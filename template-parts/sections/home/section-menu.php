@@ -131,7 +131,7 @@ $menu_page_url = (empty($raw_menu_link) || in_array($raw_menu_link, array('#menu
             
             <!-- 1. Chữ MENU đưa từ bên trái lên trên đầu của Menu -->
             <div class="mb-6 sm:mb-8 md:mb-12">
-                <span class="font-serif text-xs sm:text-sm md:text-base lg:text-lg tracking-[0.35em] text-[#caa875] uppercase select-none font-medium block">
+                <span class="font-sans text-xs sm:text-sm md:text-base lg:text-lg tracking-[0.35em] text-[#caa875] uppercase select-none font-medium block">
                     <?php echo esc_html( $section_title ); ?>
                 </span>
             </div>
@@ -152,17 +152,17 @@ $menu_page_url = (empty($raw_menu_link) || in_array($raw_menu_link, array('#menu
                                     
                                     <!-- Khối Tiêu đề dịch sang trái nhiều hơn nữa khi hover theo yêu cầu người dùng -->
                                     <div class="menu-title-wrapper transition-transform duration-500 ease-out group-hover:-translate-x-3 sm:group-hover:-translate-x-8 md:group-hover:-translate-x-14 lg:group-hover:-translate-x-20 group-[.is-active]:-translate-x-3 sm:group-[.is-active]:-translate-x-8 md:group-[.is-active]:-translate-x-14 lg:group-[.is-active]:-translate-x-20">
-                                        <div class="menu-item-num text-[11px] sm:text-xs md:text-sm tracking-widest text-[#caa875] group-hover:text-[#ecd9b4] group-[.is-active]:text-[#ecd9b4] transition-colors duration-300 mb-1 sm:mb-1.5 font-mono font-medium">
+                                        <div class="menu-item-num font-sans text-[11px] sm:text-xs md:text-sm tracking-widest text-[#caa875] group-hover:text-[#ecd9b4] group-[.is-active]:text-[#ecd9b4] transition-colors duration-300 mb-1 sm:mb-1.5 font-medium">
                                             <?php echo esc_html( $item['num'] ); ?>
                                         </div>
-                                        <div class="menu-item-title font-serif text-lg sm:text-2xl md:text-3xl lg:text-[44px] xl:text-[50px] font-normal tracking-wide text-[#caa875] group-hover:text-[#ecd9b4] group-[.is-active]:text-[#ecd9b4] transition-colors duration-400 uppercase leading-[1.12]">
+                                        <div class="menu-item-title font-mrch text-lg sm:text-2xl md:text-3xl lg:text-[44px] xl:text-[50px] font-normal tracking-wide text-[#caa875] group-hover:text-[#ecd9b4] group-[.is-active]:text-[#ecd9b4] transition-colors duration-400 uppercase leading-[1.12]">
                                             <?php echo esc_html( $item['title'] ); ?>
                                         </div>
                                     </div>
 
                                     <!-- Dòng mô tả: Bung mở khi hover, nằm nguyên vị trí cố định không bị dịch sang trái theo yêu cầu người dùng -->
                                     <div class="menu-item-desc overflow-hidden transition-all duration-500 max-h-0 opacity-0 group-hover:max-h-36 group-[.is-active]:max-h-36 group-hover:opacity-100 group-[.is-active]:opacity-100 group-hover:mt-2.5 sm:group-hover:mt-3.5 group-[.is-active]:mt-2.5 sm:group-[.is-active]:mt-3.5">
-                                        <p class="text-[11px] sm:text-xs md:text-sm leading-relaxed text-[#caa875]/90 font-light tracking-wide max-w-xl pl-0.5">
+                                        <p class="font-sans text-[11px] sm:text-xs md:text-sm leading-relaxed text-[#caa875]/90 font-light tracking-wide max-w-xl pl-0.5">
                                             <?php echo esc_html( $item['desc'] ); ?>
                                         </p>
                                     </div>

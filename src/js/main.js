@@ -8,6 +8,11 @@ window.lucide = {
 
 // Khởi tạo các thư viện dùng chung cho toàn site
 document.addEventListener('DOMContentLoaded', () => {
+    // Đảm bảo các trang không có màn hình loading (#loader) luôn có class .is-loaded để cuộn và hiển thị bình thường
+    if (!document.getElementById('loader')) {
+        document.body.classList.add('is-loaded');
+    }
+
     // 1. Tự động tìm tất cả thẻ có data-lucide và chèn icon SVG tương ứng
     createIcons({ icons });
 
