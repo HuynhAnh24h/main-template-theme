@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&subset=vietnamese,latin&display=swap');
 @import "tailwindcss";
 
 /* Khai báo quét tất cả file PHP trong theme để Tailwind CSS v4 biên dịch */
@@ -24,14 +23,6 @@
 
 @font-face {
   font-family: 'SVN-Gilroy';
-  src: url('../../assets/fonts/SVN-Gilroy-Light.otf') format('opentype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'SVN-Gilroy Light';
   src: url('../../assets/fonts/SVN-Gilroy-Light.otf') format('opentype');
   font-weight: 300;
   font-style: normal;
@@ -71,17 +62,11 @@
 }
 
 @theme {
-  --font-sans: 'SVN-Gilroy', 'SVN-Gilroy Light', system-ui, -apple-system, sans-serif;
+  --font-sans: 'SVN-Gilroy', system-ui, -apple-system, sans-serif;
   --font-serif: 'MRCH-NewYork', 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
   --font-display: 'MRCH-NewYork', 'Cormorant Garamond', Georgia, serif;
   --font-mrch: 'MRCH-NewYork', 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
-  --font-gilroy: 'SVN-Gilroy', 'SVN-Gilroy Light', system-ui, sans-serif;
-
-  --color-lc-blue: #0052cc; /* Xanh chủ đạo Long Châu */
-  --color-lc-darkblue: #003b99;
-  --color-lc-orange: #f58220; /* Màu cam */
-  --color-lc-red: #e11b22; /* Màu giá giảm */
-  --color-lc-bg: #080604;
+  --font-gilroy: 'SVN-Gilroy', system-ui, sans-serif;
 
   /* Các biến màu cho hiệu ứng Wander */
   --color-wander-ink: #080604;
@@ -489,75 +474,98 @@ body.home {
 }
 
 /* ================= LIQUID GLASS & TEXT ROLL-UP BUTTON ANIMATION (APPLE iOS SYSTEM) ================= */
-.btn-liquid-glass {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(24, 18, 12, 0.72) !important;
+.btn-liquid-glass,
+.site-header__booking-btn,
+.otr-btn-glass {
+  position: relative !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(38, 26, 17, 0.82) !important;
   backdrop-filter: blur(20px) saturate(190%) contrast(102%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(190%) contrast(102%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
-  box-shadow: 
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.32),
-    inset 0 -1px 0 0 rgba(0, 0, 0, 0.4),
-    0 6px 20px -3px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(202, 168, 117, 0.45) !important;
+  color: #caa875 !important;
+  border-radius: 9999px !important;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.35),
+              inset 0 -1px 0 0 rgba(0, 0, 0, 0.4),
+              0 4px 16px -2px rgba(0, 0, 0, 0.5) !important;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               background 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               color 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
   will-change: transform, box-shadow, background, border-color;
+  cursor: pointer !important;
+  user-select: none !important;
+}
+
+/* Đảm bảo typography nút dùng SVN-Gilroy Medium */
+.btn-liquid-glass,
+.btn-liquid-glass *,
+.site-header__booking-btn,
+.site-header__booking-btn * {
+  font-family: 'SVN-Gilroy', system-ui, sans-serif !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.14em !important;
 }
 
 /* Tia sáng khúc xạ lướt qua mặt kính (Apple iOS Specular Sheen Sweep) */
-.btn-liquid-glass::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -160%;
-  width: 130%;
-  height: 100%;
+.btn-liquid-glass::before,
+.site-header__booking-btn::before,
+.otr-btn-glass::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -160% !important;
+  width: 130% !important;
+  height: 100% !important;
   background: linear-gradient(
     105deg,
     transparent 20%,
-    rgba(255, 255, 255, 0.04) 35%,
-    rgba(255, 255, 255, 0.25) 48%,
-    rgba(202, 168, 117, 0.35) 52%,
-    rgba(255, 255, 255, 0.22) 56%,
+    rgba(255, 255, 255, 0.06) 35%,
+    rgba(255, 255, 255, 0.3) 48%,
+    rgba(202, 168, 117, 0.4) 52%,
+    rgba(255, 255, 255, 0.25) 56%,
     transparent 75%
-  );
-  transform: skewX(-20deg);
-  transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: none;
-  z-index: 1;
+  ) !important;
+  transform: skewX(-20deg) !important;
+  transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
 }
 
-.btn-liquid-glass:hover::before {
-  left: 160%;
+.btn-liquid-glass:hover::before,
+.site-header__booking-btn:hover::before,
+.otr-btn-glass:hover::before {
+  left: 160% !important;
 }
 
 /* Trạng thái Kính Lỏng khi Hover - Tỏa sáng rực rỡ từ bên trong (Internal Glass Glow) */
-.btn-liquid-glass:hover {
+.btn-liquid-glass:hover,
+.site-header__booking-btn:hover,
+.otr-btn-glass:hover {
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.18) 0%,
-    rgba(202, 168, 117, 0.28) 45%,
-    rgba(28, 20, 14, 0.88) 100%
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(202, 168, 117, 0.32) 50%,
+    rgba(45, 30, 19, 0.95) 100%
   ) !important;
-  backdrop-filter: blur(26px) saturate(200%) contrast(105%) !important;
-  -webkit-backdrop-filter: blur(26px) saturate(200%) contrast(105%) !important;
-  border-color: rgba(202, 168, 117, 0.8) !important;
-  color: #caa875 !important;
+  backdrop-filter: blur(28px) saturate(200%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) contrast(105%) !important;
+  border-color: rgba(202, 168, 117, 0.88) !important;
+  color: #f7ebd8 !important;
   box-shadow: 
-    0 12px 30px -4px rgba(0, 0, 0, 0.75),
-    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.65),
+    0 10px 25px -4px rgba(0, 0, 0, 0.75),
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.7),
     inset 0 -1px 1px 0 rgba(202, 168, 117, 0.35),
-    0 0 20px 2px rgba(202, 168, 117, 0.3) !important;
-  transform: translateY(-2px) scale(1.015);
+    0 0 18px 2px rgba(202, 168, 117, 0.32) !important;
+  transform: translateY(-1.5px) scale(1.02);
 }
 
 /* Trạng thái Chạm/Bấm kiểu Apple Haptic Spring (Đàn hồi tức thì) */
-.btn-liquid-glass:active {
+.btn-liquid-glass:active,
+.site-header__booking-btn:active,
+.otr-btn-glass:active {
   transform: translateY(0) scale(0.955) !important;
   transition: transform 0.12s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.12s ease !important;
   box-shadow: 
@@ -644,12 +652,14 @@ body.home {
   white-space: nowrap;
 }
 
-/* Khi hover vào button, text cuộn lên 50% để chữ bên dưới hiện ra */
+/* Khi hover vào button hoặc thẻ bọc, text cuộn lên 50% để chữ bên dưới hiện ra mượt mà */
 .site-header__booking-btn:hover .btn-roll-text,
 .btn-liquid-glass:hover .btn-roll-text,
+.otr-btn-glass:hover .btn-roll-text,
 .group:hover .btn-roll-text,
-button.btn-liquid-glass:hover .btn-roll-text,
-a.btn-liquid-glass:hover .btn-roll-text {
+.group\/btn:hover .btn-roll-text,
+button:hover .btn-roll-text,
+a:hover .btn-roll-text {
   transform: translateY(-50%) !important;
 }
 
@@ -1153,6 +1163,108 @@ body.home.is-loaded #site-header {
   transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
+/* ================= MOBILE PERFORMANCE OPTIMIZATIONS ================= */
+/* Tiết kiệm tài nguyên GPU & CPU: Trì hoãn render layout các khối bên dưới màn hình */
+@media (max-width: 1024px) {
+  #section-testimonials,
+  #section-menu,
+  #section-moments,
+  #section-team,
+  #site-footer {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
+  }
+}
 
+/* ================= BLOG & EVENT CARDS (EXACT MATCH WITH DESIGN) ================= */
+.blog-post-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background-color: #000000;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+}
 
+@media (min-width: 640px) {
+  .blog-post-card {
+    border-radius: 2rem;
+  }
+}
 
+.blog-post-card:hover,
+.blog-post-card.is-active {
+  border-color: rgba(202, 168, 117, 0.35);
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.85);
+}
+
+.blog-card-content {
+  background-color: #000000;
+  transition: background-color 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.blog-post-card:hover .blog-card-content,
+.blog-post-card.is-active .blog-card-content {
+  background-color: #472b08 !important;
+}
+
+/* Thẻ Tag chuyên mục trên Card */
+.blog-card-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 1.15rem;
+  border-radius: 9999px;
+  background-color: #251c11;
+  border: 1px solid rgba(202, 168, 117, 0.35);
+  color: #caa875;
+  font-size: 0.75rem;
+  font-family: 'SVN-Gilroy', system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease, transform 0.35s ease;
+}
+
+.blog-post-card:hover .blog-card-tag,
+.blog-post-card.is-active .blog-card-tag {
+  background-color: #332010;
+  border-color: rgba(202, 168, 117, 0.55);
+}
+
+.blog-card-tag:hover {
+  background-color: #4a2f16 !important;
+  color: #f7ebd8 !important;
+  border-color: rgba(202, 168, 117, 0.8) !important;
+  transform: scale(1.03);
+}
+
+/* Filter Tabs */
+.blog-tab-btn {
+  padding: 0.55rem 1.6rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: 'SVN-Gilroy', system-ui, sans-serif;
+  font-weight: 500;
+  color: rgba(202, 168, 117, 0.7);
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  user-select: none;
+}
+
+.blog-tab-btn:hover {
+  color: #caa875;
+  background-color: rgba(37, 28, 17, 0.7);
+  border-color: rgba(202, 168, 117, 0.3);
+}
+
+.blog-tab-btn.is-active {
+  color: #f4efe8 !important;
+  background-color: #251c11 !important;
+  border-color: rgba(202, 168, 117, 0.45) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}

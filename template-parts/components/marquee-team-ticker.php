@@ -47,19 +47,3 @@ $icon_url = get_template_directory_uri() . '/assets/images/otr-monogram-icon.png
         <?php endfor; ?>
     </div>
 </div>
-
-<style>
-@keyframes marquee {
-  0% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(-100%, 0, 0); }
-}
-.animate-marquee {
-  display: flex !important;
-  flex-shrink: 0 !important;
-  will-change: transform;
-  animation: marquee 35s linear infinite !important;
-}
-.ticker-wrapper:hover .animate-marquee {
-  animation-play-state: paused;
-}
-</style>

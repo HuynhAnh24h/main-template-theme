@@ -87,9 +87,9 @@ $post_date_formatted = get_the_date( 'F j, Y' );
                 <!-- Nút 1: Sao chép liên kết -->
                 <button type="button" 
                         data-share="copy" 
-                        class="w-9 h-9 rounded-full border border-white/15 bg-white/5 flex items-center justify-center text-stone-300 hover:text-[#caa875] hover:border-[#caa875]/60 hover:bg-[#caa875]/10 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer" 
+                        class="btn-liquid-glass w-9 h-9 rounded-full flex items-center justify-center text-stone-300 hover:text-[#caa875] transition-all duration-300 cursor-pointer" 
                         title="Sao chép liên kết bài viết">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 text-current" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
                     </svg>
                 </button>
@@ -97,9 +97,9 @@ $post_date_formatted = get_the_date( 'F j, Y' );
                 <!-- Nút 2: Facebook -->
                 <button type="button" 
                         data-share="facebook" 
-                        class="w-9 h-9 rounded-full border border-white/15 bg-white/5 flex items-center justify-center text-stone-300 hover:text-[#caa875] hover:border-[#caa875]/60 hover:bg-[#caa875]/10 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer" 
+                        class="btn-liquid-glass w-9 h-9 rounded-full flex items-center justify-center text-stone-300 hover:text-[#caa875] transition-all duration-300 cursor-pointer" 
                         title="Chia sẻ lên Facebook">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 text-current" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
                 </button>
@@ -107,9 +107,9 @@ $post_date_formatted = get_the_date( 'F j, Y' );
                 <!-- Nút 3: X (Twitter) -->
                 <button type="button" 
                         data-share="twitter" 
-                        class="w-9 h-9 rounded-full border border-white/15 bg-white/5 flex items-center justify-center text-stone-300 hover:text-[#caa875] hover:border-[#caa875]/60 hover:bg-[#caa875]/10 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer" 
+                        class="btn-liquid-glass w-9 h-9 rounded-full flex items-center justify-center text-stone-300 hover:text-[#caa875] transition-all duration-300 cursor-pointer" 
                         title="Chia sẻ lên X (Twitter)">
-                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-3.5 h-3.5 text-current" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                     </svg>
                 </button>
@@ -117,9 +117,9 @@ $post_date_formatted = get_the_date( 'F j, Y' );
                 <!-- Nút 4: Telegram / Chia sẻ trực tiếp -->
                 <button type="button" 
                         data-share="telegram" 
-                        class="w-9 h-9 rounded-full border border-white/15 bg-white/5 flex items-center justify-center text-stone-300 hover:text-[#caa875] hover:border-[#caa875]/60 hover:bg-[#caa875]/10 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer" 
+                        class="btn-liquid-glass w-9 h-9 rounded-full flex items-center justify-center text-stone-300 hover:text-[#caa875] transition-all duration-300 cursor-pointer" 
                         title="Chia sẻ lên Telegram">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 text-current" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
                     </svg>
                 </button>

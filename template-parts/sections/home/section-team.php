@@ -87,6 +87,8 @@ if ( empty( $members ) ) {
                 <img src="<?php echo esc_url( $member['photo'] ); ?>" 
                      alt="<?php echo esc_attr( $member['name'] ); ?>" 
                      data-parallax
+                     loading="lazy"
+                     decoding="async"
                      class="w-full h-full object-cover object-center filter brightness-[0.88] group-hover:brightness-100 group-hover:scale-105 transition-all duration-700 ease-out">
                 
                 <!-- Lớp phủ Gradient điện ảnh giúp tôn chữ vàng kim -->

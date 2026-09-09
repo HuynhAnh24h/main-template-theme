@@ -117,6 +117,8 @@ if ( empty( $items ) ) {
                     <img src="<?php echo esc_url( $media['image'] ); ?>" 
                          alt="On The Rocks Moments <?php echo esc_attr( $idx + 1 ); ?>" 
                          data-parallax
+                         loading="lazy"
+                         decoding="async"
                          class="w-full h-full object-cover object-center filter brightness-[0.88] group-hover:brightness-100 group-hover:scale-105 transition-all duration-700 ease-out">
                 <?php endif; ?>
 

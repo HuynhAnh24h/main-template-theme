@@ -178,6 +178,8 @@ $menu_page_url = (empty($raw_menu_link) || in_array($raw_menu_link, array('#menu
                                                 group-[.is-active]:-rotate-[4deg] group-[.is-active]:scale-[1.2] group-[.is-active]:brightness-100 group-[.is-active]:border-[#caa875]/80 group-[.is-active]:shadow-[0_16px_36px_-4px_rgba(0,0,0,0.9),0_0_16px_1px_rgba(202,168,117,0.22)]">
                                         <img src="<?php echo esc_url( $item_image ); ?>" 
                                              alt="<?php echo esc_attr( $item['title'] ); ?>" 
+                                             loading="lazy"
+                                             decoding="async"
                                              class="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105">
                                         <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/15 pointer-events-none group-hover:opacity-0 transition-opacity duration-500"></div>
                                     </div>
@@ -191,7 +193,7 @@ $menu_page_url = (empty($raw_menu_link) || in_array($raw_menu_link, array('#menu
                     <!-- 3. Nút Xem Menu dài nằm ở cuối danh sách menu trên Trang Chủ -->
                     <div class="pt-10 sm:pt-14 md:pt-16">
                         <a href="<?php echo esc_url( $menu_page_url ); ?>" 
-                           class="btn-liquid-glass group/btn w-full py-4 sm:py-5 px-8 rounded-full border border-[#caa875]/70 bg-[#16100a] text-[#caa875] font-serif font-medium text-xs sm:text-sm md:text-base tracking-[0.25em] uppercase shadow-xl flex items-center justify-center gap-3.5 select-none cursor-pointer">
+                           class="btn-liquid-glass group/btn w-full py-4 sm:py-5 px-8 rounded-full font-serif font-medium text-xs sm:text-sm md:text-base tracking-[0.25em] uppercase flex items-center justify-center gap-3.5 select-none cursor-pointer">
                             <span class="btn-roll-wrap">
                                 <span class="btn-roll-text">
                                     <span>XEM MENU</span>

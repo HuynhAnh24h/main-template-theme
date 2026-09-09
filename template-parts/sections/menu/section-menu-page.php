@@ -54,13 +54,13 @@ $menu_tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_me
                 
                 <!-- Ảnh 1: Đĩa món ăn khai vị tinh tế -->
                 <div class="relative aspect-[4/3] rounded-sm overflow-hidden border border-[#caa875]/20 shadow-2xl group">
-                    <img src="<?php echo esc_url( $photo_dish ); ?>" alt="On The Rock Gourmet Food" class="w-full h-full object-cover brightness-[0.9] group-hover:scale-105 group-hover:brightness-100 transition-all duration-700">
+                    <img src="<?php echo esc_url( $photo_dish ); ?>" alt="On The Rock Gourmet Food" loading="lazy" decoding="async" class="w-full h-full object-cover brightness-[0.9] group-hover:scale-105 group-hover:brightness-100 transition-all duration-700">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
                 </div>
 
                 <!-- Ảnh 2: Ly cocktail hổ phách bên không gian sang trọng -->
                 <div class="relative aspect-[4/3] rounded-sm overflow-hidden border border-[#caa875]/20 shadow-2xl group">
-                    <img src="<?php echo esc_url( $photo_cocktail ); ?>" alt="On The Rock Cocktail Bar" class="w-full h-full object-cover brightness-[0.9] group-hover:scale-105 group-hover:brightness-100 transition-all duration-700">
+                    <img src="<?php echo esc_url( $photo_cocktail ); ?>" alt="On The Rock Cocktail Bar" loading="lazy" decoding="async" class="w-full h-full object-cover brightness-[0.9] group-hover:scale-105 group-hover:brightness-100 transition-all duration-700">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
                 </div>
 
@@ -128,10 +128,15 @@ $menu_tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_me
                                 $is_sub_active = ($sub_i === 0);
                             ?>
                                 <button type="button" 
-                                        class="menu-con-subtab-btn px-5 sm:px-7 py-2.5 sm:py-3 text-[11px] sm:text-xs tracking-[0.18em] uppercase transition-all duration-300 cursor-pointer border <?php echo $is_sub_active ? 'bg-[#c8a773] text-[#1a120b] font-semibold border-[#c8a773] shadow-md' : 'bg-transparent text-[#caa875] border-dashed border-[#caa875]/35 hover:border-[#caa875] hover:bg-[#caa875]/10'; ?>"
+                                        class="menu-con-subtab-btn btn-liquid-glass px-5 sm:px-7 py-2.5 sm:py-3 text-[11px] sm:text-xs tracking-[0.18em] uppercase transition-all duration-300 cursor-pointer <?php echo $is_sub_active ? '!border-[#caa875] is-active' : ''; ?>"
                                         data-parent-cha="<?php echo esc_attr($cha_id); ?>"
                                         data-con-target="<?php echo esc_attr($con_id); ?>">
-                                    <?php echo esc_html($con['title']); ?>
+                                    <span class="btn-roll-wrap">
+                                        <span class="btn-roll-text">
+                                            <span><?php echo esc_html($con['title']); ?></span>
+                                            <span aria-hidden="true"><?php echo esc_html($con['title']); ?></span>
+                                        </span>
+                                    </span>
                                 </button>
                             <?php 
                                 $sub_i++;

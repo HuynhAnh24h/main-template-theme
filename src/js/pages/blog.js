@@ -3,32 +3,16 @@
 
 function initBlogPage() {
   const tabButtons = document.querySelectorAll('.blog-tab-btn');
-  const postItems = Array.from(document.querySelectorAll('.blog-post-item'));
+  const postItems = Array.from(document.querySelectorAll('.blog-post-card, .blog-post-item'));
   const loadMoreBtn = document.getElementById('blog-load-more-btn');
   const postsContainer = document.getElementById('blog-posts-container');
 
   if (!postsContainer || postItems.length === 0) return;
 
-  // Cập nhật bố cục so le Zig-Zag cho các bài viết đang hiển thị
-  const reindexZigZag = () => {
-    let visibleIndex = 0;
-    postItems.forEach((item) => {
-      if (!item.classList.contains('hidden')) {
-        const isEven = visibleIndex % 2 === 1;
-        if (isEven) {
-          item.classList.remove('lg:flex-row');
-          item.classList.add('lg:flex-row-reverse');
-        } else {
-          item.classList.remove('lg:flex-row-reverse');
-          item.classList.add('lg:flex-row');
-        }
-        visibleIndex++;
-      }
-    });
-
-    // Kiểm tra xem có bài viết nào hiển thị không
+  const checkEmpty = () => {
+    const visibleCount = postItems.filter(item => !item.classList.contains('hidden')).length;
     let emptyNotice = document.getElementById('blog-no-posts-notice');
-    if (visibleIndex === 0) {
+    if (visibleCount === 0) {
       if (!emptyNotice) {
         emptyNotice = document.createElement('div');
         emptyNotice.id = 'blog-no-posts-notice';
@@ -52,13 +36,8 @@ function initBlogPage() {
         const targetSlug = btn.getAttribute('data-cat-slug') || 'all';
 
         // Cập nhật trạng thái active của buttons
-        tabButtons.forEach((b) => {
-          b.classList.remove('bg-[#26180a]', 'border-[#caa875]/80', 'text-[#caa875]', 'font-semibold', 'shadow-lg');
-          b.classList.add('bg-transparent', 'text-[#caa875]/70', 'border-transparent');
-        });
-
-        btn.classList.remove('bg-transparent', 'text-[#caa875]/70', 'border-transparent');
-        btn.classList.add('bg-[#26180a]', 'border-[#caa875]/80', 'text-[#caa875]', 'font-semibold', 'shadow-lg');
+        tabButtons.forEach((b) => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
 
         // Lọc bài viết với animation mượt
         postItems.forEach((item) => {
@@ -79,8 +58,7 @@ function initBlogPage() {
           }
         });
 
-        // Sắp xếp lại chiều Zig-Zag (Trái-Phải, Phải-Trái) cho danh sách vừa lọc
-        reindexZigZag();
+        checkEmpty();
       });
     });
   }
@@ -104,8 +82,8 @@ function initBlogPage() {
     });
   }
 
-  // Khởi tạo layout ban đầu
-  reindexZigZag();
+  // Khởi tạo kiểm tra ban đầu
+  checkEmpty();
 }
 
 if (document.readyState !== 'loading') {

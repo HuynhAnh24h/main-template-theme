@@ -312,8 +312,8 @@ function initHomePageFeatures() {
       heroBgParallax.style.transform = `translate3d(0, ${heroOffset}px, 0)`;
     }
 
-    // 3. Hiệu ứng Fixed Parallax nhẹ nhàng cho các hình ảnh trong trang
-    if (parallaxMedia.length > 0) {
+    // 3. Hiệu ứng Fixed Parallax nhẹ nhàng cho các hình ảnh trong trang (Chỉ chạy trên Desktop/Tablet để tối ưu 120fps cho Mobile)
+    if (window.innerWidth >= 768 && parallaxMedia.length > 0) {
       const winH = window.innerHeight;
       parallaxMedia.forEach((media) => {
         const rect = media.getBoundingClientRect();

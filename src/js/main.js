@@ -1,4 +1,59 @@
-import { createIcons, icons } from 'lucide';
+import { 
+    createIcons, 
+    BadgeCheck, 
+    CheckCircle, 
+    AlertCircle, 
+    User, 
+    Phone, 
+    Users, 
+    Calendar, 
+    MessageSquare, 
+    ArrowRight,
+    ChevronLeft,
+    ChevronRight,
+    ChevronDown,
+    ChevronUp,
+    Search,
+    Home,
+    Menu,
+    X,
+    Check,
+    Star,
+    Clock,
+    MapPin,
+    Mail,
+    PhoneCall,
+    Sparkles,
+    ShoppingCart
+} from 'lucide';
+
+const icons = {
+    BadgeCheck,
+    CheckCircle,
+    AlertCircle,
+    User,
+    Phone,
+    Users,
+    Calendar,
+    MessageSquare,
+    ArrowRight,
+    ChevronLeft,
+    ChevronRight,
+    ChevronDown,
+    ChevronUp,
+    Search,
+    Home,
+    Menu,
+    X,
+    Check,
+    Star,
+    Clock,
+    MapPin,
+    Mail,
+    PhoneCall,
+    Sparkles,
+    ShoppingCart
+};
 
 // Expose globally for dynamic components & alerts
 window.lucide = {
@@ -110,22 +165,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 6. Hiệu ứng Liquid Glass & Dual Text Roll-up cho Button
     function initLiquidGlassButtons() {
-        const buttons = document.querySelectorAll('.btn-liquid-glass');
+        const buttons = document.querySelectorAll('.btn-liquid-glass, .otr-btn-glass, .otr-btn');
         buttons.forEach(btn => {
             if (btn.querySelector('.btn-roll-wrap')) return;
 
             const childNodes = Array.from(btn.childNodes);
-            let textNode = null;
+            let targetNode = null;
+            let text = '';
 
             for (const node of childNodes) {
                 if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
-                    textNode = node;
+                    targetNode = node;
+                    text = node.textContent.trim();
+                    break;
+                } else if (node.nodeType === Node.ELEMENT_NODE && !node.querySelector('svg') && !node.classList.contains('btn-spinner') && node.textContent.trim().length > 0 && node.children.length === 0) {
+                    targetNode = node;
+                    text = node.textContent.trim();
                     break;
                 }
             }
 
-            if (textNode) {
-                const text = textNode.textContent.trim();
+            if (targetNode && text) {
                 const rollWrap = document.createElement('span');
                 rollWrap.className = 'btn-roll-wrap';
                 rollWrap.innerHTML = `
@@ -134,11 +194,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span aria-hidden="true">${text}</span>
                     </span>
                 `;
-                btn.replaceChild(rollWrap, textNode);
+                btn.replaceChild(rollWrap, targetNode);
             }
         });
     }
 
+    window.initLiquidGlassButtons = initLiquidGlassButtons;
     initLiquidGlassButtons();
 
     console.log('On The Rock Header & Global Javascript Loaded!');

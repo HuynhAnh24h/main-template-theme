@@ -12,13 +12,13 @@ get_template_part('template-parts/components/breadcrumb', null, [
 ]);
 ?>
 
-<div class="bg-lc-bg min-h-screen pb-12">
+<div class="bg-[#080604] min-h-screen pb-16 pt-6">
     <div class="container mx-auto px-4">
-        <div class="bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-50 mb-8 max-w-4xl mx-auto">
+        <div class="bg-[#140e08] rounded-2xl p-6 md:p-10 shadow-xl border border-[#caa875]/20 mb-8 max-w-4xl mx-auto text-[#f4efe8]">
             
             <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
-                <article class="prose prose-blue max-w-none text-gray-600 text-sm md:text-base leading-relaxed space-y-6">
-                    <h1 class="text-2xl md:text-4xl font-black text-gray-800 border-b border-gray-100 pb-4 mb-6 leading-tight">
+                <article class="max-w-none text-[#d1d5db] text-sm md:text-base leading-relaxed space-y-6">
+                    <h1 class="font-serif text-2xl md:text-4xl font-normal text-[#caa875] border-b border-[#caa875]/20 pb-4 mb-6 leading-tight">
                         <?php the_title(); ?>
                     </h1>
                     

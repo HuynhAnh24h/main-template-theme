@@ -55,6 +55,8 @@ if ( is_array( $bg_image_raw ) && ! empty( $bg_image_raw['url'] ) ) {
     <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <img src="<?php echo esc_url( $bg_image_url ); ?>" 
              alt="On The Rocks Bar Background" 
+             fetchpriority="high"
+             decoding="async"
              class="hero-bg-parallax w-full h-[125%] -top-[12%] absolute object-cover object-center filter brightness-[0.78]">
         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/60 pointer-events-none"></div>
         <div class="absolute inset-0 bg-radial from-transparent via-black/20 to-black/70 pointer-events-none"></div>

@@ -53,14 +53,6 @@ function otr_url($path_or_url) {
 
 // 2. Nhúng CSS/JS thông minh (Biên dịch qua Vite) vào theme
 function theme_scripts(){
-    
-    // 0. Nhúng Google Fonts (Roboto, Cormorant Garamond & Playfair Display hỗ trợ tiếng Việt)
-    wp_enqueue_style(
-        'theme-font-google',
-        'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&subset=vietnamese,latin&display=swap',
-        array(),
-        null
-    );
 
     // Nhúng CSS Biên dịch từ Tailwind CSS v4
     $css_path = '/assets/dist/css/style.css';
@@ -139,6 +131,43 @@ function theme_scripts(){
     }
 }
 add_action('wp_enqueue_scripts', 'theme_scripts');
+
+/**
+ * Tối ưu tải trang Mobile: Tự động gắn thuộc tính 'defer' cho các script của theme
+ * Giúp trình duyệt mobile không bị chặn hiển thị (Render-blocking) khi tải JS
+ */
+add_filter('script_loader_tag', function($tag, $handle, $src) {
+    if (strpos($handle, 'theme-') === 0 || in_array($handle, array('theme-main-script', 'otrBookingData'))) {
+        if (strpos($tag, ' defer') === false) {
+            return str_replace(' src=', ' defer src=', $tag);
+        }
+    }
+    return $tag;
+}, 10, 3);
+
+/**
+ * Tối ưu tốc độ Mobile: Vô hiệu hóa Emoji mặc định của WordPress để loại bỏ JS/CSS thừa
+ */
+function otr_disable_emojis() {
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('admin_print_scripts', 'print_emoji_detection_script');
+    remove_action('wp_print_styles', 'print_emoji_styles');
+    remove_action('admin_print_styles', 'print_emoji_styles');
+    remove_filter('the_content_feed', 'wp_staticize_emoji');
+    remove_filter('comment_text_rss', 'wp_staticize_emoji');
+    remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+    add_filter('tiny_mce_plugins', function($plugins) {
+        return is_array($plugins) ? array_diff($plugins, array('wpemoji')) : array();
+    });
+    add_filter('wp_resource_hints', function($urls, $relation_type) {
+        if ('dns-prefetch' === $relation_type) {
+            $emoji_svg_url = apply_filters('emoji_svg_url', 'https://s.w.org/images/core/emoji/');
+            $urls = array_diff($urls, array($emoji_svg_url));
+        }
+        return $urls;
+    }, 10, 2);
+}
+add_action('init', 'otr_disable_emojis');
 
 /**
  * 5. Helper nhúng Icon SVG (Hỗ trợ cả Server-side & Client-side)

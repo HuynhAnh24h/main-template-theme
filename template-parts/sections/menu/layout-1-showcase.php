@@ -242,9 +242,14 @@ $tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_menu_tr
             <div class="flex flex-wrap items-center gap-2 mb-6 sm:mb-8 select-none">
                 <?php $sub_i = 0; foreach ( $cat['children'] as $con_id => $sub ) : ?>
                     <button type="button" 
-                            class="menu-subtab-btn px-5 sm:px-7 py-2.5 sm:py-3 text-[11px] sm:text-xs tracking-[0.15em] uppercase transition-all duration-300 cursor-pointer border border-[#caa875]/35 <?php echo ( $sub_i === 0 ) ? 'bg-[#c8a773] text-[#1a120b] font-semibold border-[#c8a773]' : 'bg-transparent text-[#caa875] border-dashed hover:border-[#caa875]'; ?>"
+                            class="menu-subtab-btn btn-liquid-glass px-5 sm:px-7 py-2.5 sm:py-3 text-[11px] sm:text-xs tracking-[0.15em] uppercase transition-all duration-300 cursor-pointer <?php echo ( $sub_i === 0 ) ? '!border-[#caa875] is-active' : ''; ?>"
                             data-subtab="<?php echo esc_attr( $con_id ); ?>">
-                        <?php echo esc_html( $sub['title'] ); ?>
+                        <span class="btn-roll-wrap">
+                            <span class="btn-roll-text">
+                                <span><?php echo esc_html( $sub['title'] ); ?></span>
+                                <span aria-hidden="true"><?php echo esc_html( $sub['title'] ); ?></span>
+                            </span>
+                        </span>
                     </button>
                 <?php $sub_i++; endforeach; ?>
             </div>

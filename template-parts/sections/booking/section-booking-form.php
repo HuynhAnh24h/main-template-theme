@@ -170,7 +170,7 @@ $today_value   = date_i18n('Y-m-d');
                 <button 
                     type="submit" 
                     id="otr_booking_submit_btn" 
-                    class="btn-liquid-glass w-full py-4 px-8 rounded-full font-serif tracking-[0.25em] text-sm md:text-base uppercase bg-[#1e1710] text-[#caa875] border border-[#caa875]/60 shadow-[0_4px_25px_rgba(0,0,0,0.6)] flex items-center justify-center gap-3 cursor-pointer group"
+                    class="btn-liquid-glass w-full py-4 px-8 rounded-full font-serif tracking-[0.25em] text-sm md:text-base uppercase flex items-center justify-center gap-3 cursor-pointer group"
                 >
                     <span class="btn-text btn-roll-wrap font-medium">
                         <span class="btn-roll-text">
@@ -290,9 +290,9 @@ $today_value   = date_i18n('Y-m-d');
         <button 
             type="button" 
             id="modal-close-btn" 
-            class="btn-liquid-glass btn-liquid-gold w-full py-3.5 px-6 rounded-full font-serif tracking-[0.2em] text-xs sm:text-sm uppercase bg-[#caa875] text-[#080604] font-bold cursor-pointer shadow-lg"
+            class="btn-liquid-glass w-full py-3.5 px-6 rounded-full font-serif tracking-[0.2em] text-xs sm:text-sm uppercase cursor-pointer"
         >
-            <span class="btn-roll-wrap">
+            <span class="btn-roll-wrap font-medium">
                 <span class="btn-roll-text">
                     <span>ĐÓNG CỬA SỔ</span>
                     <span aria-hidden="true">ĐÓNG CỬA SỔ</span>

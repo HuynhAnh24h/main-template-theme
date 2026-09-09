@@ -66,21 +66,26 @@ $fallback_images = array(
 <section class="w-full bg-[#080604] text-[#caa875] pt-28 sm:pt-36 md:pt-40 pb-24 md:pb-32 font-serif min-h-screen relative overflow-hidden">
     
     <!-- TIÊU ĐỀ LỚN: BLOG & EVENT (FONT MRCH-NewYork) -->
-    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 text-center mb-8 md:mb-10">
+    <div class="w-full max-w-[1536px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 text-center mb-8 md:mb-12">
         <h1 class="font-mrch text-[#caa875] text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-normal uppercase tracking-[0.06em] leading-tight select-none">
             BLOG &amp; EVENT
         </h1>
     </div>
 
     <!-- THANH BỘ LỌC CHUYÊN MỤC (PILL FILTER TABS) -->
-    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 mb-12 sm:mb-16 md:mb-20">
+    <div class="w-full max-w-[1536px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 mb-12 sm:mb-16 md:mb-20">
         <div class="blog-filter-tabs flex items-center justify-center gap-2.5 sm:gap-4 select-none flex-wrap">
             
             <!-- Tab Tất Cả -->
             <button type="button" 
-                    class="blog-tab-btn px-5 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-[13px] tracking-wider uppercase font-sans transition-all duration-300 cursor-pointer <?php echo ($current_cat_slug === 'all') ? 'bg-[#26180a] border border-[#caa875]/80 text-[#caa875] font-semibold shadow-lg' : 'bg-transparent text-[#caa875]/70 hover:text-[#caa875] border border-transparent hover:border-[#caa875]/30'; ?>"
+                    class="blog-tab-btn btn-liquid-glass <?php echo ($current_cat_slug === 'all') ? 'is-active' : ''; ?>"
                     data-cat-slug="all">
-                Tất cả
+                <span class="btn-roll-wrap">
+                    <span class="btn-roll-text">
+                        <span>Tất cả</span>
+                        <span aria-hidden="true">Tất cả</span>
+                    </span>
+                </span>
             </button>
 
             <!-- Các Tab Chuyên mục thực tế từ WordPress -->
@@ -89,34 +94,48 @@ $fallback_images = array(
                     $isActive = ($current_cat_slug === $cat->slug);
                 ?>
                     <button type="button" 
-                            class="blog-tab-btn px-5 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-[13px] tracking-wider uppercase font-sans transition-all duration-300 cursor-pointer <?php echo $isActive ? 'bg-[#26180a] border border-[#caa875]/80 text-[#caa875] font-semibold shadow-lg' : 'bg-transparent text-[#caa875]/70 hover:text-[#caa875] border border-transparent hover:border-[#caa875]/30'; ?>"
+                            class="blog-tab-btn btn-liquid-glass <?php echo $isActive ? 'is-active' : ''; ?>"
                             data-cat-slug="<?php echo esc_attr( $cat->slug ); ?>">
-                        <?php echo esc_html( $cat->name ); ?>
+                        <span class="btn-roll-wrap">
+                            <span class="btn-roll-text">
+                                <span><?php echo esc_html( $cat->name ); ?></span>
+                                <span aria-hidden="true"><?php echo esc_html( $cat->name ); ?></span>
+                            </span>
+                        </span>
                     </button>
                 <?php endforeach; ?>
             <?php else : ?>
                 <!-- Fallback Tabs mặc định chuẩn Mockup nếu chưa có Category trong DB -->
-                <button type="button" class="blog-tab-btn px-5 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-[13px] tracking-wider uppercase font-sans transition-all duration-300 cursor-pointer bg-transparent text-[#caa875]/70 hover:text-[#caa875] border border-transparent hover:border-[#caa875]/30" data-cat-slug="event">
-                    Event
+                <button type="button" class="blog-tab-btn btn-liquid-glass" data-cat-slug="event">
+                    <span class="btn-roll-wrap">
+                        <span class="btn-roll-text">
+                            <span>Event</span>
+                            <span aria-hidden="true">Event</span>
+                        </span>
+                    </span>
                 </button>
-                <button type="button" class="blog-tab-btn px-5 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-[13px] tracking-wider uppercase font-sans transition-all duration-300 cursor-pointer bg-transparent text-[#caa875]/70 hover:text-[#caa875] border border-transparent hover:border-[#caa875]/30" data-cat-slug="bai-viet">
-                    Bài viết
+                <button type="button" class="blog-tab-btn btn-liquid-glass" data-cat-slug="bai-viet">
+                    <span class="btn-roll-wrap">
+                        <span class="btn-roll-text">
+                            <span>Bài viết</span>
+                            <span aria-hidden="true">Bài viết</span>
+                        </span>
+                    </span>
                 </button>
             <?php endif; ?>
 
         </div>
     </div>
 
-    <!-- DANH SÁCH BÀI VIẾT BỐ CỤC SO LE ZIG-ZAG -->
-    <div class="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-10">
-        <div id="blog-posts-container" class="space-y-12 sm:space-y-16 md:space-y-20 lg:space-y-24">
+    <!-- DANH SÁCH BÀI VIẾT (CONTAINER RỘNG BẰNG HEADER CONTAINER) -->
+    <div class="w-full max-w-[1536px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16">
+        <div id="blog-posts-container" class="space-y-8 sm:space-y-12 md:space-y-16">
             
             <?php 
             if ( $blog_query->have_posts() ) :
                 $item_index = 0;
                 while ( $blog_query->have_posts() ) : $blog_query->the_post();
                     $post_id   = get_the_ID();
-                    $is_even   = ($item_index % 2 === 1); // So le hàng lẻ / hàng chẵn
                     
                     // Ảnh đại diện
                     $img_url = get_the_post_thumbnail_url( $post_id, 'large' );
@@ -142,44 +161,43 @@ $fallback_images = array(
                         $excerpt = wp_trim_words( get_the_content(), 35, '...' );
                     }
             ?>
-                <!-- Khung Thẻ Bài Viết So Le (Zig-Zag Item) -->
-                <article class="blog-post-item group flex flex-col items-center gap-6 sm:gap-8 md:gap-10 lg:gap-14 transition-all duration-500 <?php echo $is_even ? 'lg:flex-row-reverse' : 'lg:flex-row'; ?>"
+                <!-- Khung Thẻ Bài Viết Chuẩn Mockup On The Rock -->
+                <article class="blog-post-card group relative w-full flex flex-col lg:flex-row cursor-pointer"
                          data-post-cat="<?php echo esc_attr( $cat_slug ); ?>">
                     
-                    <!-- CỘT ẢNH NGHỆ THUẬT BO GÓC -->
-                    <div class="w-full lg:w-1/2 shrink-0">
-                        <div class="relative w-full aspect-[16/10] sm:aspect-[16/9] lg:aspect-[16/10] rounded-2xl sm:rounded-3xl overflow-hidden border border-[#caa875]/25 shadow-2xl bg-[#120c07]">
-                            <a href="<?php the_permalink(); ?>" class="block w-full h-full relative overflow-hidden group">
-                                <img src="<?php echo esc_url( $img_url ); ?>" 
-                                     alt="<?php the_title_attribute(); ?>" 
-                                     class="w-full h-full object-cover brightness-[0.92] group-hover:brightness-100 group-hover:scale-105 transition-all duration-700 select-none">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
-                            </a>
-                        </div>
+                    <!-- Link bọc toàn bộ thẻ để click mở chi tiết -->
+                    <a href="<?php the_permalink(); ?>" class="absolute inset-0 z-10" aria-label="<?php the_title_attribute(); ?>"></a>
+
+                    <!-- CỘT ẢNH NGHỆ THUẬT (50% WIDTH) -->
+                    <div class="w-full lg:w-1/2 relative overflow-hidden shrink-0 aspect-[16/10] sm:aspect-[16/9] lg:aspect-auto lg:min-h-[380px] bg-[#0c0805]">
+                        <img src="<?php echo esc_url( $img_url ); ?>" 
+                             alt="<?php the_title_attribute(); ?>" 
+                             loading="lazy"
+                             decoding="async"
+                             class="w-full h-full object-cover brightness-[0.92] group-hover:brightness-100 group-hover:scale-105 transition-all duration-700 ease-out select-none">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
                     </div>
 
-                    <!-- CỘT NỘI DUNG CHI TIẾT -->
-                    <div class="w-full lg:w-1/2 flex flex-col justify-center px-1 sm:px-3 md:px-4">
+                    <!-- CỘT NỘI DUNG CHI TIẾT (50% WIDTH, NỀN ĐỔI SANG #472b08 KHI HOVER) -->
+                    <div class="blog-card-content w-full lg:w-1/2 flex flex-col justify-center p-6 sm:p-8 md:p-10 lg:p-14">
                         
                         <!-- Dòng Meta: Tag chuyên mục & Tác giả / Ngày đăng -->
-                        <div class="flex items-center justify-between gap-4 mb-3 sm:mb-4 select-none">
-                            <span class="inline-block px-3.5 py-1 text-[10.5px] sm:text-xs font-sans tracking-wider text-[#caa875] bg-[#1a120b] border border-[#caa875]/40 rounded-full font-medium shadow-sm uppercase">
+                        <div class="flex items-center justify-between gap-4 mb-4 sm:mb-6 select-none relative z-20">
+                            <span class="blog-card-tag">
                                 <?php echo esc_html( $cat_name ); ?>
                             </span>
-                            <span class="text-xs sm:text-[13px] font-sans font-light tracking-wide text-[#caa875]/60">
+                            <span class="text-xs sm:text-[13px] font-sans font-light tracking-wide text-[#caa875]/70 group-hover:text-[#f4efe8]/80 transition-colors">
                                 By <?php echo esc_html( $author_name ); ?> &nbsp;|&nbsp; <?php echo esc_html( $date_str ); ?>
                             </span>
                         </div>
 
                         <!-- Tiêu đề bài viết (Font MRCH-NewYork) -->
-                        <h2 class="font-mrch text-2xl sm:text-3xl md:text-4xl lg:text-[34px] font-normal text-[#d8c19d] group-hover:text-white transition-colors duration-300 leading-snug mb-3 sm:mb-4 tracking-[0.02em]">
-                            <a href="<?php the_permalink(); ?>" class="hover:underline decoration-[#caa875]/50 underline-offset-4">
-                                <?php the_title(); ?>
-                            </a>
+                        <h2 class="font-mrch text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-normal text-[#caa875] group-hover:text-[#fdf8f0] transition-colors duration-400 leading-[1.22] mb-3 sm:mb-4 tracking-[0.02em]">
+                            <?php the_title(); ?>
                         </h2>
 
                         <!-- Đoạn trích tóm tắt (Font SVN-Gilroy Light) -->
-                        <p class="text-xs sm:text-sm md:text-[14.5px] font-gilroy-light text-[#caa875]/75 leading-relaxed line-clamp-3 md:line-clamp-4">
+                        <p class="text-xs sm:text-sm md:text-[14.5px] font-gilroy-light text-[#caa875]/75 group-hover:text-[#f4efe8]/90 transition-colors duration-400 leading-relaxed line-clamp-3 md:line-clamp-4">
                             <?php echo esc_html( $excerpt ); ?>
                         </p>
 
@@ -204,8 +222,13 @@ $fallback_images = array(
         <div class="text-center mt-16 sm:mt-20 md:mt-24">
             <button type="button" 
                     id="blog-load-more-btn" 
-                    class="inline-flex items-center justify-center px-8 sm:px-10 py-3 rounded-full border border-[#caa875]/40 hover:border-[#caa875] bg-[#1a120b] hover:bg-[#caa875]/20 text-[#caa875] text-xs sm:text-[13px] tracking-[0.2em] uppercase font-sans font-medium transition-all duration-300 cursor-pointer shadow-lg active:scale-95 select-none">
-                XEM THÊM
+                    class="btn-liquid-glass inline-flex items-center justify-center px-8 sm:px-10 py-3.5 rounded-full text-xs sm:text-[13px] tracking-[0.2em] uppercase font-sans font-medium transition-all duration-300 cursor-pointer shadow-lg select-none">
+                <span class="btn-roll-wrap">
+                    <span class="btn-roll-text">
+                        <span>XEM THÊM</span>
+                        <span aria-hidden="true">XEM THÊM</span>
+                    </span>
+                </span>
             </button>
         </div>
 
