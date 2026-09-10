@@ -15,21 +15,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $front_page_id = get_option('page_on_front');
 
-$marquee_text = ! empty( $args['marquee_text'] ) ? $args['marquee_text'] : (function_exists('get_field') ? (get_field('team_marquee_text', $front_page_id) ?: 'MEET THE ON THE ROCK TEAM') : 'MEET THE ON THE ROCK TEAM');
+$marquee_text = ! empty( $args['marquee_text'] ) ? $args['marquee_text'] : (function_exists('otr_get_field') ? otr_get_field('team_marquee_text', $front_page_id, function_exists('otr_t') ? otr_t('GẶP GỠ ĐỘI NGŨ ON THE ROCK', 'MEET THE ON THE ROCK TEAM') : 'MEET THE ON THE ROCK TEAM') : 'MEET THE ON THE ROCK TEAM');
 $members      = ! empty( $args['members'] ) ? $args['members'] : array();
 
 $fallback_team_photos = array(
-    1 => array('name' => 'QUỲNH VÂN', 'role' => 'STORE MANAGER', 'photo' => 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop'),
-    2 => array('name' => 'TUẤN KIỆT', 'role' => 'BAR MANAGER', 'photo' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop'),
-    3 => array('name' => 'VĂN BẢO', 'role' => 'BAR CAPTAIN', 'photo' => 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800&auto=format&fit=crop'),
-    4 => array('name' => 'THÀNH ĐỨC', 'role' => 'BAR CAPTAIN', 'photo' => 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=800&auto=format&fit=crop'),
-    5 => array('name' => 'HỒNG PHÚ', 'role' => 'BARTENDER', 'photo' => 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop'),
+    1 => array('name' => 'QUỲNH VÂN', 'role' => function_exists('otr_t') ? otr_t('QUẢN LÝ CỬA HÀNG', 'STORE MANAGER') : 'STORE MANAGER', 'photo' => 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop'),
+    2 => array('name' => 'TUẤN KIỆT', 'role' => function_exists('otr_t') ? otr_t('QUẢN LÝ QUẦY BAR', 'BAR MANAGER') : 'BAR MANAGER', 'photo' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop'),
+    3 => array('name' => 'VĂN BẢO', 'role' => function_exists('otr_t') ? otr_t('TRƯỞNG CA QUẦY BAR', 'BAR CAPTAIN') : 'BAR CAPTAIN', 'photo' => 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800&auto=format&fit=crop'),
+    4 => array('name' => 'THÀNH ĐỨC', 'role' => function_exists('otr_t') ? otr_t('TRƯỞNG CA QUẦY BAR', 'BAR CAPTAIN') : 'BAR CAPTAIN', 'photo' => 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=800&auto=format&fit=crop'),
+    5 => array('name' => 'HỒNG PHÚ', 'role' => function_exists('otr_t') ? otr_t('CHUYÊN VIÊN PHA CHẾ', 'BARTENDER') : 'BARTENDER', 'photo' => 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop'),
 );
 
 if ( empty( $members ) && function_exists('get_field') ) {
     for ($t = 1; $t <= 5; $t++) {
-        $t_name  = get_field('team_member_name_' . $t, $front_page_id);
-        $t_role  = get_field('team_member_role_' . $t, $front_page_id);
+        $t_name  = function_exists('otr_get_field') ? otr_get_field('team_member_name_' . $t, $front_page_id) : get_field('team_member_name_' . $t, $front_page_id);
+        $t_role  = function_exists('otr_get_field') ? otr_get_field('team_member_role_' . $t, $front_page_id) : get_field('team_member_role_' . $t, $front_page_id);
         $t_photo = get_field('team_member_photo_' . $t, $front_page_id);
 
         $photo_url = (!empty($t_photo) && is_array($t_photo)) ? $t_photo['url'] : (is_string($t_photo) && !empty($t_photo) ? $t_photo : $fallback_team_photos[$t]['photo']);

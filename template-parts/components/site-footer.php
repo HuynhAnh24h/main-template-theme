@@ -13,8 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 $front_page_id = get_option('page_on_front');
 
 // 1. Cột 1: Danh mục
-$col1_title   = ! empty( $args['col1_title'] )   ? $args['col1_title']   : ( get_field( 'footer_col1_title', $front_page_id ) ?: 'DANH MỤC' );
-$menu_text    = ! empty( $args['menu_text'] )    ? $args['menu_text']    : ( get_field( 'footer_menu_text', $front_page_id ) ?: 'TRANG MENU' );
+$col1_title   = ! empty( $args['col1_title'] )   ? $args['col1_title']   : ( function_exists('otr_get_field') ? otr_get_field( 'footer_col1_title', $front_page_id, function_exists('otr_t') ? otr_t('DANH MỤC', 'NAVIGATION') : 'DANH MỤC' ) : 'DANH MỤC' );
+$menu_text    = ! empty( $args['menu_text'] )    ? $args['menu_text']    : ( function_exists('otr_get_field') ? otr_get_field( 'footer_menu_text', $front_page_id, function_exists('otr_t') ? otr_t('TRANG MENU', 'MENU') : 'TRANG MENU' ) : 'TRANG MENU' );
 $raw_footer_menu = ! empty( $args['menu_url'] ) ? $args['menu_url'] : get_field( 'footer_menu_url', $front_page_id );
 if (empty($raw_footer_menu) || in_array($raw_footer_menu, array('#menu', '#', ''))) {
     $menu_url = home_url('/menu/');
@@ -22,7 +22,7 @@ if (empty($raw_footer_menu) || in_array($raw_footer_menu, array('#menu', '#', ''
     $menu_url = function_exists('otr_url') ? otr_url($raw_footer_menu) : ((strpos($raw_footer_menu, 'http') === 0) ? $raw_footer_menu : home_url('/' . ltrim($raw_footer_menu, '/')));
 }
 
-$contact_text = ! empty( $args['contact_text'] ) ? $args['contact_text'] : ( get_field( 'footer_contact_text', $front_page_id ) ?: 'TRANG LIÊN HỆ' );
+$contact_text = ! empty( $args['contact_text'] ) ? $args['contact_text'] : ( function_exists('otr_get_field') ? otr_get_field( 'footer_contact_text', $front_page_id, function_exists('otr_t') ? otr_t('TRANG LIÊN HỆ', 'CONTACT') : 'TRANG LIÊN HỆ' ) : 'TRANG LIÊN HỆ' );
 $raw_footer_contact = ! empty( $args['contact_url'] ) ? $args['contact_url'] : get_field( 'footer_contact_url', $front_page_id );
 if (empty($raw_footer_contact) || in_array($raw_footer_contact, array('#contact', '#', ''))) {
     $contact_url = home_url('/contact/');
@@ -30,7 +30,7 @@ if (empty($raw_footer_contact) || in_array($raw_footer_contact, array('#contact'
     $contact_url = function_exists('otr_url') ? otr_url($raw_footer_contact) : ((strpos($raw_footer_contact, 'http') === 0) ? $raw_footer_contact : home_url('/' . ltrim($raw_footer_contact, '/')));
 }
 
-$booking_text = ! empty( $args['booking_text'] ) ? $args['booking_text'] : ( get_field( 'footer_booking_text', $front_page_id ) ?: 'ĐẶT BÀN TRƯỚC' );
+$booking_text = ! empty( $args['booking_text'] ) ? $args['booking_text'] : ( function_exists('otr_get_field') ? otr_get_field( 'footer_booking_text', $front_page_id, function_exists('otr_t') ? otr_t('ĐẶT BÀN TRƯỚC', 'RESERVATION') : 'ĐẶT BÀN TRƯỚC' ) : 'ĐẶT BÀN TRƯỚC' );
 $raw_footer_booking = ! empty( $args['booking_url'] ) ? $args['booking_url'] : get_field( 'footer_booking_url', $front_page_id );
 if (empty($raw_footer_booking) || in_array($raw_footer_booking, array('#book', '#booking', '#', ''))) {
     $booking_url = home_url('/booking/');
@@ -39,7 +39,7 @@ if (empty($raw_footer_booking) || in_array($raw_footer_booking, array('#book', '
 }
 
 // 2. Cột 2: Mạng xã hội
-$col2_title     = ! empty( $args['col2_title'] )     ? $args['col2_title']     : ( get_field( 'footer_col2_title', $front_page_id ) ?: 'MẠNG XÃ HỘI' );
+$col2_title     = ! empty( $args['col2_title'] )     ? $args['col2_title']     : ( function_exists('otr_get_field') ? otr_get_field( 'footer_col2_title', $front_page_id, function_exists('otr_t') ? otr_t('MẠNG XÃ HỘI', 'SOCIAL MEDIA') : 'MẠNG XÃ HỘI' ) : 'MẠNG XÃ HỘI' );
 $facebook_text  = ! empty( $args['facebook_text'] )  ? $args['facebook_text']  : ( get_field( 'footer_facebook_text', $front_page_id ) ?: 'FACEBOOK' );
 $raw_fb = ! empty( $args['facebook_url'] ) ? $args['facebook_url'] : get_field( 'footer_facebook_url', $front_page_id );
 if (empty($raw_fb) || in_array(rtrim($raw_fb, '/'), array('https://facebook.com', 'http://facebook.com', '#', ''))) {
@@ -65,11 +65,11 @@ if (empty($raw_tiktok) || in_array(rtrim($raw_tiktok, '/'), array('https://tikto
 }
 
 // 3. Cột 3: Đến và trải nghiệm
-$col3_title     = ! empty( $args['col3_title'] )     ? $args['col3_title']     : ( get_field( 'footer_col3_title', $front_page_id ) ?: 'ĐẾN VÀ TRẢI NGHIỆM' );
-$hours_days     = ! empty( $args['hours_days'] )     ? $args['hours_days']     : ( get_field( 'footer_hours_days', $front_page_id ) ?: 'THỨ HAI – CHỦ NHẬT' );
-$hours_time     = ! empty( $args['hours_time'] )     ? $args['hours_time']     : ( get_field( 'footer_hours_time', $front_page_id ) ?: '18H30 – 2H' );
-$address_line1  = ! empty( $args['address_line1'] )  ? $args['address_line1']  : ( get_field( 'footer_address_line1', $front_page_id ) ?: 'TẦNG HẦM 69' );
-$address_line2  = ! empty( $args['address_line2'] )  ? $args['address_line2']  : ( get_field( 'footer_address_line2', $front_page_id ) ?: 'TRƯƠNG CÔNG ĐỊNH, PHƯỜNG 01, ĐÀ LẠT' );
+$col3_title     = ! empty( $args['col3_title'] )     ? $args['col3_title']     : ( function_exists('otr_get_field') ? otr_get_field( 'footer_col3_title', $front_page_id, function_exists('otr_t') ? otr_t('ĐẾN VÀ TRẢI NGHIỆM', 'VISIT & EXPERIENCE') : 'ĐẾN VÀ TRẢI NGHIỆM' ) : 'ĐẾN VÀ TRẢI NGHIỆM' );
+$hours_days     = ! empty( $args['hours_days'] )     ? $args['hours_days']     : ( function_exists('otr_get_field') ? otr_get_field( 'footer_hours_days', $front_page_id, function_exists('otr_t') ? otr_t('THỨ HAI – CHỦ NHẬT', 'MONDAY – SUNDAY') : 'THỨ HAI – CHỦ NHẬT' ) : 'THỨ HAI – CHỦ NHẬT' );
+$hours_time     = ! empty( $args['hours_time'] )     ? $args['hours_time']     : ( function_exists('otr_get_field') ? otr_get_field( 'footer_hours_time', $front_page_id, function_exists('otr_t') ? otr_t('18H30 – 2H', '6:30 PM – 2:00 AM') : '18H30 – 2H' ) : '18H30 – 2H' );
+$address_line1  = ! empty( $args['address_line1'] )  ? $args['address_line1']  : ( function_exists('otr_get_field') ? otr_get_field( 'footer_address_line1', $front_page_id, function_exists('otr_t') ? otr_t('TẦNG HẦM 69', 'BASEMENT 69') : 'TẦNG HẦM 69' ) : 'TẦNG HẦM 69' );
+$address_line2  = ! empty( $args['address_line2'] )  ? $args['address_line2']  : ( function_exists('otr_get_field') ? otr_get_field( 'footer_address_line2', $front_page_id, function_exists('otr_t') ? otr_t('TRƯƠNG CÔNG ĐỊNH, PHƯỜNG 01, ĐÀ LẠT', 'TRUONG CONG DINH, WARD 01, DA LAT') : 'TRƯƠNG CÔNG ĐỊNH, PHƯỜNG 01, ĐÀ LẠT' ) : 'TRƯƠNG CÔNG ĐỊNH, PHƯỜNG 01, ĐÀ LẠT' );
 $raw_maps = ! empty( $args['maps_url'] ) ? $args['maps_url'] : get_field( 'footer_maps_url', $front_page_id );
 if (empty($raw_maps) || $raw_maps === '#') {
     $maps_url = 'https://maps.google.com/?q=69+Trương+Công+Định,+Phường+1,+Đà+Lạt';
@@ -78,13 +78,13 @@ if (empty($raw_maps) || $raw_maps === '#') {
 }
 
 // 4. Cột 4: Liên hệ
-$col4_title = ! empty( $args['col4_title'] ) ? $args['col4_title'] : ( get_field( 'footer_col4_title', $front_page_id ) ?: 'LIÊN HỆ' );
+$col4_title = ! empty( $args['col4_title'] ) ? $args['col4_title'] : ( function_exists('otr_get_field') ? otr_get_field( 'footer_col4_title', $front_page_id, function_exists('otr_t') ? otr_t('LIÊN HỆ', 'CONTACT US') : 'LIÊN HỆ' ) : 'LIÊN HỆ' );
 $email      = ! empty( $args['email'] )      ? $args['email']      : ( get_field( 'footer_email', $front_page_id ) ?: 'ONTHEROCK@GMAIL.COM' );
 $phone      = ! empty( $args['phone'] )      ? $args['phone']      : ( get_field( 'footer_phone', $front_page_id ) ?: '070 297 0268' );
 
 // 5. Thương hiệu & Bản quyền
 $brand_title = ! empty( $args['brand_title'] ) ? $args['brand_title'] : ( get_field( 'footer_brand_title', $front_page_id ) ?: 'ON THE ROCK' );
-$copyright   = ! empty( $args['copyright'] )   ? $args['copyright']   : ( get_field( 'footer_copyright', $front_page_id ) ?: '@2026 ON THE ROCK' );
+$copyright   = ! empty( $args['copyright'] )   ? $args['copyright']   : ( function_exists('otr_get_field') ? otr_get_field( 'footer_copyright', $front_page_id, '@2026 ON THE ROCK' ) : '@2026 ON THE ROCK' );
 ?>
 
 <footer id="site-footer" class="w-full bg-[#36230d] text-[#caa875] pt-16 md:pt-24 pb-8 overflow-hidden font-sans select-none">
@@ -181,6 +181,13 @@ $copyright   = ! empty( $args['copyright'] )   ? $args['copyright']   : ( get_fi
             </h2>
         </a>
     </div>
+
+    <!-- Language Switcher in Footer -->
+    <?php if (function_exists('otr_language_switcher')): ?>
+        <div class="flex justify-center items-center mb-6">
+            <?php echo otr_language_switcher(); ?>
+        </div>
+    <?php endif; ?>
 
     <!-- 3. VIỀN NÉT ĐỨT & BẢN QUYỀN: TRÀN TOÀN BỘ MÀN HÌNH -->
     <div class="w-full border-t border-dashed border-[#caa875]/25 pt-6 md:pt-7 text-center px-4">

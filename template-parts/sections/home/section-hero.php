@@ -25,8 +25,8 @@ $front_page_id = get_option('page_on_front');
 
 // 1. Phân giải dữ liệu đầu vào (tự nạp từ ACF nếu không truyền tham số)
 $bg_image_raw        = ! empty( $args['hero_bg_image'] ) ? $args['hero_bg_image'] : (function_exists('get_field') ? get_field('hero_bg_image', $front_page_id) : null);
-$hero_title          = ! empty( $args['hero_title'] ) ? $args['hero_title'] : (function_exists('get_field') ? (get_field('hero_title', $front_page_id) ?: "BESPEAK YOUR\nBESPOKE COCKTAIL") : "BESPEAK YOUR\nBESPOKE COCKTAIL");
-$hero_btn_text       = ! empty( $args['hero_btn_text'] ) ? $args['hero_btn_text'] : (function_exists('get_field') ? (get_field('hero_btn_text', $front_page_id) ?: 'XEM MENU') : 'XEM MENU');
+$hero_title          = ! empty( $args['hero_title'] ) ? $args['hero_title'] : (function_exists('otr_get_field') ? otr_get_field('hero_title', $front_page_id, "BESPEAK YOUR\nBESPOKE COCKTAIL") : "BESPEAK YOUR\nBESPOKE COCKTAIL");
+$hero_btn_text       = ! empty( $args['hero_btn_text'] ) ? $args['hero_btn_text'] : (function_exists('otr_get_field') ? otr_get_field('hero_btn_text', $front_page_id, function_exists('otr_t') ? otr_t('XEM MENU', 'VIEW MENU') : 'VIEW MENU') : 'XEM MENU');
 
 $raw_hero_btn        = ! empty( $args['hero_btn_link'] ) ? $args['hero_btn_link'] : (function_exists('get_field') ? get_field('hero_btn_link', $front_page_id) : '');
 $hero_btn_link       = (empty($raw_hero_btn) || in_array($raw_hero_btn, array('#menu', '#', ''))) ? home_url('/menu/') : (function_exists('otr_url') ? otr_url($raw_hero_btn) : $raw_hero_btn);

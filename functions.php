@@ -312,6 +312,11 @@ add_filter('wp_resource_hints', 'theme_resource_hints', 10, 2);
 
 
 /**
+ * 8.b Hệ thống Đa Ngôn Ngữ Song Ngữ (Bilingual VI / EN System)
+ */
+require get_template_directory() . '/inc/multilingual.php';
+
+/**
  * 9. Quản lý Custom Fields (ACF Settings)
  * Nạp cấu hình các trường dữ liệu tùy biến từ thư mục custom-fields/
  */
@@ -423,3 +428,8 @@ add_filter( 'body_class', function ( $classes ) {
     }
     return $classes;
 } );
+
+/**
+ * 8. Nạp Module Content Seeder cho Admin Pages (Đồng bộ nội dung song ngữ theo từng trang)
+ */
+require get_template_directory() . '/inc/content-seeder.php';

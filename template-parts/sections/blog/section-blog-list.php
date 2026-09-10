@@ -61,6 +61,16 @@ $fallback_images = array(
     'https://images.unsplash.com/photo-1572116469696-31de0f17cc34?q=80&w=1200&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1560512823-829485b8bf24?q=80&w=1200&auto=format&fit=crop',
 );
+$blog_page_id = get_queried_object_id();
+if ( empty( $blog_page_id ) || ! is_page() ) {
+    $blog_page = get_page_by_path( 'blog' );
+    if ( $blog_page ) {
+        $blog_page_id = $blog_page->ID;
+    }
+}
+$blog_title     = function_exists('otr_get_field') ? otr_get_field('blog_page_title', $blog_page_id, 'BLOG & EVENT') : 'BLOG & EVENT';
+$blog_subtitle  = function_exists('otr_get_field') ? otr_get_field('blog_page_subtitle', $blog_page_id, '') : '';
+$all_tab_label  = function_exists('otr_get_field') ? otr_get_field('blog_filter_all_label', $blog_page_id, function_exists('otr_t') ? otr_t('Tất cả', 'All') : 'Tất cả') : 'Tất cả';
 ?>
 
 <section class="w-full bg-[#080604] text-[#caa875] pt-28 sm:pt-36 md:pt-40 pb-24 md:pb-32 font-serif min-h-screen relative overflow-hidden">
@@ -68,8 +78,13 @@ $fallback_images = array(
     <!-- TIÊU ĐỀ LỚN: BLOG & EVENT (FONT MRCH-NewYork) -->
     <div class="w-full max-w-[1536px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 text-center mb-8 md:mb-12">
         <h1 class="font-mrch text-[#caa875] text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-normal uppercase tracking-[0.06em] leading-tight select-none">
-            BLOG &amp; EVENT
+            <?php echo esc_html( $blog_title ); ?>
         </h1>
+        <?php if ( ! empty( $blog_subtitle ) ) : ?>
+            <p class="text-[#caa875]/75 text-xs sm:text-sm md:text-base leading-relaxed max-w-xl mx-auto font-normal font-sans mt-3">
+                <?php echo esc_html( $blog_subtitle ); ?>
+            </p>
+        <?php endif; ?>
     </div>
 
     <!-- THANH BỘ LỌC CHUYÊN MỤC (PILL FILTER TABS) -->
@@ -82,8 +97,8 @@ $fallback_images = array(
                     data-cat-slug="all">
                 <span class="btn-roll-wrap">
                     <span class="btn-roll-text">
-                        <span>Tất cả</span>
-                        <span aria-hidden="true">Tất cả</span>
+                        <span><?php echo esc_html( $all_tab_label ); ?></span>
+                        <span aria-hidden="true"><?php echo esc_html( $all_tab_label ); ?></span>
                     </span>
                 </span>
             </button>
@@ -92,14 +107,20 @@ $fallback_images = array(
             <?php if ( ! empty( $categories ) ) : ?>
                 <?php foreach ( $categories as $cat ) : 
                     $isActive = ($current_cat_slug === $cat->slug);
+                    $cat_tab_name = $cat->name;
+                    if ( $cat->slug === 'event' ) {
+                        $cat_tab_name = function_exists('otr_t') ? otr_t('Event', 'Events') : $cat->name;
+                    } elseif ( in_array($cat->slug, array('bai-viet', 'tin-tuc', 'news', 'articles', 'article')) ) {
+                        $cat_tab_name = function_exists('otr_t') ? otr_t('Bài viết', 'Articles') : $cat->name;
+                    }
                 ?>
                     <button type="button" 
                             class="blog-tab-btn btn-liquid-glass <?php echo $isActive ? 'is-active' : ''; ?>"
                             data-cat-slug="<?php echo esc_attr( $cat->slug ); ?>">
                         <span class="btn-roll-wrap">
                             <span class="btn-roll-text">
-                                <span><?php echo esc_html( $cat->name ); ?></span>
-                                <span aria-hidden="true"><?php echo esc_html( $cat->name ); ?></span>
+                                <span><?php echo esc_html( $cat_tab_name ); ?></span>
+                                <span aria-hidden="true"><?php echo esc_html( $cat_tab_name ); ?></span>
                             </span>
                         </span>
                     </button>
@@ -109,16 +130,16 @@ $fallback_images = array(
                 <button type="button" class="blog-tab-btn btn-liquid-glass" data-cat-slug="event">
                     <span class="btn-roll-wrap">
                         <span class="btn-roll-text">
-                            <span>Event</span>
-                            <span aria-hidden="true">Event</span>
+                            <span><?php echo esc_html(function_exists('otr_t') ? otr_t('Event', 'Events') : 'Event'); ?></span>
+                            <span aria-hidden="true"><?php echo esc_html(function_exists('otr_t') ? otr_t('Event', 'Events') : 'Event'); ?></span>
                         </span>
                     </span>
                 </button>
                 <button type="button" class="blog-tab-btn btn-liquid-glass" data-cat-slug="bai-viet">
                     <span class="btn-roll-wrap">
                         <span class="btn-roll-text">
-                            <span>Bài viết</span>
-                            <span aria-hidden="true">Bài viết</span>
+                            <span><?php echo esc_html(function_exists('otr_t') ? otr_t('Bài viết', 'Articles') : 'Bài viết'); ?></span>
+                            <span aria-hidden="true"><?php echo esc_html(function_exists('otr_t') ? otr_t('Bài viết', 'Articles') : 'Bài viết'); ?></span>
                         </span>
                     </span>
                 </button>
@@ -147,7 +168,17 @@ $fallback_images = array(
                     // Chuyên mục bài viết
                     $post_cats = get_the_category( $post_id );
                     $cat_obj   = ! empty( $post_cats ) ? $post_cats[0] : null;
-                    $cat_name  = $cat_obj ? $cat_obj->name : 'Event';
+                    if ( $cat_obj ) {
+                        if ( $cat_obj->slug === 'event' ) {
+                            $cat_name = function_exists('otr_t') ? otr_t('Event', 'Event') : $cat_obj->name;
+                        } elseif ( in_array($cat_obj->slug, array('bai-viet', 'tin-tuc', 'news', 'articles', 'article')) ) {
+                            $cat_name = function_exists('otr_t') ? otr_t('Bài viết', 'Article') : $cat_obj->name;
+                        } else {
+                            $cat_name = $cat_obj->name;
+                        }
+                    } else {
+                        $cat_name = function_exists('otr_t') ? otr_t('Event', 'Event') : 'Event';
+                    }
                     $cat_slug  = $cat_obj ? $cat_obj->slug : 'event';
 
                     // Tác giả & Ngày đăng
@@ -212,7 +243,7 @@ $fallback_images = array(
             else :
             ?>
                 <div class="text-center py-16 text-[#caa875]/60 font-sans italic">
-                    Chưa có bài viết hoặc sự kiện nào trong danh mục này.
+                    <?php echo esc_html(function_exists('otr_t') ? otr_t('Chưa có bài viết hoặc sự kiện nào trong danh mục này.', 'No articles or events found in this category.') : 'Chưa có bài viết hoặc sự kiện nào trong danh mục này.'); ?>
                 </div>
             <?php endif; ?>
 
@@ -220,13 +251,14 @@ $fallback_images = array(
 
         <!-- NÚT XEM THÊM Ở ĐÁY TRANG -->
         <div class="text-center mt-16 sm:mt-20 md:mt-24">
+            <?php $load_more_text = function_exists('otr_get_field') ? otr_get_field('blog_load_more_label', $blog_page_id, function_exists('otr_t') ? otr_t('XEM THÊM', 'LOAD MORE') : 'XEM THÊM') : 'XEM THÊM'; ?>
             <button type="button" 
                     id="blog-load-more-btn" 
                     class="btn-liquid-glass inline-flex items-center justify-center px-8 sm:px-10 py-3.5 rounded-full text-xs sm:text-[13px] tracking-[0.2em] uppercase font-sans font-medium transition-all duration-300 cursor-pointer shadow-lg select-none">
                 <span class="btn-roll-wrap">
                     <span class="btn-roll-text">
-                        <span>XEM THÊM</span>
-                        <span aria-hidden="true">XEM THÊM</span>
+                        <span><?php echo esc_html($load_more_text); ?></span>
+                        <span aria-hidden="true"><?php echo esc_html($load_more_text); ?></span>
                     </span>
                 </span>
             </button>

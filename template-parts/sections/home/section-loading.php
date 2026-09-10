@@ -17,15 +17,16 @@ $front_page_id = get_option('page_on_front');
 // 1. Cấu hình Câu nói mở đầu Giai đoạn 4 (Intro Quote)
 $quote_text = ! empty($args['quote_text']) ? $args['quote_text'] : '';
 if (empty($quote_text)) {
-    $raw_intro = function_exists('get_field') ? get_field('home_intro_quote', $front_page_id) : '';
-    if (empty($raw_intro) && function_exists('get_field')) {
-        $raw_intro = get_field('home_reveal_title', $front_page_id);
+    $fallback_default = function_exists('otr_t') ? otr_t("Một quán cocktail bar ở Đà Lạt,\ncủa người Đà Lạt, dành cho những ai\nmuốn một trãi nghiệm Đà Lạt thú vị.", "A cocktail bar in Da Lat,\ncrafted by locals, for those seeking\nan authentic Da Lat experience.") : "Một quán cocktail bar ở Đà Lạt,\ncủa người Đà Lạt, dành cho những ai\nmuốn một trãi nghiệm Đà Lạt thú vị.";
+    $raw_intro = function_exists('otr_get_field') ? otr_get_field('home_intro_quote', $front_page_id, $fallback_default) : (function_exists('get_field') ? get_field('home_intro_quote', $front_page_id) : '');
+    if (empty($raw_intro) && function_exists('otr_get_field')) {
+        $raw_intro = otr_get_field('home_reveal_title', $front_page_id);
     }
     if (!empty($raw_intro) && strpos($raw_intro, 'Ánh sáng') === false) {
         $clean_intro = preg_replace('/<br\s*\/?>/i', "\n", $raw_intro);
         $quote_text = trim(strip_tags($clean_intro));
     } else {
-        $quote_text = "Một quán cocktail bar ở Đà Lạt,\ncủa người Đà Lạt, dành cho những ai\nmuốn một trãi nghiệm Đà Lạt thú vị.";
+        $quote_text = $fallback_default;
     }
 }
 

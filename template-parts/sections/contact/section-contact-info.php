@@ -12,77 +12,46 @@ if ( ! defined( 'ABSPATH' ) ) {
 $post_id = get_the_ID();
 
 // 1. Tiêu đề chính trang Liên Hệ
-$page_title = function_exists('get_field') ? get_field('contact_page_title', $post_id) : '';
-if (empty($page_title)) {
-    $page_title = 'LIÊN HỆ VỚI CHÚNG MÌNH';
-}
+$page_title = function_exists('otr_get_field') ? otr_get_field('contact_page_title', $post_id, function_exists('otr_t') ? otr_t('LIÊN HỆ VỚI CHÚNG MÌNH', 'GET IN TOUCH WITH US') : 'LIÊN HỆ VỚI CHÚNG MÌNH') : 'LIÊN HỆ VỚI CHÚNG MÌNH';
 
 // 2. Khối 1: ĐỊA CHỈ
-$addr_title = function_exists('get_field') ? get_field('contact_address_title', $post_id) : '';
-if (empty($addr_title)) {
-    $addr_title = 'ĐỊA CHỈ';
-}
-$addr_link = function_exists('get_field') ? get_field('contact_address_link', $post_id) : '';
-if (empty($addr_link)) {
-    $addr_link = 'https://maps.google.com/?q=69+Trương+Công+Định,+Phường+1,+Đà+Lạt';
-}
-$addr_lines_raw = function_exists('get_field') ? get_field('contact_address_lines', $post_id) : '';
+$addr_title = function_exists('otr_get_field') ? otr_get_field('contact_address_title', $post_id, function_exists('otr_t') ? otr_t('ĐỊA CHỈ', 'ADDRESS') : 'ĐỊA CHỈ') : 'ĐỊA CHỈ';
+$addr_link = function_exists('otr_get_field') ? otr_get_field('contact_address_link', $post_id, 'https://maps.google.com/?q=69+Trương+Công+Định,+Phường+1,+Đà+Lạt') : 'https://maps.google.com/?q=69+Trương+Công+Định,+Phường+1,+Đà+Lạt';
+$addr_lines_raw = function_exists('otr_get_field') ? otr_get_field('contact_address_lines', $post_id) : '';
 if (empty($addr_lines_raw)) {
-    $addr_lines = array(
-        'TẦNG HẦM 69',
-        'TRƯƠNG CÔNG ĐỊNH,',
-        'PHƯỜNG 01, ĐÀ LẠT'
-    );
+    if (function_exists('otr_is_en') && otr_is_en()) {
+        $addr_lines = array(
+            'BASEMENT 69',
+            'TRUONG CONG DINH,',
+            'WARD 01, DA LAT'
+        );
+    } else {
+        $addr_lines = array(
+            'TẦNG HẦM 69',
+            'TRƯƠNG CÔNG ĐỊNH,',
+            'PHƯỜNG 01, ĐÀ LẠT'
+        );
+    }
 } else {
     $addr_lines = array_filter(array_map('trim', explode("\n", str_replace("\r", "", $addr_lines_raw))));
 }
 
 // 3. Khối 2: LIÊN HỆ
-$info_title = function_exists('get_field') ? get_field('contact_info_title', $post_id) : '';
-if (empty($info_title)) {
-    $info_title = 'LIÊN HỆ';
-}
-$email = function_exists('get_field') ? get_field('contact_email', $post_id) : '';
-if (empty($email)) {
-    $email = 'ONTHEROCK@GMAIL.COM';
-}
-$phone = function_exists('get_field') ? get_field('contact_phone', $post_id) : '';
-if (empty($phone)) {
-    $phone = '070 297 0268';
-}
+$info_title = function_exists('otr_get_field') ? otr_get_field('contact_info_title', $post_id, function_exists('otr_t') ? otr_t('LIÊN HỆ', 'CONTACT') : 'LIÊN HỆ') : 'LIÊN HỆ';
+$email = function_exists('otr_get_field') ? otr_get_field('contact_email', $post_id, 'ONTHEROCK@GMAIL.COM') : 'ONTHEROCK@GMAIL.COM';
+$phone = function_exists('otr_get_field') ? otr_get_field('contact_phone', $post_id, '070 297 0268') : '070 297 0268';
 $clean_phone = preg_replace('/[^0-9+]/', '', $phone);
 
 // 4. Khối 3: GIỜ HOẠT ĐỘNG
-$hours_title = function_exists('get_field') ? get_field('contact_hours_title', $post_id) : '';
-if (empty($hours_title)) {
-    $hours_title = 'GIỜ HOẠT ĐỘNG';
-}
-$hours_days = function_exists('get_field') ? get_field('contact_hours_days', $post_id) : '';
-if (empty($hours_days)) {
-    $hours_days = 'THỨ HAI – CHỦ NHẬT';
-}
-$hours_time = function_exists('get_field') ? get_field('contact_hours_time', $post_id) : '';
-if (empty($hours_time)) {
-    $hours_time = '18H30 – 2H';
-}
+$hours_title = function_exists('otr_get_field') ? otr_get_field('contact_hours_title', $post_id, function_exists('otr_t') ? otr_t('GIỜ HOẠT ĐỘNG', 'OPENING HOURS') : 'GIỜ HOẠT ĐỘNG') : 'GIỜ HOẠT ĐỘNG';
+$hours_days = function_exists('otr_get_field') ? otr_get_field('contact_hours_days', $post_id, function_exists('otr_t') ? otr_t('THỨ HAI – CHỦ NHẬT', 'MONDAY – SUNDAY') : 'THỨ HAI – CHỦ NHẬT') : 'THỨ HAI – CHỦ NHẬT';
+$hours_time = function_exists('otr_get_field') ? otr_get_field('contact_hours_time', $post_id, function_exists('otr_t') ? otr_t('18H30 – 2H', '6:30 PM – 2:00 AM') : '18H30 – 2H') : '18H30 – 2H';
 
 // 5. Khối 4: MẠNG XÃ HỘI
-$social_title = function_exists('get_field') ? get_field('contact_social_title', $post_id) : '';
-if (empty($social_title)) {
-    $social_title = 'MẠNG XÃ HỘI';
-}
-$fb_url = function_exists('get_field') ? get_field('contact_facebook_url', $post_id) : '';
-if (empty($fb_url)) {
-    $fb_url = 'https://facebook.com/ontherock.dalat';
-}
-$insta_url = function_exists('get_field') ? get_field('contact_instagram_url', $post_id) : '';
-if (empty($insta_url)) {
-    $insta_url = 'https://instagram.com/ontherock.dalat';
-}
-$tiktok_url = function_exists('get_field') ? get_field('contact_tiktok_url', $post_id) : '';
-if (empty($tiktok_url)) {
-    $tiktok_url = 'https://tiktok.com/@ontherock.dalat';
-}
+$social_title = function_exists('otr_get_field') ? otr_get_field('contact_social_title', $post_id, function_exists('otr_t') ? otr_t('MẠNG XÃ HỘI', 'SOCIAL MEDIA') : 'MẠNG XÃ HỘI') : 'MẠNG XÃ HỘI';
+$fb_url = function_exists('otr_get_field') ? otr_get_field('contact_facebook_url', $post_id, 'https://facebook.com/ontherock.dalat') : 'https://facebook.com/ontherock.dalat';
+$insta_url = function_exists('otr_get_field') ? otr_get_field('contact_instagram_url', $post_id, 'https://instagram.com/ontherock.dalat') : 'https://instagram.com/ontherock.dalat';
+$tiktok_url = function_exists('otr_get_field') ? otr_get_field('contact_tiktok_url', $post_id, 'https://tiktok.com/@ontherock.dalat') : 'https://tiktok.com/@ontherock.dalat';
 ?>
 
 <section class="otr-contact-section bg-[#080604] text-[#caa875] pt-32 sm:pt-40 md:pt-48 pb-20 sm:pb-28 md:pb-36 px-4 sm:px-6 md:px-8 w-full select-none">

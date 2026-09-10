@@ -14,13 +14,13 @@ $parent_cha = $args['cha'] ?? null;
 
 // ================= CHẾ ĐỘ 1: RENDER TRỰC TIẾP CHO 1 MENU CON ================= //
 if ( ! empty( $single_con ) ) {
-    $con_title = $single_con['title'] ?? 'CLASSIC COCKTAIL';
+    $con_title = function_exists('otr_t_menu') ? otr_t_menu($single_con, 'title') : ($single_con['title'] ?? 'CLASSIC COCKTAIL');
     $columns = array();
 
     if (!empty($single_con['sub_children']) && is_array($single_con['sub_children'])) {
         foreach ($single_con['sub_children'] as $concon) {
             $columns[] = array(
-                'spirit' => $concon['title'] ?? 'SPIRIT',
+                'spirit' => function_exists('otr_t_menu') ? otr_t_menu($concon, 'title') : ($concon['title'] ?? 'SPIRIT'),
                 'drinks' => !empty($concon['items']) && is_array($concon['items']) ? $concon['items'] : array(),
             );
         }
@@ -37,7 +37,7 @@ if ( ! empty( $single_con ) ) {
 
         <?php if (empty($columns)): ?>
             <div class="text-center text-[#caa875]/60 text-sm py-8 italic">
-                Chưa có danh sách cột rượu cho mục này.
+                <?php echo esc_html(function_exists('otr_t') ? otr_t('Chưa có danh sách cột rượu cho mục này.', 'No spirit columns available for this section.') : 'Chưa có danh sách cột rượu cho mục này.'); ?>
             </div>
         <?php else: ?>
             <!-- Lưới 2 cột (hoặc responsive theo số cột) theo từng loại rượu (WHISKY, GIN, RUM...) -->
@@ -52,20 +52,22 @@ if ( ! empty( $single_con ) ) {
                         <!-- Danh sách món & Giá -->
                         <div class="divide-y divide-[#caa875]/10 border-t border-b border-[#caa875]/10">
                             <?php if (empty($col['drinks'])): ?>
-                                <div class="py-3 text-xs text-[#caa875]/50 italic">Đang cập nhật đồ uống...</div>
+                                <div class="py-3 text-xs text-[#caa875]/50 italic"><?php echo esc_html(function_exists('otr_t') ? otr_t('Đang cập nhật đồ uống...', 'Updating drinks...') : 'Đang cập nhật đồ uống...'); ?></div>
                             <?php else: ?>
                                 <?php foreach ( $col['drinks'] as $drink ) : 
+                                    $drink_name = function_exists('otr_t_menu') ? otr_t_menu($drink, 'name') : $drink['name'];
+                                    $drink_desc = function_exists('otr_t_menu') ? otr_t_menu($drink, 'desc') : ($drink['desc'] ?? '');
                                     $drink_img = function_exists('otr_get_drink_modal_image') ? otr_get_drink_modal_image($drink, $single_con['image'] ?? ($parent_cha['image'] ?? '')) : ($drink['image'] ?? '');
                                 ?>
                                     <div class="menu-item-clickable group cursor-pointer flex items-center justify-between py-3 sm:py-3.5 hover:bg-[#caa875]/10 px-2 sm:px-3 rounded-lg border-b border-[#caa875]/10 hover:border-[#caa875]/30 transition-all duration-300"
-                                         data-name="<?php echo esc_attr( $drink['name'] ); ?>"
+                                         data-name="<?php echo esc_attr( $drink_name ); ?>"
                                          data-price="<?php echo esc_attr( $drink['price'] ); ?>"
-                                         data-desc="<?php echo esc_attr( $drink['desc'] ?? '' ); ?>"
+                                         data-desc="<?php echo esc_attr( $drink_desc ); ?>"
                                          data-image="<?php echo esc_url( $drink_img ); ?>"
                                          data-category="<?php echo esc_attr( $col['spirit'] ?? $con_title ); ?>">
                                          <div class="pr-2 flex items-center gap-2">
                                              <span class="text-[#d8c19d] text-sm sm:text-[15px] font-normal tracking-wide group-hover:text-white transition-colors">
-                                                 <?php echo esc_html( $drink['name'] ); ?>
+                                                 <?php echo esc_html( $drink_name ); ?>
                                              </span>
                                              <span class="opacity-0 group-hover:opacity-100 transition-all duration-300 text-[#caa875] text-xs transform -translate-x-1 group-hover:translate-x-0">✦</span>
                                          </div>
@@ -96,7 +98,9 @@ $tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_menu_tr
 ?>
 
 <div class="menu-layout-3-wrapper space-y-16 md:space-y-24">
-    <?php foreach ( $tree as $cha_id => $cat ) : ?>
+    <?php foreach ( $tree as $cha_id => $cat ) : 
+        $cat_title = function_exists('otr_t_menu') ? otr_t_menu($cat, 'title') : $cat['title'];
+    ?>
         <div class="menu-cat-block scroll-mt-28 md:scroll-mt-32" id="menu-cat-<?php echo esc_attr( $cha_id ); ?>">
             
             <div class="mb-8 md:mb-10">
@@ -104,7 +108,7 @@ $tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_menu_tr
                     <?php echo esc_html( $cat['num'] ); ?>
                 </span>
                 <h2 class="font-serif font-light text-[#caa875] text-4xl sm:text-5xl md:text-6xl uppercase tracking-[0.03em]">
-                    <?php echo esc_html( $cat['title'] ); ?>
+                    <?php echo esc_html( $cat_title ); ?>
                 </h2>
             </div>
 
@@ -117,12 +121,13 @@ $tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_menu_tr
                         $t_idx = 0;
                         foreach ( $cat['children'] as $sub_key => $sub ) : 
                             $isActiveTab = ($t_idx === 0);
+                            $sub_title = function_exists('otr_t_menu') ? otr_t_menu($sub, 'title') : $sub['title'];
                         ?>
                             <button type="button" 
                                     class="menu-layout3-tab-btn px-5 sm:px-6 py-3.5 text-xs sm:text-[13px] tracking-[0.14em] uppercase text-left transition-all duration-300 cursor-pointer <?php echo $isActiveTab ? 'bg-[#c8a773] text-[#1a120b] font-semibold border border-[#c8a773] shadow-lg' : 'bg-[#211508]/80 text-[#caa875] border border-dashed border-[#caa875]/30 hover:border-[#caa875]'; ?>"
                                     data-target-group="<?php echo esc_attr( $cha_id ); ?>"
                                     data-target-subtab="<?php echo esc_attr( $sub_key ); ?>">
-                                <?php echo esc_html( $sub['title'] ); ?>
+                                <?php echo esc_html( $sub_title ); ?>
                             </button>
                         <?php 
                             $t_idx++;

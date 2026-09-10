@@ -18,8 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $front_page_id = get_option('page_on_front');
 
-$title_1       = ! empty( $args['title_1'] ) ? $args['title_1'] : (function_exists('get_field') ? (get_field('moments_title_1', $front_page_id) ?: 'THƯỞNG THỨC, LƯU LẠI KHOẢNH KHẮC') : 'THƯỞNG THỨC, LƯU LẠI KHOẢNH KHẮC');
-$title_2       = ! empty( $args['title_2'] ) ? $args['title_2'] : (function_exists('get_field') ? (get_field('moments_title_2', $front_page_id) ?: 'VÀ GẮN THẺ @ONTHEROCK.') : 'VÀ GẮN THẺ @ONTHEROCK.');
+$title_1       = ! empty( $args['title_1'] ) ? $args['title_1'] : (function_exists('otr_get_field') ? otr_get_field('moments_title_1', $front_page_id, function_exists('otr_t') ? otr_t('THƯỞNG THỨC, LƯU LẠI KHOẢNH KHẮC', 'SAVOR, CAPTURE THE MOMENT') : 'SAVOR, CAPTURE THE MOMENT') : 'THƯỞNG THỨC, LƯU LẠI KHOẢNH KHẮC');
+$title_2       = ! empty( $args['title_2'] ) ? $args['title_2'] : (function_exists('otr_get_field') ? otr_get_field('moments_title_2', $front_page_id, function_exists('otr_t') ? otr_t('VÀ GẮN THẺ @ONTHEROCK.', 'AND TAG @ONTHEROCK.') : 'AND TAG @ONTHEROCK.') : 'VÀ GẮN THẺ @ONTHEROCK.');
 $instagram_url = ! empty( $args['instagram_url'] ) ? $args['instagram_url'] : (function_exists('get_field') ? (get_field('moments_instagram_url', $front_page_id) ?: 'https://instagram.com') : 'https://instagram.com');
 $facebook_url  = ! empty( $args['facebook_url'] ) ? $args['facebook_url'] : (function_exists('get_field') ? (get_field('moments_facebook_url', $front_page_id) ?: 'https://facebook.com') : 'https://facebook.com');
 $items         = ! empty( $args['items'] ) ? $args['items'] : array();

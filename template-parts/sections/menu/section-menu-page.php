@@ -23,11 +23,14 @@ if ( empty( $current_id ) ) {
 $front_page_id = get_option('page_on_front');
 
 // 1. Dữ liệu mở đầu (Hero Intro) từ ACF
-$hero_title = get_field('menu_page_title', $current_id) ?: (get_field('menu_page_title', $front_page_id) ?: 'MENU');
-$hero_desc  = get_field('menu_page_desc', $current_id) ?: (get_field('menu_page_desc', $front_page_id) ?: 'Thưởng thức những ly cocktail thủ công và các món ăn được chế biến tinh tế trong một không gian đầy cảm hứng.');
+$hero_title = function_exists('otr_get_field') ? otr_get_field('menu_page_title', $current_id, (otr_get_field('menu_page_title', $front_page_id, 'MENU'))) : 'MENU';
+$hero_desc  = function_exists('otr_get_field') ? otr_get_field('menu_page_desc', $current_id, (otr_get_field('menu_page_desc', $front_page_id, otr_t('Thưởng thức những ly cocktail thủ công và các món ăn được chế biến tinh tế trong một không gian đầy cảm hứng.', 'Experience handcrafted cocktails and delicately prepared delicacies in an inspiring ambiance.')))) : 'MENU';
 
-$photo_dish     = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800&auto=format&fit=crop';
-$photo_cocktail = 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=800&auto=format&fit=crop';
+$raw_dish = function_exists('otr_get_field') ? otr_get_field('menu_hero_photo_dish', $current_id) : '';
+$photo_dish = ! empty($raw_dish) ? $raw_dish : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800&auto=format&fit=crop';
+
+$raw_cocktail = function_exists('otr_get_field') ? otr_get_field('menu_hero_photo_cocktail', $current_id) : '';
+$photo_cocktail = ! empty($raw_cocktail) ? $raw_cocktail : 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=800&auto=format&fit=crop';
 
 // 2. Lấy dữ liệu Cây Thực Đơn Menu TheRocks
 $menu_tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_menu_tree() : array();
@@ -75,6 +78,8 @@ $menu_tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_me
         $cha_idx = 0;
         foreach ($menu_tree as $cha_id => $cha): 
             $children = !empty($cha['children']) && is_array($cha['children']) ? $cha['children'] : array();
+            $cha_display_title = function_exists('otr_t_menu') ? otr_t_menu($cha, 'title') : $cha['title'];
+            $cha_display_desc  = function_exists('otr_t_menu') ? otr_t_menu($cha, 'desc') : ($cha['desc'] ?? '');
         ?>
             <!-- Đường kẻ nét đứt ngăn cách -->
             <div class="w-full border-t border-dashed border-[#caa875]/30"></div>
@@ -92,7 +97,7 @@ $menu_tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_me
 
                     <!-- Tiêu đề Menu Cha: BESPOKE COCKTAIL, CLASSIC COCKTAIL, SHOTS... -->
                     <h2 class="menu-accordion-title text-[#caa875] text-4xl sm:text-5xl md:text-6xl lg:text-7xl uppercase group-hover:text-white transition-colors duration-300">
-                        <?php echo esc_html($cha['title']); ?>
+                        <?php echo esc_html($cha_display_title); ?>
                     </h2>
                 </div>
 
@@ -111,9 +116,9 @@ $menu_tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_me
                  data-cha-panel="<?php echo esc_attr($cha_id); ?>">
                 
                 <!-- Mô tả ngắn của Menu Cha (nếu có) -->
-                <?php if (!empty($cha['desc'])): ?>
+                <?php if (!empty($cha_display_desc)): ?>
                     <p class="text-[#caa875]/75 text-xs sm:text-sm md:text-base leading-relaxed max-w-2xl mb-8 font-sans font-light">
-                        <?php echo esc_html($cha['desc']); ?>
+                        <?php echo esc_html($cha_display_desc); ?>
                     </p>
                 <?php endif; ?>
 
@@ -121,11 +126,12 @@ $menu_tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_me
                 <?php if (!empty($children) && count($children) > 1): ?>
                     <div class="menu-con-tabs-container mb-8 sm:mb-10 select-none">
                         <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-                            <span class="text-xs uppercase tracking-[0.2em] text-[#caa875]/60 mr-2">✦ PHÂN LOẠI:</span>
+                            <span class="text-xs uppercase tracking-[0.2em] text-[#caa875]/60 mr-2"><?php echo esc_html( otr_t('✦ PHÂN LOẠI:', '✦ CATEGORY:') ); ?></span>
                             <?php 
                             $sub_i = 0;
                             foreach ($children as $con_id => $con): 
                                 $is_sub_active = ($sub_i === 0);
+                                $con_tab_title = function_exists('otr_t_menu') ? otr_t_menu($con, 'title') : $con['title'];
                             ?>
                                 <button type="button" 
                                         class="menu-con-subtab-btn btn-liquid-glass px-5 sm:px-7 py-2.5 sm:py-3 text-[11px] sm:text-xs tracking-[0.18em] uppercase transition-all duration-300 cursor-pointer <?php echo $is_sub_active ? '!border-[#caa875] is-active' : ''; ?>"
@@ -133,8 +139,8 @@ $menu_tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_me
                                         data-con-target="<?php echo esc_attr($con_id); ?>">
                                     <span class="btn-roll-wrap">
                                         <span class="btn-roll-text">
-                                            <span><?php echo esc_html($con['title']); ?></span>
-                                            <span aria-hidden="true"><?php echo esc_html($con['title']); ?></span>
+                                            <span><?php echo esc_html($con_tab_title); ?></span>
+                                            <span aria-hidden="true"><?php echo esc_html($con_tab_title); ?></span>
                                         </span>
                                     </span>
                                 </button>

@@ -14,8 +14,9 @@ $parent_cha = $args['cha'] ?? null;
 
 // ================= CHẾ ĐỘ 1: RENDER TRỰC TIẾP CHO 1 MENU CON ================= //
 if ( ! empty( $single_con ) ) {
-    $con_title   = $single_con['title'] ?? 'Cocktail';
-    $con_tag     = !empty($single_con['tag']) ? $single_con['tag'] : $con_title;
+    $con_title   = function_exists('otr_t_menu') ? otr_t_menu($single_con, 'title') : ($single_con['title'] ?? 'Cocktail');
+    $con_tag     = function_exists('otr_t_menu') ? otr_t_menu($single_con, 'tag') : (!empty($single_con['tag']) ? $single_con['tag'] : $con_title);
+    $con_desc    = function_exists('otr_t_menu') ? otr_t_menu($single_con, 'desc') : ($single_con['desc'] ?? '');
     $con_price   = !empty($single_con['price']) ? $single_con['price'] : '320k';
     $con_alcohol = !empty($single_con['alcohol']) ? $single_con['alcohol'] : 'Medium';
     
@@ -70,9 +71,9 @@ if ( ! empty( $single_con ) ) {
                     <h3 class="font-serif font-light text-[#caa875] text-2xl sm:text-3xl tracking-[0.04em] uppercase">
                         <?php echo esc_html( $con_tag ); ?>
                     </h3>
-                    <?php if (!empty($single_con['desc'])): ?>
+                    <?php if (!empty($con_desc)): ?>
                         <p class="text-[#caa875]/60 text-xs mt-1 font-sans font-light">
-                            <?php echo esc_html($single_con['desc']); ?>
+                            <?php echo esc_html($con_desc); ?>
                         </p>
                     <?php endif; ?>
                 </div>
@@ -84,7 +85,7 @@ if ( ! empty( $single_con ) ) {
             <!-- Khối 1: Chọn nền rượu / Spirits -->
             <div class="mb-6">
                 <h4 class="text-[#caa875]/80 text-xs sm:text-[13px] font-normal tracking-[0.06em] mb-2.5">
-                    Chọn nền rượu / Flavor Combinations
+                    <?php echo esc_html(function_exists('otr_t') ? otr_t('Chọn nền rượu / Spirits', 'Base Spirits & Infusions') : 'Chọn nền rượu / Spirits'); ?>
                 </h4>
                 <div class="border border-[#caa875]/20 divide-y divide-[#caa875]/15 text-xs sm:text-[13px]">
                     <?php foreach ( $spirits as $base => $brand ) : ?>
@@ -99,7 +100,7 @@ if ( ! empty( $single_con ) ) {
             <!-- Khối 2: Kết hợp các vị / Flavors -->
             <div class="mb-6">
                 <h4 class="text-[#caa875]/80 text-xs sm:text-[13px] font-normal tracking-[0.06em] mb-2.5">
-                    Kết hợp các vị / Flavor Combinations
+                    <?php echo esc_html(function_exists('otr_t') ? otr_t('Kết hợp các vị / Flavors', 'Flavor Combinations') : 'Kết hợp các vị / Flavors'); ?>
                 </h4>
                 <div class="grid grid-cols-2 border border-[#caa875]/20 divide-x divide-y divide-[#caa875]/15 text-xs text-center">
                     <?php 
@@ -117,7 +118,7 @@ if ( ! empty( $single_con ) ) {
             <!-- Khối 3: Độ cồn / Alcohol level -->
             <div>
                 <h4 class="text-[#caa875]/80 text-xs sm:text-[13px] font-normal tracking-[0.06em] text-center mb-2.5">
-                    Độ cồn / Alcohol level
+                    <?php echo esc_html(function_exists('otr_t') ? otr_t('Độ cồn / Alcohol level', 'Alcohol Level') : 'Độ cồn / Alcohol level'); ?>
                 </h4>
                 <div class="alcohol-level-group grid grid-cols-3 border border-[#caa875]/20 divide-x divide-[#caa875]/15 text-xs text-center">
                     <?php 
@@ -136,18 +137,21 @@ if ( ! empty( $single_con ) ) {
             <?php if (!empty($sub_items)): ?>
                 <div class="mt-6 pt-5 border-t border-[#caa875]/20">
                     <h4 class="text-[#caa875]/80 text-xs uppercase tracking-[0.12em] mb-3 font-serif">
-                        ✦ Danh sách ly đề xuất:
+                        ✦ <?php echo esc_html(function_exists('otr_t') ? otr_t('Danh sách ly đề xuất:', 'Recommended Cocktails:') : 'Danh sách ly đề xuất:'); ?>
                     </h4>
                     <div class="divide-y divide-[#caa875]/10 border-t border-b border-[#caa875]/10">
-                        <?php foreach ($sub_items as $it): ?>
+                        <?php foreach ($sub_items as $it): 
+                            $it_name = function_exists('otr_t_menu') ? otr_t_menu($it, 'name') : ($it['name'] ?? '');
+                            $it_desc = function_exists('otr_t_menu') ? otr_t_menu($it, 'desc') : ($it['desc'] ?? '');
+                        ?>
                             <div class="py-2 flex items-baseline justify-between text-xs">
                                 <div>
-                                    <span class="text-[#d8c19d] font-medium"><?php echo esc_html($it['name']); ?></span>
-                                    <?php if (!empty($it['desc'])): ?>
-                                        <div class="text-[#caa875]/50 text-[11px]"><?php echo esc_html($it['desc']); ?></div>
+                                    <span class="text-[#d8c19d] font-medium"><?php echo esc_html($it_name); ?></span>
+                                    <?php if (!empty($it_desc)): ?>
+                                        <div class="text-[#caa875]/50 text-[11px]"><?php echo esc_html($it_desc); ?></div>
                                     <?php endif; ?>
                                 </div>
-                                <span class="text-[#caa875] font-serif font-medium ml-3 shrink-0"><?php echo esc_html($it['price']); ?></span>
+                                <span class="text-[#caa875] font-serif font-medium ml-3 shrink-0"><?php echo esc_html($it['price'] ?? ''); ?></span>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -224,7 +228,7 @@ $tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_menu_tr
                     <?php echo esc_html( $cat['num'] ); ?>
                 </span>
                 <h2 class="font-serif font-light text-[#caa875] text-3xl sm:text-4xl md:text-5xl lg:text-6xl uppercase tracking-[0.03em] group-hover:text-white group-hover:translate-x-3 transition-all duration-300">
-                    <?php echo esc_html( $cat['title'] ); ?>
+                    <?php echo esc_html( function_exists('otr_t_menu') ? otr_t_menu($cat, 'title') : $cat['title'] ); ?>
                 </h2>
             </div>
 
@@ -240,14 +244,16 @@ $tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_menu_tr
             
             <?php if ( !empty($cat['children']) && count( $cat['children'] ) > 1 ) : ?>
             <div class="flex flex-wrap items-center gap-2 mb-6 sm:mb-8 select-none">
-                <?php $sub_i = 0; foreach ( $cat['children'] as $con_id => $sub ) : ?>
+                <?php $sub_i = 0; foreach ( $cat['children'] as $con_id => $sub ) : 
+                    $sub_t = function_exists('otr_t_menu') ? otr_t_menu($sub, 'title') : $sub['title'];
+                ?>
                     <button type="button" 
                             class="menu-subtab-btn btn-liquid-glass px-5 sm:px-7 py-2.5 sm:py-3 text-[11px] sm:text-xs tracking-[0.15em] uppercase transition-all duration-300 cursor-pointer <?php echo ( $sub_i === 0 ) ? '!border-[#caa875] is-active' : ''; ?>"
                             data-subtab="<?php echo esc_attr( $con_id ); ?>">
                         <span class="btn-roll-wrap">
                             <span class="btn-roll-text">
-                                <span><?php echo esc_html( $sub['title'] ); ?></span>
-                                <span aria-hidden="true"><?php echo esc_html( $sub['title'] ); ?></span>
+                                <span><?php echo esc_html( $sub_t ); ?></span>
+                                <span aria-hidden="true"><?php echo esc_html( $sub_t ); ?></span>
                             </span>
                         </span>
                     </button>

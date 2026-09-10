@@ -14,7 +14,7 @@ $parent_cha = $args['cha'] ?? null;
 
 // ================= CHẾ ĐỘ 1: RENDER CHO 1 MENU CON ================= //
 if ( ! empty( $single_con ) ) {
-    $con_title = $single_con['title'] ?? 'GOURMET';
+    $con_title = function_exists('otr_t_menu') ? otr_t_menu($single_con, 'title') : ($single_con['title'] ?? 'GOURMET');
     $sub_categories = array();
 
     if (!empty($single_con['sub_children']) && is_array($single_con['sub_children'])) {
@@ -22,7 +22,7 @@ if ( ! empty( $single_con ) ) {
         foreach ($single_con['sub_children'] as $concon_id => $concon) {
             $sub_categories[$concon_id] = array(
                 'num'   => sprintf('%02d', $sub_num++),
-                'name'  => $concon['title'] ?? 'Món',
+                'name'  => function_exists('otr_t_menu') ? otr_t_menu($concon, 'title') : ($concon['title'] ?? 'Món'),
                 'desc'  => '',
                 'items' => !empty($concon['items']) && is_array($concon['items']) ? $concon['items'] : array(),
                 'image' => !empty($single_con['image']) ? $single_con['image'] : ($parent_cha['image'] ?? ''),
@@ -37,7 +37,7 @@ if ( ! empty( $single_con ) ) {
             <aside class="menu-sticky-sidebar z-20 select-none bg-[#140e08]/95 p-6 sm:p-8 border border-[#caa875]/25 shadow-2xl backdrop-blur-md rounded-sm sticky top-[100px] lg:top-[115px] max-h-[calc(100vh-140px)] overflow-y-auto"
                    style="position: -webkit-sticky; position: sticky; top: 115px;">
                 <h3 class="text-xs tracking-[0.25em] text-[#caa875]/60 uppercase font-medium mb-6 pb-3 border-b border-[#caa875]/20">
-                    MỤC LỤC THỰC ĐƠN
+                    <?php echo esc_html(function_exists('otr_t') ? otr_t('MỤC LỤC THỰC ĐƠN', 'TABLE OF CONTENTS') : 'MỤC LỤC THỰC ĐƠN'); ?>
                 </h3>
                 
                 <nav class="flex flex-col gap-3 font-serif">
@@ -63,7 +63,7 @@ if ( ! empty( $single_con ) ) {
                 </nav>
 
                 <div class="mt-8 pt-6 border-t border-[#caa875]/15 text-[11px] text-[#caa875]/60 leading-relaxed font-sans">
-                    ✦ Cuộn trang để khám phá toàn bộ món. Thanh sidebar sẽ ghim cố định và đồng hành cùng trải nghiệm.
+                    ✦ <?php echo esc_html(function_exists('otr_t') ? otr_t('Cuộn trang để khám phá toàn bộ món. Thanh sidebar sẽ ghim cố định và đồng hành cùng trải nghiệm.', 'Scroll to explore all items. The sidebar stays pinned alongside your journey.') : 'Cuộn trang để khám phá toàn bộ món. Thanh sidebar sẽ ghim cố định và đồng hành cùng trải nghiệm.'); ?>
                 </div>
             </aside>
         </div>
@@ -83,21 +83,23 @@ if ( ! empty( $single_con ) ) {
                     </div>
 
                     <?php if (empty($cat['items'])): ?>
-                        <p class="text-xs text-[#caa875]/50 italic">Chưa có món trong nhóm này.</p>
+                        <p class="text-xs text-[#caa875]/50 italic"><?php echo esc_html(function_exists('otr_t') ? otr_t('Chưa có món trong nhóm này.', 'No items in this category yet.') : 'Chưa có món trong nhóm này.'); ?></p>
                     <?php else: ?>
                         <div class="grid grid-cols-1 gap-4">
                             <?php foreach ( $cat['items'] as $drink ) : 
+                                $drink_name = function_exists('otr_t_menu') ? otr_t_menu($drink, 'name') : $drink['name'];
+                                $drink_desc = function_exists('otr_t_menu') ? otr_t_menu($drink, 'desc') : ($drink['desc'] ?? '');
                                 $drink_img = function_exists('otr_get_drink_modal_image') ? otr_get_drink_modal_image($drink, $cat['image'] ?? '') : ($drink['image'] ?? '');
                             ?>
                                 <div class="menu-item-clickable group cursor-pointer flex items-center justify-between py-3.5 px-3 rounded-xl hover:bg-[#caa875]/10 border-b border-[#caa875]/10 hover:border-[#caa875]/30 transition-all duration-300"
-                                     data-name="<?php echo esc_attr( $drink['name'] ); ?>"
+                                     data-name="<?php echo esc_attr( $drink_name ); ?>"
                                      data-price="<?php echo esc_attr( $drink['price'] ); ?>"
-                                     data-desc="<?php echo esc_attr( $drink['desc'] ?? '' ); ?>"
+                                     data-desc="<?php echo esc_attr( $drink_desc ); ?>"
                                      data-image="<?php echo esc_url( $drink_img ); ?>"
                                      data-category="<?php echo esc_attr( $cat['name'] ?? $con_title ); ?>">
                                     <div class="pr-3 flex items-center gap-2">
                                         <h4 class="font-serif text-[#d8c19d] text-base font-normal tracking-wide group-hover:text-white transition-colors">
-                                            <?php echo esc_html( $drink['name'] ); ?>
+                                            <?php echo esc_html( $drink_name ); ?>
                                         </h4>
                                         <span class="opacity-0 group-hover:opacity-100 transition-all duration-300 text-[#caa875] text-xs transform -translate-x-1 group-hover:translate-x-0">✦</span>
                                     </div>
@@ -134,15 +136,17 @@ $tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_menu_tr
         <aside class="menu-sticky-sidebar z-20 select-none bg-[#140e08]/95 p-6 sm:p-8 border border-[#caa875]/25 shadow-2xl backdrop-blur-md rounded-sm sticky top-[100px] lg:top-[115px] max-h-[calc(100vh-140px)] overflow-y-auto"
                style="position: -webkit-sticky; position: sticky; top: 115px;">
             <h3 class="text-xs tracking-[0.25em] text-[#caa875]/60 uppercase font-medium mb-6 pb-3 border-b border-[#caa875]/20">
-                MỤC LỤC THỰC ĐƠN
+                <?php echo esc_html(function_exists('otr_t') ? otr_t('MỤC LỤC THỰC ĐƠN', 'TABLE OF CONTENTS') : 'MỤC LỤC THỰC ĐƠN'); ?>
             </h3>
             <nav class="flex flex-col gap-3 font-serif">
-                <?php $s_i = 0; foreach ($tree as $cha_id => $cha) : ?>
+                <?php $s_i = 0; foreach ($tree as $cha_id => $cha) : 
+                    $cha_title = function_exists('otr_t_menu') ? otr_t_menu($cha, 'title') : $cha['title'];
+                ?>
                     <a href="#section-<?php echo esc_attr($cha_id); ?>" 
                        class="sidebar-nav-item flex items-baseline gap-3 py-2 px-3 rounded transition-all duration-300 <?php echo ($s_i === 0) ? 'bg-[#caa875]/20 text-white font-semibold' : 'text-[#caa875]/75 hover:text-white hover:bg-[#caa875]/10'; ?>"
                        data-nav-target="section-<?php echo esc_attr($cha_id); ?>">
                         <span class="text-xs text-[#caa875]/60 font-mono"><?php echo esc_html($cha['num']); ?></span>
-                        <span class="text-sm tracking-wide uppercase"><?php echo esc_html($cha['title']); ?></span>
+                        <span class="text-sm tracking-wide uppercase"><?php echo esc_html($cha_title); ?></span>
                     </a>
                 <?php $s_i++; endforeach; ?>
             </nav>
@@ -150,35 +154,44 @@ $tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_menu_tr
     </div>
 
     <div class="lg:col-span-8 space-y-16">
-        <?php foreach ($tree as $cha_id => $cha) : ?>
+        <?php foreach ($tree as $cha_id => $cha) : 
+            $cha_title = function_exists('otr_t_menu') ? otr_t_menu($cha, 'title') : $cha['title'];
+            $cha_desc  = function_exists('otr_t_menu') ? otr_t_menu($cha, 'desc') : ($cha['desc'] ?? '');
+        ?>
             <section id="section-<?php echo esc_attr($cha_id); ?>" class="sidebar-content-section scroll-mt-28 md:scroll-mt-36 pb-8 border-b border-dashed border-[#caa875]/25 last:border-b-0">
                 <span class="block text-[#caa875]/60 text-xs sm:text-sm tracking-[0.2em] font-normal mb-1.5"><?php echo esc_html($cha['num']); ?></span>
-                <h2 class="font-serif font-light text-[#caa875] text-3xl sm:text-4xl md:text-5xl uppercase tracking-[0.03em] mb-3"><?php echo esc_html($cha['title']); ?></h2>
-                <?php if (!empty($cha['desc'])): ?>
-                    <p class="text-[#caa875]/70 text-xs sm:text-sm leading-relaxed max-w-xl mb-8"><?php echo esc_html($cha['desc']); ?></p>
+                <h2 class="font-serif font-light text-[#caa875] text-3xl sm:text-4xl md:text-5xl uppercase tracking-[0.03em] mb-3"><?php echo esc_html($cha_title); ?></h2>
+                <?php if (!empty($cha_desc)): ?>
+                    <p class="text-[#caa875]/70 text-xs sm:text-sm leading-relaxed max-w-xl mb-8"><?php echo esc_html($cha_desc); ?></p>
                 <?php endif; ?>
 
                 <?php if (!empty($cha['children'])): ?>
-                    <?php foreach ($cha['children'] as $con): ?>
+                    <?php foreach ($cha['children'] as $con): 
+                        $con_title = function_exists('otr_t_menu') ? otr_t_menu($con, 'title') : $con['title'];
+                    ?>
                         <div class="mb-8">
-                            <h3 class="text-[#caa875] text-lg uppercase tracking-wider mb-4 border-b border-[#caa875]/20 pb-2"><?php echo esc_html($con['title']); ?></h3>
+                            <h3 class="text-[#caa875] text-lg uppercase tracking-wider mb-4 border-b border-[#caa875]/20 pb-2"><?php echo esc_html($con_title); ?></h3>
                             <?php if (!empty($con['sub_children'])): ?>
-                                <?php foreach ($con['sub_children'] as $concon): ?>
+                                <?php foreach ($con['sub_children'] as $concon): 
+                                    $concon_title = function_exists('otr_t_menu') ? otr_t_menu($concon, 'title') : $concon['title'];
+                                ?>
                                     <div class="mb-4">
-                                        <h4 class="text-xs uppercase text-[#caa875]/60 mb-2"><?php echo esc_html($concon['title']); ?></h4>
+                                        <h4 class="text-xs uppercase text-[#caa875]/60 mb-2"><?php echo esc_html($concon_title); ?></h4>
                                         <?php if (!empty($concon['items'])): ?>
                                             <div class="grid grid-cols-1 gap-3">
                                                  <?php foreach ($concon['items'] as $it): 
-                                                     $it_img = function_exists('otr_get_drink_modal_image') ? otr_get_drink_modal_image($it, $con['image'] ?? ($cha['image'] ?? '')) : ($it['image'] ?? '');
+                                                     $it_name = function_exists('otr_t_menu') ? otr_t_menu($it, 'name') : $it['name'];
+                                                     $it_desc = function_exists('otr_t_menu') ? otr_t_menu($it, 'desc') : ($it['desc'] ?? '');
+                                                     $it_img  = function_exists('otr_get_drink_modal_image') ? otr_get_drink_modal_image($it, $con['image'] ?? ($cha['image'] ?? '')) : ($it['image'] ?? '');
                                                  ?>
                                                       <div class="menu-item-clickable group cursor-pointer flex items-center justify-between py-2.5 px-2.5 rounded-lg hover:bg-[#caa875]/10 border-b border-[#caa875]/10 hover:border-[#caa875]/30 transition-all duration-300"
-                                                           data-name="<?php echo esc_attr($it['name']); ?>"
+                                                           data-name="<?php echo esc_attr($it_name); ?>"
                                                            data-price="<?php echo esc_attr($it['price']); ?>"
-                                                           data-desc="<?php echo esc_attr($it['desc'] ?? ''); ?>"
+                                                           data-desc="<?php echo esc_attr($it_desc); ?>"
                                                            data-image="<?php echo esc_url($it_img); ?>"
-                                                           data-category="<?php echo esc_attr($concon['title'] ?? $con['title']); ?>">
+                                                           data-category="<?php echo esc_attr($concon_title ?? $con_title); ?>">
                                                           <div class="pr-2 flex items-center gap-2">
-                                                              <div class="text-[#d8c19d] text-sm group-hover:text-white transition-colors"><?php echo esc_html($it['name']); ?></div>
+                                                              <div class="text-[#d8c19d] text-sm group-hover:text-white transition-colors"><?php echo esc_html($it_name); ?></div>
                                                               <span class="opacity-0 group-hover:opacity-100 transition-all duration-300 text-[#caa875] text-xs">✦</span>
                                                           </div>
                                                          <div class="flex items-center gap-2 shrink-0 ml-4">

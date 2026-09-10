@@ -63,6 +63,16 @@ function theme_custom_menu_registration() {
         'theme-custom-contact',
         'theme_custom_fallback_contact_page'
     );
+
+    // Menu con "Cấu hình Blog & Event"
+    add_submenu_page(
+        'theme-custom',
+        'Cấu hình Blog & Event',
+        'Blog & Event',
+        'manage_options',
+        'theme-custom-blog',
+        'theme_custom_fallback_blog_page'
+    );
 }
 
 /**
@@ -115,7 +125,19 @@ function theme_custom_fallback_contact_page() {
 }
 
 /**
- * Tự động chuyển hướng khi click vào Theme Custom, Home hoặc Trang Menu / Đặt Bàn / Liên Hệ
+ * Hàm hiển thị giao diện dự phòng nếu chưa tìm thấy trang Blog & Event
+ */
+function theme_custom_fallback_blog_page() {
+    echo '<div class="wrap">';
+    echo '<h2>Theme Custom - Cấu hình Blog & Event</h2>';
+    echo '<div class="notice notice-warning"><p>';
+    echo 'Vui lòng tạo hoặc kích hoạt trang có đường dẫn <strong>/blog/</strong> hoặc gắn mẫu giao diện <strong>Trang Blog & Event</strong> để bắt đầu cấu hình.';
+    echo '</p></div>';
+    echo '</div>';
+}
+
+/**
+ * Tự động chuyển hướng khi click vào Theme Custom, Home hoặc Trang Menu / Đặt Bàn / Liên Hệ / Blog
  */
 add_action('admin_init', 'theme_custom_admin_redirect');
 function theme_custom_admin_redirect() {
@@ -184,6 +206,24 @@ function theme_custom_admin_redirect() {
                 wp_redirect(admin_url('post.php?post=' . $contact_pages[0]->ID . '&action=edit'));
                 exit;
             }
+        } elseif ($_GET['page'] === 'theme-custom-blog') {
+            $blog_pages = get_posts(array(
+                'post_type'      => 'page',
+                'meta_key'       => '_wp_page_template',
+                'meta_value'     => 'theme-pages/page-blog.php',
+                'posts_per_page' => 1,
+                'post_status'    => 'any',
+            ));
+            if (empty($blog_pages)) {
+                $bpage = get_page_by_path('blog');
+                if ($bpage) {
+                    $blog_pages = array($bpage);
+                }
+            }
+            if (!empty($blog_pages)) {
+                wp_redirect(admin_url('post.php?post=' . $blog_pages[0]->ID . '&action=edit'));
+                exit;
+            }
         }
     }
 }
@@ -204,14 +244,25 @@ if (function_exists('acf_add_local_field_group')) {
         ),
         array(
             'key' => 'field_home_intro_quote',
-            'label' => 'Nội dung câu nói nổi trên hình ảnh sau khi load xong',
+            'label' => '🇻🇳 Câu nói mở đầu (Tiếng Việt)',
             'name' => 'home_intro_quote',
             'type' => 'textarea',
             'default_value' => "Một quán cocktail bar ở Đà Lạt,\ncủa người Đà Lạt, dành cho những ai\nmuốn một trãi nghiệm Đà Lạt thú vị.",
             'placeholder' => "Một quán cocktail bar ở Đà Lạt,\ncủa người Đà Lạt, dành cho những ai\nmuốn một trãi nghiệm Đà Lạt thú vị.",
-            'instructions' => 'Dòng chữ màu vàng nổi bật ở giữa màn hình trên các hình ảnh sau khi hiệu ứng loading quăng ảnh hoàn tất (hỗ trợ xuống dòng).',
+            'instructions' => 'Dòng chữ màu vàng nổi bật ở giữa màn hình trên các hình ảnh sau khi hiệu ứng loading hoàn tất.',
             'rows' => 3,
-            'wrapper' => array('width' => '100'),
+            'wrapper' => array('width' => '50'),
+        ),
+        array(
+            'key' => 'field_home_intro_quote_en',
+            'label' => '🇬🇧 Câu nói mở đầu (English Translation)',
+            'name' => 'home_intro_quote_en',
+            'type' => 'textarea',
+            'default_value' => "A cocktail bar in Da Lat,\nby Da Lat locals, crafted for those\nseeking an enchanting Da Lat experience.",
+            'placeholder' => "A cocktail bar in Da Lat,\nby Da Lat locals, crafted for those\nseeking an enchanting Da Lat experience.",
+            'instructions' => 'Bản dịch tiếng Anh hiển thị khi người xem chọn ngôn ngữ EN.',
+            'rows' => 3,
+            'wrapper' => array('width' => '50'),
         ),
 
         // Tab 2: Hình ảnh (10 ảnh)
@@ -277,11 +328,19 @@ if (function_exists('acf_add_local_field_group')) {
     );
     $fields[] = array(
         'key' => 'field_header_menu_text',
-        'label' => 'Chữ link Menu',
+        'label' => 'Chữ link Menu (VI)',
         'name' => 'header_menu_text',
         'type' => 'text',
         'default_value' => 'MENU',
-        'wrapper' => array('width' => '50'),
+        'wrapper' => array('width' => '25'),
+    );
+    $fields[] = array(
+        'key' => 'field_header_menu_text_en',
+        'label' => 'Chữ link Menu (EN)',
+        'name' => 'header_menu_text_en',
+        'type' => 'text',
+        'default_value' => 'MENU',
+        'wrapper' => array('width' => '25'),
     );
     $fields[] = array(
         'key' => 'field_header_menu_url',
@@ -293,11 +352,19 @@ if (function_exists('acf_add_local_field_group')) {
     );
     $fields[] = array(
         'key' => 'field_header_contact_text',
-        'label' => 'Chữ link Contact',
+        'label' => 'Chữ link Contact (VI)',
         'name' => 'header_contact_text',
         'type' => 'text',
         'default_value' => 'CONTACT',
-        'wrapper' => array('width' => '50'),
+        'wrapper' => array('width' => '25'),
+    );
+    $fields[] = array(
+        'key' => 'field_header_contact_text_en',
+        'label' => 'Chữ link Contact (EN)',
+        'name' => 'header_contact_text_en',
+        'type' => 'text',
+        'default_value' => 'CONTACT',
+        'wrapper' => array('width' => '25'),
     );
     $fields[] = array(
         'key' => 'field_header_contact_url',
@@ -309,11 +376,19 @@ if (function_exists('acf_add_local_field_group')) {
     );
     $fields[] = array(
         'key' => 'field_header_booking_text',
-        'label' => 'Chữ nút Đặt bàn',
+        'label' => 'Chữ nút Đặt bàn (VI)',
         'name' => 'header_booking_text',
         'type' => 'text',
         'default_value' => 'ĐẶT BÀN TRƯỚC',
-        'wrapper' => array('width' => '50'),
+        'wrapper' => array('width' => '25'),
+    );
+    $fields[] = array(
+        'key' => 'field_header_booking_text_en',
+        'label' => 'Chữ nút Đặt bàn (EN)',
+        'name' => 'header_booking_text_en',
+        'type' => 'text',
+        'default_value' => 'RESERVATION',
+        'wrapper' => array('width' => '25'),
     );
     $fields[] = array(
         'key' => 'field_header_booking_url',
@@ -353,11 +428,19 @@ if (function_exists('acf_add_local_field_group')) {
     );
     $fields[] = array(
         'key' => 'field_hero_btn_text',
-        'label' => 'Chữ nút Hero',
+        'label' => 'Chữ nút Hero (VI)',
         'name' => 'hero_btn_text',
         'type' => 'text',
         'default_value' => 'XEM MENU',
-        'wrapper' => array('width' => '33'),
+        'wrapper' => array('width' => '25'),
+    );
+    $fields[] = array(
+        'key' => 'field_hero_btn_text_en',
+        'label' => 'Chữ nút Hero (EN)',
+        'name' => 'hero_btn_text_en',
+        'type' => 'text',
+        'default_value' => 'VIEW MENU',
+        'wrapper' => array('width' => '25'),
     );
     $fields[] = array(
         'key' => 'field_hero_btn_link',
@@ -409,16 +492,32 @@ if (function_exists('acf_add_local_field_group')) {
     );
     $fields[] = array(
         'key' => 'field_hero_review_title',
-        'label' => 'Đánh giá chữ',
+        'label' => 'Đánh giá chữ (VI)',
         'name' => 'hero_review_title',
+        'type' => 'text',
+        'default_value' => 'Xuất sắc',
+        'wrapper' => array('width' => '50'),
+    );
+    $fields[] = array(
+        'key' => 'field_hero_review_title_en',
+        'label' => 'Đánh giá chữ (EN)',
+        'name' => 'hero_review_title_en',
         'type' => 'text',
         'default_value' => 'Excellent',
         'wrapper' => array('width' => '50'),
     );
     $fields[] = array(
         'key' => 'field_hero_review_subtitle',
-        'label' => 'Số lượt đánh giá',
+        'label' => 'Số lượt đánh giá (VI)',
         'name' => 'hero_review_subtitle',
+        'type' => 'text',
+        'default_value' => 'Dựa trên 3 576 lượt đánh giá',
+        'wrapper' => array('width' => '50'),
+    );
+    $fields[] = array(
+        'key' => 'field_hero_review_subtitle_en',
+        'label' => 'Số lượt đánh giá (EN)',
+        'name' => 'hero_review_subtitle_en',
         'type' => 'text',
         'default_value' => 'Based on 3 576 reviews',
         'wrapper' => array('width' => '50'),
@@ -457,11 +556,21 @@ if (function_exists('acf_add_local_field_group')) {
     );
     $fields[] = array(
         'key' => 'field_testimonials_title',
-        'label' => 'Tiêu đề khối Cảm nhận',
+        'label' => 'Tiêu đề khối Cảm nhận (VI)',
         'name' => 'testimonials_title',
         'type' => 'text',
         'default_value' => 'CẢM NHẬN TỪ KHÁCH HÀNG',
         'instructions' => 'Dòng tiêu đề hiển thị ở đầu khối cảm nhận khách hàng.',
+        'wrapper' => array('width' => '50'),
+    );
+    $fields[] = array(
+        'key' => 'field_testimonials_title_en',
+        'label' => 'Tiêu đề khối Cảm nhận (EN)',
+        'name' => 'testimonials_title_en',
+        'type' => 'text',
+        'default_value' => 'GUEST REVIEWS',
+        'instructions' => 'Bản dịch tiếng Anh hiển thị ngoài frontend khi chọn EN.',
+        'wrapper' => array('width' => '50'),
     );
 
     // Tab 8: Khối Thực đơn Menu
@@ -474,36 +583,74 @@ if (function_exists('acf_add_local_field_group')) {
     );
     $fields[] = array(
         'key' => 'field_menu_section_title',
-        'label' => 'Tiêu đề khối Menu',
+        'label' => 'Tiêu đề khối Menu (VI)',
         'name' => 'menu_section_title',
         'type' => 'text',
+        'default_value' => 'THỰC ĐƠN',
+        'instructions' => 'Dòng chữ tiêu đề khối menu.',
+        'wrapper' => array('width' => '50'),
+    );
+    $fields[] = array(
+        'key' => 'field_menu_section_title_en',
+        'label' => 'Tiêu đề khối Menu (EN)',
+        'name' => 'menu_section_title_en',
+        'type' => 'text',
         'default_value' => 'MENU',
-        'instructions' => 'Dòng chữ tiêu đề khối menu (ví dụ: MENU).',
+        'instructions' => 'Bản dịch tiếng Anh hiển thị khi chọn EN.',
+        'wrapper' => array('width' => '50'),
     );
 
     // Đăng ký 8 món menu cocktail
     $default_menu_items = array(
-        1 => array('BESPOKE COCKTAIL', 'Đi ngang lâu lắm rồi giờ mới có dịp ghé quán, trời mưa có nhân viên siêu nice hỗ trợ'),
-        2 => array('CLASSIC COCKTAIL', 'Hương vị cổ điển vượt thời gian — từ Old Fashioned đậm đà đến Negroni trầm lắng.'),
-        3 => array('SIGNATURE CREATION', 'Sáng tạo độc quyền từ các bartender lành nghề với các tầng hương độc bản của thảo mộc cao nguyên.'),
-        4 => array('MOCKTAIL & BOTANICAL', 'Trải nghiệm tinh tế không cồn, thanh mát và cân bằng hoàn hảo cho buổi tối thư thái.'),
-        5 => array('PREMIUM SPIRITS & WHISKY', 'Bộ sưu tập single malt và whisky tuyển chọn từ các nhà chưng cất danh tiếng thế giới.'),
-        6 => array('WINE & CHAMPAGNE', 'Những giọt vang thượng hạng và bọt sủi champagne lấp lánh nâng niu từng khoảnh khắc đáng nhớ.'),
-        7 => array('BAR BITES & TAPAS', 'Món ăn nhẹ tinh hoa kết hợp phong vị Á - Âu, được thiết kế để tôn vinh hương vị đồ uống.'),
-        8 => array('SEASONAL SPECIALS', 'Bản giao hưởng hương vị theo mùa — biến tấu ngẫu hứng với nguyên liệu tươi mới độc đáo.'),
+        1 => array('BESPOKE COCKTAIL', 'Đi ngang lâu lắm rồi giờ mới có dịp ghé quán, trời mưa có nhân viên siêu nice hỗ trợ', 'BESPOKE COCKTAIL', 'Passed by many times, finally visited; on a rainy day, the staff was exceptionally nice and supportive.'),
+        2 => array('CLASSIC COCKTAIL', 'Hương vị cổ điển vượt thời gian — từ Old Fashioned đậm đà đến Negroni trầm lắng.', 'CLASSIC COCKTAIL', 'Timeless classic flavors — from the bold Old Fashioned to the contemplative Negroni.'),
+        3 => array('SIGNATURE CREATION', 'Sáng tạo độc quyền từ các bartender lành nghề với các tầng hương độc bản của thảo mộc cao nguyên.', 'SIGNATURE CREATION', 'Exclusive creations by skilled bartenders with distinct layers of highland botanicals.'),
+        4 => array('MOCKTAIL & BOTANICAL', 'Trải nghiệm tinh tế không cồn, thanh mát và cân bằng hoàn hảo cho buổi tối thư thái.', 'MOCKTAIL & BOTANICAL', 'Refined non-alcoholic experience, crisp and perfectly balanced for a relaxed evening.'),
+        5 => array('PREMIUM SPIRITS & WHISKY', 'Bộ sưu tập single malt và whisky tuyển chọn từ các nhà chưng cất danh tiếng thế giới.', 'PREMIUM SPIRITS & WHISKY', 'Curated single malts and whiskies from world-renowned distilleries.'),
+        6 => array('WINE & CHAMPAGNE', 'Những giọt vang thượng hạng và bọt sủi champagne lấp lánh nâng niu từng khoảnh khắc đáng nhớ.', 'WINE & CHAMPAGNE', 'Fine wines and sparkling champagne bubbles celebrating every memorable moment.'),
+        7 => array('BAR BITES & TAPAS', 'Món ăn nhẹ tinh hoa kết hợp phong vị Á - Âu, được thiết kế để tôn vinh hương vị đồ uống.', 'BAR BITES & TAPAS', 'Artisanal Asian-European fusion bar bites crafted to elevate drink pairings.'),
+        8 => array('SEASONAL SPECIALS', 'Bản giao hưởng hương vị theo mùa — biến tấu ngẫu hứng với nguyên liệu tươi mới độc đáo.', 'SEASONAL SPECIALS', 'A seasonal symphony of flavors — improvised with fresh and unique local produce.'),
     );
 
     for ($m = 1; $m <= 8; $m++) {
         $num_str = sprintf('%02d', $m);
-        $title_def = isset($default_menu_items[$m]) ? $default_menu_items[$m][0] : "COCKTAIL ITEM $num_str";
-        $desc_def  = isset($default_menu_items[$m]) ? $default_menu_items[$m][1] : "Mô tả ngắn hương vị đồ uống món $num_str.";
+        $title_def    = isset($default_menu_items[$m]) ? $default_menu_items[$m][0] : "COCKTAIL ITEM $num_str";
+        $desc_def     = isset($default_menu_items[$m]) ? $default_menu_items[$m][1] : "Mô tả ngắn hương vị đồ uống món $num_str.";
+        $title_def_en = isset($default_menu_items[$m]) ? $default_menu_items[$m][2] : "COCKTAIL ITEM $num_str";
+        $desc_def_en  = isset($default_menu_items[$m]) ? $default_menu_items[$m][3] : "Short tasting notes for item $num_str.";
 
         $fields[] = array(
             'key' => 'field_menu_item_title_' . $m,
-            'label' => "Tên món $num_str",
+            'label' => "Tên món $num_str (VI)",
             'name' => 'menu_item_title_' . $m,
             'type' => 'text',
             'default_value' => $title_def,
+            'wrapper' => array('width' => '50'),
+        );
+        $fields[] = array(
+            'key' => 'field_menu_item_title_' . $m . '_en',
+            'label' => "Tên món $num_str (EN)",
+            'name' => 'menu_item_title_' . $m . '_en',
+            'type' => 'text',
+            'default_value' => $title_def_en,
+            'wrapper' => array('width' => '50'),
+        );
+        $fields[] = array(
+            'key' => 'field_menu_item_desc_' . $m,
+            'label' => "Mô tả món $num_str (VI)",
+            'name' => 'menu_item_desc_' . $m,
+            'type' => 'textarea',
+            'rows' => 2,
+            'default_value' => $desc_def,
+            'wrapper' => array('width' => '50'),
+        );
+        $fields[] = array(
+            'key' => 'field_menu_item_desc_' . $m . '_en',
+            'label' => "Mô tả món $num_str (EN)",
+            'name' => 'menu_item_desc_' . $m . '_en',
+            'type' => 'textarea',
+            'rows' => 2,
+            'default_value' => $desc_def_en,
             'wrapper' => array('width' => '50'),
         );
         $fields[] = array(
@@ -513,15 +660,7 @@ if (function_exists('acf_add_local_field_group')) {
             'type' => 'image',
             'return_format' => 'array',
             'preview_size' => 'thumbnail',
-            'wrapper' => array('width' => '50'),
-        );
-        $fields[] = array(
-            'key' => 'field_menu_item_desc_' . $m,
-            'label' => "Mô tả món $num_str",
-            'name' => 'menu_item_desc_' . $m,
-            'type' => 'textarea',
-            'rows' => 2,
-            'default_value' => $desc_def,
+            'wrapper' => array('width' => '100'),
         );
     }
 
@@ -535,18 +674,34 @@ if (function_exists('acf_add_local_field_group')) {
     );
     $fields[] = array(
         'key' => 'field_moments_title_1',
-        'label' => 'Tiêu đề dòng 1',
+        'label' => 'Tiêu đề dòng 1 (VI)',
         'name' => 'moments_title_1',
         'type' => 'text',
         'default_value' => 'THƯỞNG THỨC, LƯU LẠI KHOẢNH KHẮC',
         'wrapper' => array('width' => '50'),
     );
     $fields[] = array(
+        'key' => 'field_moments_title_1_en',
+        'label' => 'Tiêu đề dòng 1 (EN)',
+        'name' => 'moments_title_1_en',
+        'type' => 'text',
+        'default_value' => 'SAVOR, CAPTURE THE MOMENT',
+        'wrapper' => array('width' => '50'),
+    );
+    $fields[] = array(
         'key' => 'field_moments_title_2',
-        'label' => 'Tiêu đề dòng 2',
+        'label' => 'Tiêu đề dòng 2 (VI)',
         'name' => 'moments_title_2',
         'type' => 'text',
         'default_value' => 'VÀ GẮN THẺ @ONTHEROCK.',
+        'wrapper' => array('width' => '50'),
+    );
+    $fields[] = array(
+        'key' => 'field_moments_title_2_en',
+        'label' => 'Tiêu đề dòng 2 (EN)',
+        'name' => 'moments_title_2_en',
+        'type' => 'text',
+        'default_value' => 'AND TAG @ONTHEROCK.',
         'wrapper' => array('width' => '50'),
     );
     $fields[] = array(
@@ -620,24 +775,35 @@ if (function_exists('acf_add_local_field_group')) {
     );
     $fields[] = array(
         'key' => 'field_team_marquee_text',
-        'label' => 'Nội dung chữ chạy (Marquee)',
+        'label' => 'Nội dung chữ chạy (VI)',
         'name' => 'team_marquee_text',
         'type' => 'text',
-        'default_value' => 'MEET THE ON THE ROCK TEAM',
+        'default_value' => 'GẶP GỠ ĐỘI NGŨ ON THE ROCK',
         'instructions' => 'Dòng chữ chạy vô tận ở dải trên và dải dưới của khối đội ngũ.',
+        'wrapper' => array('width' => '50'),
+    );
+    $fields[] = array(
+        'key' => 'field_team_marquee_text_en',
+        'label' => 'Nội dung chữ chạy (EN)',
+        'name' => 'team_marquee_text_en',
+        'type' => 'text',
+        'default_value' => 'MEET THE ON THE ROCK TEAM',
+        'instructions' => 'Bản dịch tiếng Anh hiển thị khi chọn EN.',
+        'wrapper' => array('width' => '50'),
     );
 
     $default_team_members = array(
-        1 => array('QUỲNH VÂN', 'STORE MANAGER'),
-        2 => array('TUẤN KIỆT', 'BAR MANAGER'),
-        3 => array('VĂN BẢO', 'BAR CAPTAIN'),
-        4 => array('THÀNH ĐỨC', 'BAR CAPTAIN'),
-        5 => array('HỒNG PHÚ', 'BARTENDER'),
+        1 => array('QUỲNH VÂN', 'QUẢN LÝ CỬA HÀNG', 'STORE MANAGER'),
+        2 => array('TUẤN KIỆT', 'QUẢN LÝ QUẦY BAR', 'BAR MANAGER'),
+        3 => array('VĂN BẢO', 'TRƯỞNG CA QUẦY BAR', 'BAR CAPTAIN'),
+        4 => array('THÀNH ĐỨC', 'TRƯỞNG CA QUẦY BAR', 'BAR CAPTAIN'),
+        5 => array('HỒNG PHÚ', 'CHUYÊN VIÊN PHA CHẾ', 'BARTENDER'),
     );
 
     for ($t = 1; $t <= 5; $t++) {
-        $t_name_def = isset($default_team_members[$t]) ? $default_team_members[$t][0] : "THÀNH VIÊN $t";
-        $t_role_def = isset($default_team_members[$t]) ? $default_team_members[$t][1] : "BARTENDER";
+        $t_name_def    = isset($default_team_members[$t]) ? $default_team_members[$t][0] : "THÀNH VIÊN $t";
+        $t_role_def    = isset($default_team_members[$t]) ? $default_team_members[$t][1] : "CHUYÊN VIÊN PHA CHẾ";
+        $t_role_def_en = isset($default_team_members[$t]) ? $default_team_members[$t][2] : "BARTENDER";
 
         $fields[] = array(
             'key' => 'field_team_member_name_' . $t,
@@ -649,11 +815,19 @@ if (function_exists('acf_add_local_field_group')) {
         );
         $fields[] = array(
             'key' => 'field_team_member_role_' . $t,
-            'label' => "Thành viên $t: Chức vụ / Vị trí",
+            'label' => "Thành viên $t: Chức vụ (VI)",
             'name' => 'team_member_role_' . $t,
             'type' => 'text',
             'default_value' => $t_role_def,
             'wrapper' => array('width' => '33'),
+        );
+        $fields[] = array(
+            'key' => 'field_team_member_role_' . $t . '_en',
+            'label' => "Thành viên $t: Chức vụ (EN)",
+            'name' => 'team_member_role_' . $t . '_en',
+            'type' => 'text',
+            'default_value' => $t_role_def_en,
+            'wrapper' => array('width' => '34'),
         );
         $fields[] = array(
             'key' => 'field_team_member_photo_' . $t,
@@ -662,7 +836,7 @@ if (function_exists('acf_add_local_field_group')) {
             'type' => 'image',
             'return_format' => 'array',
             'preview_size' => 'thumbnail',
-            'wrapper' => array('width' => '34'),
+            'wrapper' => array('width' => '100'),
         );
     }
 
@@ -678,19 +852,35 @@ if (function_exists('acf_add_local_field_group')) {
     // Cột 1: Danh mục
     $fields[] = array(
         'key' => 'field_footer_col1_title',
-        'label' => 'Cột 1: Tiêu đề cột',
+        'label' => 'Cột 1: Tiêu đề cột (VI)',
         'name' => 'footer_col1_title',
         'type' => 'text',
         'default_value' => 'DANH MỤC',
-        'wrapper' => array('width' => '100'),
+        'wrapper' => array('width' => '50'),
+    );
+    $fields[] = array(
+        'key' => 'field_footer_col1_title_en',
+        'label' => 'Cột 1: Tiêu đề cột (EN)',
+        'name' => 'footer_col1_title_en',
+        'type' => 'text',
+        'default_value' => 'NAVIGATION',
+        'wrapper' => array('width' => '50'),
     );
     $fields[] = array(
         'key' => 'field_footer_menu_text',
-        'label' => 'Cột 1: Chữ Menu',
+        'label' => 'Cột 1: Chữ Menu (VI)',
         'name' => 'footer_menu_text',
         'type' => 'text',
         'default_value' => 'TRANG MENU',
-        'wrapper' => array('width' => '50'),
+        'wrapper' => array('width' => '25'),
+    );
+    $fields[] = array(
+        'key' => 'field_footer_menu_text_en',
+        'label' => 'Cột 1: Chữ Menu (EN)',
+        'name' => 'footer_menu_text_en',
+        'type' => 'text',
+        'default_value' => 'MENU',
+        'wrapper' => array('width' => '25'),
     );
     $fields[] = array(
         'key' => 'field_footer_menu_url',
@@ -702,11 +892,19 @@ if (function_exists('acf_add_local_field_group')) {
     );
     $fields[] = array(
         'key' => 'field_footer_contact_text',
-        'label' => 'Cột 1: Chữ Liên hệ',
+        'label' => 'Cột 1: Chữ Liên hệ (VI)',
         'name' => 'footer_contact_text',
         'type' => 'text',
         'default_value' => 'TRANG LIÊN HỆ',
-        'wrapper' => array('width' => '50'),
+        'wrapper' => array('width' => '25'),
+    );
+    $fields[] = array(
+        'key' => 'field_footer_contact_text_en',
+        'label' => 'Cột 1: Chữ Liên hệ (EN)',
+        'name' => 'footer_contact_text_en',
+        'type' => 'text',
+        'default_value' => 'CONTACT',
+        'wrapper' => array('width' => '25'),
     );
     $fields[] = array(
         'key' => 'field_footer_contact_url',
@@ -718,11 +916,19 @@ if (function_exists('acf_add_local_field_group')) {
     );
     $fields[] = array(
         'key' => 'field_footer_booking_text',
-        'label' => 'Cột 1: Chữ Đặt bàn',
+        'label' => 'Cột 1: Chữ Đặt bàn (VI)',
         'name' => 'footer_booking_text',
         'type' => 'text',
         'default_value' => 'ĐẶT BÀN TRƯỚC',
-        'wrapper' => array('width' => '50'),
+        'wrapper' => array('width' => '25'),
+    );
+    $fields[] = array(
+        'key' => 'field_footer_booking_text_en',
+        'label' => 'Cột 1: Chữ Đặt bàn (EN)',
+        'name' => 'footer_booking_text_en',
+        'type' => 'text',
+        'default_value' => 'RESERVATION',
+        'wrapper' => array('width' => '25'),
     );
     $fields[] = array(
         'key' => 'field_footer_booking_url',
@@ -736,11 +942,19 @@ if (function_exists('acf_add_local_field_group')) {
     // Cột 2: Mạng xã hội
     $fields[] = array(
         'key' => 'field_footer_col2_title',
-        'label' => 'Cột 2: Tiêu đề cột',
+        'label' => 'Cột 2: Tiêu đề cột (VI)',
         'name' => 'footer_col2_title',
         'type' => 'text',
         'default_value' => 'MẠNG XÃ HỘI',
-        'wrapper' => array('width' => '100'),
+        'wrapper' => array('width' => '50'),
+    );
+    $fields[] = array(
+        'key' => 'field_footer_col2_title_en',
+        'label' => 'Cột 2: Tiêu đề cột (EN)',
+        'name' => 'footer_col2_title_en',
+        'type' => 'text',
+        'default_value' => 'SOCIAL MEDIA',
+        'wrapper' => array('width' => '50'),
     );
     $fields[] = array(
         'key' => 'field_footer_facebook_text',
@@ -794,43 +1008,83 @@ if (function_exists('acf_add_local_field_group')) {
     // Cột 3: Đến và trải nghiệm
     $fields[] = array(
         'key' => 'field_footer_col3_title',
-        'label' => 'Cột 3: Tiêu đề cột',
+        'label' => 'Cột 3: Tiêu đề cột (VI)',
         'name' => 'footer_col3_title',
         'type' => 'text',
         'default_value' => 'ĐẾN VÀ TRẢI NGHIỆM',
-        'wrapper' => array('width' => '100'),
+        'wrapper' => array('width' => '50'),
+    );
+    $fields[] = array(
+        'key' => 'field_footer_col3_title_en',
+        'label' => 'Cột 3: Tiêu đề cột (EN)',
+        'name' => 'footer_col3_title_en',
+        'type' => 'text',
+        'default_value' => 'VISIT & EXPERIENCE',
+        'wrapper' => array('width' => '50'),
     );
     $fields[] = array(
         'key' => 'field_footer_hours_days',
-        'label' => 'Cột 3: Ngày hoạt động',
+        'label' => 'Cột 3: Ngày hoạt động (VI)',
         'name' => 'footer_hours_days',
         'type' => 'text',
         'default_value' => 'THỨ HAI – CHỦ NHẬT',
-        'wrapper' => array('width' => '50'),
+        'wrapper' => array('width' => '25'),
+    );
+    $fields[] = array(
+        'key' => 'field_footer_hours_days_en',
+        'label' => 'Cột 3: Ngày hoạt động (EN)',
+        'name' => 'footer_hours_days_en',
+        'type' => 'text',
+        'default_value' => 'MONDAY – SUNDAY',
+        'wrapper' => array('width' => '25'),
     );
     $fields[] = array(
         'key' => 'field_footer_hours_time',
-        'label' => 'Cột 3: Giờ mở cửa',
+        'label' => 'Cột 3: Giờ mở cửa (VI)',
         'name' => 'footer_hours_time',
         'type' => 'text',
         'default_value' => '18H30 – 2H',
-        'wrapper' => array('width' => '50'),
+        'wrapper' => array('width' => '25'),
+    );
+    $fields[] = array(
+        'key' => 'field_footer_hours_time_en',
+        'label' => 'Cột 3: Giờ mở cửa (EN)',
+        'name' => 'footer_hours_time_en',
+        'type' => 'text',
+        'default_value' => '6:30 PM – 2:00 AM',
+        'wrapper' => array('width' => '25'),
     );
     $fields[] = array(
         'key' => 'field_footer_address_line1',
-        'label' => 'Cột 3: Địa chỉ dòng 1',
+        'label' => 'Cột 3: Địa chỉ dòng 1 (VI)',
         'name' => 'footer_address_line1',
         'type' => 'text',
         'default_value' => 'TẦNG HẦM 69',
-        'wrapper' => array('width' => '50'),
+        'wrapper' => array('width' => '25'),
+    );
+    $fields[] = array(
+        'key' => 'field_footer_address_line1_en',
+        'label' => 'Cột 3: Địa chỉ dòng 1 (EN)',
+        'name' => 'footer_address_line1_en',
+        'type' => 'text',
+        'default_value' => 'BASEMENT 69',
+        'wrapper' => array('width' => '25'),
     );
     $fields[] = array(
         'key' => 'field_footer_address_line2',
-        'label' => 'Cột 3: Địa chỉ dòng 2',
+        'label' => 'Cột 3: Địa chỉ dòng 2 (VI)',
         'name' => 'footer_address_line2',
         'type' => 'text',
         'default_value' => 'TRƯƠNG CÔNG ĐỊNH, PHƯỜNG 01, ĐÀ LẠT',
-        'wrapper' => array('width' => '50'),
+        'wrapper' => array('width' => '25'),
+    );
+    $fields[] = array(
+        'key' => 'field_footer_address_line2_en',
+        'label' => 'Cột 3: Địa chỉ dòng 2 (EN)',
+        'name' => 'footer_address_line2_en',
+        'type' => 'text',
+        'default_value' => 'TRUONG CONG DINH, WARD 01, DA LAT',
+        'wrapper' => array('width' => '25'),
     );
     $fields[] = array(
         'key' => 'field_footer_maps_url',
@@ -844,11 +1098,19 @@ if (function_exists('acf_add_local_field_group')) {
     // Cột 4: Liên hệ
     $fields[] = array(
         'key' => 'field_footer_col4_title',
-        'label' => 'Cột 4: Tiêu đề cột',
+        'label' => 'Cột 4: Tiêu đề cột (VI)',
         'name' => 'footer_col4_title',
         'type' => 'text',
         'default_value' => 'LIÊN HỆ',
-        'wrapper' => array('width' => '100'),
+        'wrapper' => array('width' => '50'),
+    );
+    $fields[] = array(
+        'key' => 'field_footer_col4_title_en',
+        'label' => 'Cột 4: Tiêu đề cột (EN)',
+        'name' => 'footer_col4_title_en',
+        'type' => 'text',
+        'default_value' => 'CONTACT US',
+        'wrapper' => array('width' => '50'),
     );
     $fields[] = array(
         'key' => 'field_footer_email',
@@ -937,20 +1199,55 @@ if (function_exists('acf_add_local_field_group')) {
             ),
             array(
                 'key' => 'field_menu_page_title',
-                'label' => 'Tiêu đề Menu',
+                'label' => 'Tiêu đề Menu (VI)',
                 'name' => 'menu_page_title',
                 'type' => 'text',
                 'default_value' => 'MENU',
                 'wrapper' => array('width' => '50'),
             ),
             array(
+                'key' => 'field_menu_page_title_en',
+                'label' => 'Tiêu đề Menu (EN)',
+                'name' => 'menu_page_title_en',
+                'type' => 'text',
+                'default_value' => 'MENU',
+                'wrapper' => array('width' => '50'),
+            ),
+            array(
                 'key' => 'field_menu_page_desc',
-                'label' => 'Mô tả ngắn Menu',
+                'label' => 'Mô tả ngắn Menu (VI)',
                 'name' => 'menu_page_desc',
                 'type' => 'textarea',
                 'rows' => 3,
                 'default_value' => 'Thưởng thức những ly cocktail thủ công và các món ăn được chế biến tinh tế trong một không gian đầy cảm hứng.',
-                'wrapper' => array('width' => '100'),
+                'wrapper' => array('width' => '50'),
+            ),
+            array(
+                'key' => 'field_menu_page_desc_en',
+                'label' => 'Mô tả ngắn Menu (EN)',
+                'name' => 'menu_page_desc_en',
+                'type' => 'textarea',
+                'rows' => 3,
+                'default_value' => 'Experience handcrafted cocktails and delicately prepared delicacies in an inspiring ambiance.',
+                'wrapper' => array('width' => '50'),
+            ),
+            array(
+                'key' => 'field_menu_hero_photo_dish',
+                'label' => 'Ảnh đĩa món ăn (Hero trái)',
+                'name' => 'menu_hero_photo_dish',
+                'type' => 'image',
+                'return_format' => 'url',
+                'instructions' => 'Để trống sẽ tự động dùng ảnh món ăn nghệ thuật mặc định',
+                'wrapper' => array('width' => '50'),
+            ),
+            array(
+                'key' => 'field_menu_hero_photo_cocktail',
+                'label' => 'Ảnh ly cocktail (Hero phải)',
+                'name' => 'menu_hero_photo_cocktail',
+                'type' => 'image',
+                'return_format' => 'url',
+                'instructions' => 'Để trống sẽ tự động dùng ảnh cocktail nghệ thuật mặc định',
+                'wrapper' => array('width' => '50'),
             ),
         ),
         'location' => array(

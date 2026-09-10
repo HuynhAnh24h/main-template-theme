@@ -39,11 +39,12 @@ $image_html = has_post_thumbnail($post_id)
     
     <!-- Link Xem thêm -->
     <div class="px-5 pb-5 pt-0">
+        <?php $read_more_text = function_exists('otr_t') ? otr_t('Xem thêm &rarr;', 'Read more &rarr;') : 'Xem thêm &rarr;'; ?>
         <a href="<?php echo esc_url($permalink); ?>" class="btn-liquid-glass inline-flex items-center px-4 py-2 rounded-full text-[11px] tracking-wider uppercase font-medium text-[#caa875] gap-1.5 transition">
             <span class="btn-roll-wrap">
                 <span class="btn-roll-text">
-                    <span>Xem thêm &rarr;</span>
-                    <span aria-hidden="true">Xem thêm &rarr;</span>
+                    <span><?php echo esc_html($read_more_text); ?></span>
+                    <span aria-hidden="true"><?php echo esc_html($read_more_text); ?></span>
                 </span>
             </span>
         </a>

@@ -334,22 +334,66 @@ function otr_enrich_tree_tasting_notes(&$tree) {
         'Midnight In The Rocks' => "– Nốt khói than bùn biển đảo Scotland bùng nổ cùng vị đắng bùi của hạt óc chó đen\n– Khói lá hương thảo tỏa ngát tạo nên trải nghiệm thưởng thức đầy bí ẩn và quyền lực",
     );
 
+    $cha_en_map = array(
+        'cha_01' => array('title_en' => 'BESPOKE COCKTAIL', 'desc_en' => 'One-of-a-kind bespoke creations tailored specifically to your personality and taste palate.'),
+        'cha_02' => array('title_en' => 'CLASSIC COCKTAIL', 'desc_en' => 'Timeless legendary recipes that shaped the global cocktail culture.'),
+        'cha_03' => array('title_en' => 'SHOTS & SHOOTERS', 'desc_en' => 'Vibrant bursts of spirits for high-energy celebrations and shared moments.'),
+        'cha_04' => array('title_en' => 'FOOD & BAR BITES', 'desc_en' => 'Artisanal tapas, charcuterie, and gourmet pairings crafted to complement our drinks.'),
+    );
+
     $updated = false;
     if (!empty($tree) && is_array($tree)) {
-        foreach ($tree as &$cha) {
+        foreach ($tree as $cha_k => &$cha) {
+            if (isset($cha_en_map[$cha_k])) {
+                if (empty($cha['title_en'])) {
+                    $cha['title_en'] = $cha_en_map[$cha_k]['title_en'];
+                    $updated = true;
+                }
+                if (empty($cha['desc_en'])) {
+                    $cha['desc_en'] = $cha_en_map[$cha_k]['desc_en'];
+                    $updated = true;
+                }
+            }
+
             if (!empty($cha['children']) && is_array($cha['children'])) {
                 foreach ($cha['children'] as &$con) {
+                    if (empty($con['title_en'])) {
+                        $con['title_en'] = $con['title'];
+                        $updated = true;
+                    }
+                    if (empty($con['tag_en']) && !empty($con['tag'])) {
+                        $con['tag_en'] = $con['tag'];
+                        $updated = true;
+                    }
+
                     if (!empty($con['sub_children']) && is_array($con['sub_children'])) {
                         foreach ($con['sub_children'] as &$concon) {
+                            if (empty($concon['title_en'])) {
+                                $concon['title_en'] = $concon['title'];
+                                $updated = true;
+                            }
+
                             if (!empty($concon['items']) && is_array($concon['items'])) {
                                 foreach ($concon['items'] as &$it) {
                                     $name = trim($it['name'] ?? '');
+                                    if (empty($it['name_en'])) {
+                                        $it['name_en'] = $name;
+                                        $updated = true;
+                                    }
+
                                     if (isset($tasting_map[$name])) {
                                         if (empty($it['desc']) || (strpos($it['desc'], '–') === false && strpos($it['desc'], '-') === false)) {
                                             $base_ing = !empty($it['desc']) ? trim($it['desc']) : $name;
                                             $it['desc'] = $base_ing . "\n" . $tasting_map[$name];
                                             $updated = true;
                                         }
+                                    }
+
+                                    // Mô tả tiếng Anh trích xuất thành phần gốc
+                                    if (empty($it['desc_en']) && !empty($it['desc'])) {
+                                        $lines = explode("\n", $it['desc']);
+                                        $it['desc_en'] = trim($lines[0]);
+                                        $updated = true;
                                     }
                                 }
                             }
@@ -438,12 +482,14 @@ function otr_handle_menu_therocks_crud() {
 
     // A. Thêm hoặc Sửa Menu Cha
     if ($action === 'save_cha') {
-        $cha_id = sanitize_text_field($_POST['cha_id'] ?: 'cha_' . time());
-        $title  = sanitize_text_field($_POST['cha_title']);
-        $num    = sanitize_text_field($_POST['cha_num']);
-        $desc   = sanitize_textarea_field($_POST['cha_desc']);
-        $image  = esc_url_raw($_POST['cha_image']);
-        $layout = in_array($_POST['cha_layout'], array('layout_1', 'layout_2', 'layout_3')) ? $_POST['cha_layout'] : 'layout_3';
+        $cha_id   = sanitize_text_field($_POST['cha_id'] ?: 'cha_' . time());
+        $title    = sanitize_text_field($_POST['cha_title']);
+        $title_en = sanitize_text_field($_POST['cha_title_en'] ?? '');
+        $num      = sanitize_text_field($_POST['cha_num']);
+        $desc     = sanitize_textarea_field($_POST['cha_desc']);
+        $desc_en  = sanitize_textarea_field($_POST['cha_desc_en'] ?? '');
+        $image    = esc_url_raw($_POST['cha_image']);
+        $layout   = in_array($_POST['cha_layout'], array('layout_1', 'layout_2', 'layout_3')) ? $_POST['cha_layout'] : 'layout_3';
 
         if (!isset($tree[$cha_id])) {
             $tree[$cha_id] = array(
@@ -451,12 +497,14 @@ function otr_handle_menu_therocks_crud() {
                 'children' => array(),
             );
         }
-        $tree[$cha_id]['id']     = $cha_id;
-        $tree[$cha_id]['title']  = $title ?: 'Menu Mới';
-        $tree[$cha_id]['num']    = $num ?: sprintf('%02d', count($tree));
-        $tree[$cha_id]['desc']   = $desc;
-        $tree[$cha_id]['image']  = $image;
-        $tree[$cha_id]['layout'] = $layout;
+        $tree[$cha_id]['id']       = $cha_id;
+        $tree[$cha_id]['title']    = $title ?: 'Menu Mới';
+        $tree[$cha_id]['title_en'] = $title_en;
+        $tree[$cha_id]['num']      = $num ?: sprintf('%02d', count($tree));
+        $tree[$cha_id]['desc']     = $desc;
+        $tree[$cha_id]['desc_en']  = $desc_en;
+        $tree[$cha_id]['image']    = $image;
+        $tree[$cha_id]['layout']   = $layout;
 
         otr_save_therocks_menu_tree($tree);
         wp_redirect(admin_url('admin.php?page=menu-therocks&msg=saved_cha'));
@@ -476,14 +524,17 @@ function otr_handle_menu_therocks_crud() {
 
     // C. Thêm hoặc Sửa Menu Con
     if ($action === 'save_con') {
-        $cha_id = sanitize_text_field($_POST['parent_cha_id']);
-        $con_id = sanitize_text_field($_POST['con_id'] ?: 'con_' . time());
-        $title  = sanitize_text_field($_POST['con_title']);
-        $layout = in_array($_POST['con_layout'], array('layout_1', 'layout_2', 'layout_3')) ? $_POST['con_layout'] : 'layout_3';
-        $desc   = sanitize_textarea_field($_POST['con_desc']);
-        $tag    = sanitize_text_field($_POST['con_tag']);
-        $price  = sanitize_text_field($_POST['con_price']);
-        $image  = isset($_POST['con_image']) ? esc_url_raw($_POST['con_image']) : '';
+        $cha_id   = sanitize_text_field($_POST['parent_cha_id']);
+        $con_id   = sanitize_text_field($_POST['con_id'] ?: 'con_' . time());
+        $title    = sanitize_text_field($_POST['con_title']);
+        $title_en = sanitize_text_field($_POST['con_title_en'] ?? '');
+        $layout   = in_array($_POST['con_layout'], array('layout_1', 'layout_2', 'layout_3')) ? $_POST['con_layout'] : 'layout_3';
+        $desc     = sanitize_textarea_field($_POST['con_desc']);
+        $desc_en  = sanitize_textarea_field($_POST['con_desc_en'] ?? '');
+        $tag      = sanitize_text_field($_POST['con_tag']);
+        $tag_en   = sanitize_text_field($_POST['con_tag_en'] ?? '');
+        $price    = sanitize_text_field($_POST['con_price']);
+        $image    = isset($_POST['con_image']) ? esc_url_raw($_POST['con_image']) : '';
 
         if (isset($tree[$cha_id])) {
             if (!isset($tree[$cha_id]['children'])) {
@@ -495,13 +546,16 @@ function otr_handle_menu_therocks_crud() {
                     'sub_children' => array(),
                 );
             }
-            $tree[$cha_id]['children'][$con_id]['id']     = $con_id;
-            $tree[$cha_id]['children'][$con_id]['title']  = $title ?: 'Menu Con Mới';
-            $tree[$cha_id]['children'][$con_id]['layout'] = $layout;
-            $tree[$cha_id]['children'][$con_id]['desc']   = $desc;
-            $tree[$cha_id]['children'][$con_id]['tag']    = $tag;
-            $tree[$cha_id]['children'][$con_id]['price']  = $price;
-            $tree[$cha_id]['children'][$con_id]['image']  = $image;
+            $tree[$cha_id]['children'][$con_id]['id']       = $con_id;
+            $tree[$cha_id]['children'][$con_id]['title']    = $title ?: 'Menu Con Mới';
+            $tree[$cha_id]['children'][$con_id]['title_en'] = $title_en;
+            $tree[$cha_id]['children'][$con_id]['layout']   = $layout;
+            $tree[$cha_id]['children'][$con_id]['desc']     = $desc;
+            $tree[$cha_id]['children'][$con_id]['desc_en']  = $desc_en;
+            $tree[$cha_id]['children'][$con_id]['tag']      = $tag;
+            $tree[$cha_id]['children'][$con_id]['tag_en']   = $tag_en;
+            $tree[$cha_id]['children'][$con_id]['price']    = $price;
+            $tree[$cha_id]['children'][$con_id]['image']    = $image;
             if ($image) {
                 if (empty($tree[$cha_id]['children'][$con_id]['images'])) {
                     $tree[$cha_id]['children'][$con_id]['images'] = array($image);
@@ -534,6 +588,7 @@ function otr_handle_menu_therocks_crud() {
         $con_id    = sanitize_text_field($_POST['parent_con_id']);
         $concon_id = sanitize_text_field($_POST['concon_id'] ?: 'concon_' . time());
         $title     = sanitize_text_field($_POST['concon_title']);
+        $title_en  = sanitize_text_field($_POST['concon_title_en'] ?? '');
 
         if (isset($tree[$cha_id]['children'][$con_id])) {
             if (!isset($tree[$cha_id]['children'][$con_id]['sub_children'])) {
@@ -545,8 +600,9 @@ function otr_handle_menu_therocks_crud() {
                     'items' => array(),
                 );
             }
-            $tree[$cha_id]['children'][$con_id]['sub_children'][$concon_id]['id']    = $concon_id;
-            $tree[$cha_id]['children'][$con_id]['sub_children'][$concon_id]['title'] = $title ?: 'Nhóm Cột Mới';
+            $tree[$cha_id]['children'][$con_id]['sub_children'][$concon_id]['id']       = $concon_id;
+            $tree[$cha_id]['children'][$con_id]['sub_children'][$concon_id]['title']    = $title ?: 'Nhóm Cột Mới';
+            $tree[$cha_id]['children'][$con_id]['sub_children'][$concon_id]['title_en'] = $title_en;
 
             otr_save_therocks_menu_tree($tree);
         }
@@ -559,7 +615,7 @@ function otr_handle_menu_therocks_crud() {
         $cha_id    = sanitize_text_field($_POST['parent_cha_id']);
         $con_id    = sanitize_text_field($_POST['parent_con_id']);
         $concon_id = sanitize_text_field($_POST['concon_id']);
-        if (isset($tree[$cha_id]['children'][$con_id]['sub_children'][$concon_id])) {
+        if (isset($tree[$cha_id]['children'][$con_id])) {
             unset($tree[$cha_id]['children'][$con_id]['sub_children'][$concon_id]);
             otr_save_therocks_menu_tree($tree);
         }
@@ -574,8 +630,10 @@ function otr_handle_menu_therocks_crud() {
         $concon_id = sanitize_text_field($_POST['parent_concon_id']);
         $item_id   = sanitize_text_field($_POST['item_id'] ?: 'item_' . time());
         $name      = sanitize_text_field($_POST['item_name']);
+        $name_en   = sanitize_text_field($_POST['item_name_en'] ?? '');
         $price     = sanitize_text_field($_POST['item_price']);
         $desc      = sanitize_textarea_field($_POST['item_desc']);
+        $desc_en   = sanitize_textarea_field($_POST['item_desc_en'] ?? '');
         $image     = esc_url_raw($_POST['item_image']);
 
         if (isset($tree[$cha_id]['children'][$con_id]['sub_children'][$concon_id])) {
@@ -587,21 +645,25 @@ function otr_handle_menu_therocks_crud() {
             $found = false;
             foreach ($items as &$it) {
                 if ($it['id'] === $item_id) {
-                    $it['name']  = $name ?: 'Món mới';
-                    $it['price'] = $price ?: '199k';
-                    $it['desc']  = $desc;
-                    $it['image'] = $image;
+                    $it['name']    = $name ?: 'Món mới';
+                    $it['name_en'] = $name_en;
+                    $it['price']   = $price ?: '199k';
+                    $it['desc']    = $desc;
+                    $it['desc_en'] = $desc_en;
+                    $it['image']   = $image;
                     $found = true;
                     break;
                 }
             }
             if (!$found) {
                 $items[] = array(
-                    'id'    => $item_id,
-                    'name'  => $name ?: 'Món mới',
-                    'price' => $price ?: '199k',
-                    'desc'  => $desc,
-                    'image' => $image,
+                    'id'      => $item_id,
+                    'name'    => $name ?: 'Món mới',
+                    'name_en' => $name_en,
+                    'price'   => $price ?: '199k',
+                    'desc'    => $desc,
+                    'desc_en' => $desc_en,
+                    'image'   => $image,
                 );
             }
 
@@ -868,7 +930,7 @@ function otr_render_menu_therocks_page() {
                             </span>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <button type="button" onclick="otrEditCha('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($cha['title']); ?>', '<?php echo esc_js($cha['num']); ?>', '<?php echo esc_js($cha['desc']); ?>', '<?php echo esc_js($cha['image'] ?? ''); ?>', '<?php echo esc_js($cha['layout']); ?>')" class="button button-small" style="background: #33261a; color: #caa875; border-color: #caa875;">
+                            <button type="button" onclick="otrEditCha('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($cha['title']); ?>', '<?php echo esc_js($cha['title_en'] ?? ''); ?>', '<?php echo esc_js($cha['num']); ?>', '<?php echo esc_js($cha['desc']); ?>', '<?php echo esc_js($cha['desc_en'] ?? ''); ?>', '<?php echo esc_js($cha['image'] ?? ''); ?>', '<?php echo esc_js($cha['layout']); ?>')" class="button button-small" style="background: #33261a; color: #caa875; border-color: #caa875;">
                                 ✎ Sửa Menu Cha
                             </button>
                             <button type="button" onclick="otrOpenAddCon('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($cha['title']); ?>')" class="button button-primary button-small" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 600;">
@@ -911,13 +973,16 @@ function otr_render_menu_therocks_page() {
                                                 </span>
                                                 <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #18110b;">
                                                     <?php echo esc_html($con['title']); ?>
+                                                    <?php if (!empty($con['title_en'])): ?>
+                                                        <span style="font-size: 11.5px; color: #b8860b; font-weight: 600; margin-left: 6px;">[EN: <?php echo esc_html($con['title_en']); ?>]</span>
+                                                    <?php endif; ?>
                                                 </h3>
                                                 <span style="background: <?php echo esc_attr($badge_color); ?>; color: #fff; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px;">
                                                     ★ <?php echo esc_html($con_layout_name); ?>
                                                 </span>
                                             </div>
                                             <div style="display: flex; gap: 6px;">
-                                                <button type="button" onclick="otrEditCon('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($con['title']); ?>', '<?php echo esc_js($con['layout']); ?>', '<?php echo esc_js($con['desc'] ?? ''); ?>', '<?php echo esc_js($con['tag'] ?? ''); ?>', '<?php echo esc_js($con['price'] ?? ''); ?>', '<?php echo esc_js($con_img); ?>')" class="button button-small">
+                                                <button type="button" onclick="otrEditCon('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($con['title']); ?>', '<?php echo esc_js($con['title_en'] ?? ''); ?>', '<?php echo esc_js($con['layout']); ?>', '<?php echo esc_js($con['desc'] ?? ''); ?>', '<?php echo esc_js($con['desc_en'] ?? ''); ?>', '<?php echo esc_js($con['tag'] ?? ''); ?>', '<?php echo esc_js($con['tag_en'] ?? ''); ?>', '<?php echo esc_js($con['price'] ?? ''); ?>', '<?php echo esc_js($con_img); ?>')" class="button button-small">
                                                     ✎ Sửa
                                                 </button>
                                                 <button type="button" onclick="otrOpenAddConCon('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($con['title']); ?>')" class="button button-small button-primary" style="background: #2271b1;">
@@ -944,7 +1009,7 @@ function otr_render_menu_therocks_page() {
                                                     <?php foreach ($con['sub_children'] as $concon_id => $concon) : ?>
                                                         <div style="background: #fdfdfd; border: 1px solid #e5e5e5; border-radius: 5px; padding: 12px 14px;">
                                                             
-                                                            <!-- Header Menu Con Con -->
+                                                             <!-- Header Menu Con Con -->
                                                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #eee;">
                                                                 <div style="display: flex; align-items: center; gap: 6px;">
                                                                     <span style="background: #e5e5e5; color: #555; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px;">
@@ -952,9 +1017,15 @@ function otr_render_menu_therocks_page() {
                                                                     </span>
                                                                     <strong style="color: #b8860b; font-size: 13px; text-transform: uppercase;">
                                                                         <?php echo esc_html($concon['title']); ?>
+                                                                        <?php if (!empty($concon['title_en'])): ?>
+                                                                            <span style="font-size: 11px; color: #666; font-weight: normal; margin-left: 4px;">(EN: <?php echo esc_html($concon['title_en']); ?>)</span>
+                                                                        <?php endif; ?>
                                                                     </strong>
                                                                 </div>
                                                                 <div style="display: flex; gap: 4px;">
+                                                                    <button type="button" onclick="otrEditConCon('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($concon_id); ?>', '<?php echo esc_js($concon['title']); ?>', '<?php echo esc_js($concon['title_en'] ?? ''); ?>')" class="button button-small" style="font-size: 11px; padding: 0 6px; height: 24px; line-height: 22px;">
+                                                                        ✎
+                                                                    </button>
                                                                     <button type="button" onclick="otrOpenAddItem('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($concon_id); ?>', '<?php echo esc_js($concon['title']); ?>')" class="button button-small" style="font-size: 11px; padding: 0 6px; height: 24px; line-height: 22px; color: #2271b1;">
                                                                         + Món
                                                                     </button>
@@ -982,6 +1053,9 @@ function otr_render_menu_therocks_page() {
                                                                                 <?php endif; ?>
                                                                                 <div>
                                                                                     <strong style="color: #222;"><?php echo esc_html($it['name']); ?></strong>
+                                                                                    <?php if (!empty($it['name_en']) && strtolower(trim($it['name_en'])) !== strtolower(trim($it['name']))): ?>
+                                                                                        <span style="color: #b8860b; font-size: 11.5px; margin-left: 4px;">[EN: <?php echo esc_html($it['name_en']); ?>]</span>
+                                                                                    <?php endif; ?>
                                                                                     <span style="color: #b8860b; font-weight: 600; margin-left: 6px;"><?php echo esc_html($it['price']); ?></span>
                                                                                     <?php if (!empty($it['desc'])) : ?>
                                                                                         <div style="color: #777; font-size: 11px;"><?php echo esc_html($it['desc']); ?></div>
@@ -989,7 +1063,7 @@ function otr_render_menu_therocks_page() {
                                                                                 </div>
                                                                             </div>
                                                                             <div style="display: flex; gap: 4px; shrink-0; margin-left: 8px;">
-                                                                                <button type="button" onclick="otrEditItem('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($concon_id); ?>', '<?php echo esc_js($it['id']); ?>', '<?php echo esc_js($it['name']); ?>', '<?php echo esc_js($it['price']); ?>', '<?php echo esc_js($it['desc'] ?? ''); ?>', '<?php echo esc_js($it['image'] ?? ''); ?>')" class="button button-small" style="padding: 0 5px; height: 22px; line-height: 20px; font-size: 10px;">✎</button>
+                                                                                <button type="button" onclick="otrEditItem('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($concon_id); ?>', '<?php echo esc_js($it['id']); ?>', '<?php echo esc_js($it['name']); ?>', '<?php echo esc_js($it['name_en'] ?? ''); ?>', '<?php echo esc_js($it['price']); ?>', '<?php echo esc_js($it['desc'] ?? ''); ?>', '<?php echo esc_js($it['desc_en'] ?? ''); ?>', '<?php echo esc_js($it['image'] ?? ''); ?>')" class="button button-small" style="padding: 0 5px; height: 22px; line-height: 20px; font-size: 10px;">✎</button>
                                                                                 <form method="post" onsubmit="return confirm('Xóa món này?');" style="display:inline;">
                                                                                     <?php wp_nonce_field('otr_menu_therocks_nonce', 'otr_nonce'); ?>
                                                                                     <input type="hidden" name="otr_menu_action" value="delete_item">
@@ -1027,7 +1101,7 @@ function otr_render_menu_therocks_page() {
 
     <!-- Modal 1: Thêm/Sửa Menu Cha -->
     <div id="modal-add-cha" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100000; align-items: center; justify-content: center;">
-        <div style="background: #fff; width: 520px; max-width: 90%; border-radius: 8px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); position: relative; max-height: 90vh; overflow-y: auto;">
+        <div style="background: #fff; width: 540px; max-width: 90%; border-radius: 8px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); position: relative; max-height: 90vh; overflow-y: auto;">
             <h3 id="modal-cha-title" style="margin-top: 0; font-size: 18px; color: #18110b; border-bottom: 1px solid #eee; padding-bottom: 10px;">
                 Thêm Menu Cha (Cấp 1)
             </h3>
@@ -1036,10 +1110,36 @@ function otr_render_menu_therocks_page() {
                 <input type="hidden" name="otr_menu_action" value="save_cha">
                 <input type="hidden" name="cha_id" id="input_cha_id" value="">
                 
-                <div style="margin-bottom: 12px;">
-                    <label style="display:block; font-weight: 600; margin-bottom: 4px;">Tên Menu Cha *</label>
-                    <input type="text" name="cha_title" id="input_cha_title" required class="widefat" placeholder="VD: 02 CLASSIC COCKTAIL">
+                <!-- Tabs Ngôn Ngữ -->
+                <div style="display: flex; gap: 8px; border-bottom: 2px solid #caa875; padding-bottom: 6px; margin-bottom: 14px;">
+                    <button type="button" onclick="otrSwitchModalTab(this, 'vi')" class="button button-small button-primary otr-modal-tab-btn otr-btn-vi" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700;">🇻🇳 Tiếng Việt</button>
+                    <button type="button" onclick="otrSwitchModalTab(this, 'en')" class="button button-small otr-modal-tab-btn otr-btn-en" style="font-weight: 600;">🇬🇧 English</button>
                 </div>
+
+                <!-- Pane VI -->
+                <div class="otr-modal-pane-vi">
+                    <div style="margin-bottom: 12px;">
+                        <label style="display:block; font-weight: 600; margin-bottom: 4px;">Tên Menu Cha (VI) *</label>
+                        <input type="text" name="cha_title" id="input_cha_title" required class="widefat" placeholder="VD: 02 CLASSIC COCKTAIL">
+                    </div>
+                    <div style="margin-bottom: 14px;">
+                        <label style="display:block; font-weight: 600; margin-bottom: 4px;">Mô tả ngắn (VI)</label>
+                        <textarea name="cha_desc" id="input_cha_desc" rows="3" class="widefat" placeholder="Mô tả phong cách đồ uống của nhóm này..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Pane EN -->
+                <div class="otr-modal-pane-en" style="display:none; background: #fffdf8; padding: 12px 14px; border: 1px solid #ebd9c0; border-radius: 6px; margin-bottom: 14px;">
+                    <div style="margin-bottom: 12px;">
+                        <label style="display:block; font-weight: 700; color: #b8860b; margin-bottom: 4px;">Tên Menu Cha (English Title)</label>
+                        <input type="text" name="cha_title_en" id="input_cha_title_en" class="widefat" placeholder="e.g. 02 CLASSIC COCKTAIL">
+                    </div>
+                    <div>
+                        <label style="display:block; font-weight: 700; color: #b8860b; margin-bottom: 4px;">Mô tả ngắn (English Description)</label>
+                        <textarea name="cha_desc_en" id="input_cha_desc_en" rows="3" class="widefat" placeholder="e.g. Timeless legendary recipes that shaped the global cocktail culture..."></textarea>
+                    </div>
+                </div>
+
                 <div style="margin-bottom: 12px;">
                     <label style="display:block; font-weight: 600; margin-bottom: 4px;">Số thứ tự hiển thị (VD: 01, 02)</label>
                     <input type="text" name="cha_num" id="input_cha_num" class="widefat" placeholder="01">
@@ -1073,10 +1173,6 @@ function otr_render_menu_therocks_page() {
                     <input type="text" name="cha_image" id="input_cha_image" class="widefat" placeholder="Đường dẫn ảnh từ Thư viện WordPress..." readonly style="background: #f6f7f7; color: #555; font-size: 12px;">
                 </div>
 
-                <div style="margin-bottom: 16px;">
-                    <label style="display:block; font-weight: 600; margin-bottom: 4px;">Mô tả ngắn</label>
-                    <textarea name="cha_desc" id="input_cha_desc" rows="3" class="widefat" placeholder="Mô tả phong cách đồ uống của nhóm này..."></textarea>
-                </div>
                 <div style="display: flex; justify-content: flex-end; gap: 10px;">
                     <button type="button" onclick="otrCloseModal('modal-add-cha')" class="button">Hủy</button>
                     <button type="submit" class="button button-primary">Lưu Menu Cha</button>
@@ -1087,7 +1183,7 @@ function otr_render_menu_therocks_page() {
 
     <!-- Modal 2: Thêm/Sửa Menu Con -->
     <div id="modal-add-con" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100000; align-items: center; justify-content: center;">
-        <div style="background: #fff; width: 540px; max-width: 90%; border-radius: 8px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); position: relative; max-height: 90vh; overflow-y: auto;">
+        <div style="background: #fff; width: 560px; max-width: 90%; border-radius: 8px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); position: relative; max-height: 90vh; overflow-y: auto;">
             <h3 id="modal-con-heading" style="margin-top: 0; font-size: 18px; color: #18110b; border-bottom: 1px solid #eee; padding-bottom: 10px;">
                 Thêm Menu Con (Cấp 2)
             </h3>
@@ -1097,10 +1193,50 @@ function otr_render_menu_therocks_page() {
                 <input type="hidden" name="parent_cha_id" id="input_con_parent_cha" value="">
                 <input type="hidden" name="con_id" id="input_con_id" value="">
                 
-                <div style="margin-bottom: 12px;">
-                    <label style="display:block; font-weight: 600; margin-bottom: 4px;">Tên Menu Con (Tên Tab) *</label>
-                    <input type="text" name="con_title" id="input_con_title" required class="widefat" placeholder="VD: CLASSIC COCKTAIL hoặc SIGNATURE CRAFT">
+                <!-- Tabs Ngôn Ngữ -->
+                <div style="display: flex; gap: 8px; border-bottom: 2px solid #caa875; padding-bottom: 6px; margin-bottom: 14px;">
+                    <button type="button" onclick="otrSwitchModalTab(this, 'vi')" class="button button-small button-primary otr-modal-tab-btn otr-btn-vi" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700;">🇻🇳 Tiếng Việt</button>
+                    <button type="button" onclick="otrSwitchModalTab(this, 'en')" class="button button-small otr-modal-tab-btn otr-btn-en" style="font-weight: 600;">🇬🇧 English</button>
                 </div>
+
+                <!-- Pane VI -->
+                <div class="otr-modal-pane-vi">
+                    <div style="margin-bottom: 12px;">
+                        <label style="display:block; font-weight: 600; margin-bottom: 4px;">Tên Menu Con (Tên Tab VI) *</label>
+                        <input type="text" name="con_title" id="input_con_title" required class="widefat" placeholder="VD: CLASSIC COCKTAIL hoặc SIGNATURE CRAFT">
+                    </div>
+                    <div style="margin-bottom: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="display:block; font-weight: 600; margin-bottom: 4px;">Tag danh mục (VI)</label>
+                            <input type="text" name="con_tag" id="input_con_tag" class="widefat" placeholder="VD: BESPOKE">
+                        </div>
+                        <div>
+                            <label style="display:block; font-weight: 600; margin-bottom: 4px;">Giá tham chiếu (Kiểu 1)</label>
+                            <input type="text" name="con_price" id="input_con_price" class="widefat" placeholder="VD: 320k">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 14px;">
+                        <label style="display:block; font-weight: 600; margin-bottom: 4px;">Mô tả chi tiết (VI)</label>
+                        <textarea name="con_desc" id="input_con_desc" rows="2" class="widefat" placeholder="Mô tả cho tab này..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Pane EN -->
+                <div class="otr-modal-pane-en" style="display:none; background: #fffdf8; padding: 12px 14px; border: 1px solid #ebd9c0; border-radius: 6px; margin-bottom: 14px;">
+                    <div style="margin-bottom: 12px;">
+                        <label style="display:block; font-weight: 700; color: #b8860b; margin-bottom: 4px;">Tên Menu Con (English Title)</label>
+                        <input type="text" name="con_title_en" id="input_con_title_en" class="widefat" placeholder="e.g. CLASSIC COCKTAIL or SIGNATURE CRAFT">
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="display:block; font-weight: 700; color: #b8860b; margin-bottom: 4px;">Tag danh mục (English Tag)</label>
+                        <input type="text" name="con_tag_en" id="input_con_tag_en" class="widefat" placeholder="e.g. BESPOKE">
+                    </div>
+                    <div>
+                        <label style="display:block; font-weight: 700; color: #b8860b; margin-bottom: 4px;">Mô tả chi tiết (English Description)</label>
+                        <textarea name="con_desc_en" id="input_con_desc_en" rows="2" class="widefat" placeholder="e.g. Tasting notes and details in English..."></textarea>
+                    </div>
+                </div>
+
                 <div style="margin-bottom: 14px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                         <label style="display:block; font-weight: 700; color: #b8860b; margin: 0;">
@@ -1115,16 +1251,6 @@ function otr_render_menu_therocks_page() {
                         <option value="layout_1">Kiểu 1: Showcase Card & Slider Ảnh (Card hương vị & Slider)</option>
                         <option value="layout_2">Kiểu 2: Sidebar Cố Định Cuộn Trang (Sticky Sidebar bám cuộn)</option>
                     </select>
-                </div>
-                <div style="margin-bottom: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div>
-                        <label style="display:block; font-weight: 600; margin-bottom: 4px;">Tag danh mục (Kiểu 1)</label>
-                        <input type="text" name="con_tag" id="input_con_tag" class="widefat" placeholder="VD: BESPOKE">
-                    </div>
-                    <div>
-                        <label style="display:block; font-weight: 600; margin-bottom: 4px;">Giá tham chiếu (Kiểu 1)</label>
-                        <input type="text" name="con_price" id="input_con_price" class="widefat" placeholder="VD: 320k">
-                    </div>
                 </div>
 
                 <!-- Chọn hình ảnh qua Media Library cho Menu Con -->
@@ -1142,10 +1268,6 @@ function otr_render_menu_therocks_page() {
                     <input type="text" name="con_image" id="input_con_image" class="widefat" placeholder="Đường dẫn ảnh từ Thư viện WordPress..." readonly style="background: #f6f7f7; color: #555; font-size: 12px;">
                 </div>
 
-                <div style="margin-bottom: 16px;">
-                    <label style="display:block; font-weight: 600; margin-bottom: 4px;">Mô tả chi tiết</label>
-                    <textarea name="con_desc" id="input_con_desc" rows="2" class="widefat" placeholder="Mô tả cho tab này..."></textarea>
-                </div>
                 <div style="display: flex; justify-content: flex-end; gap: 10px;">
                     <button type="button" onclick="otrCloseModal('modal-add-con')" class="button">Hủy</button>
                     <button type="submit" class="button button-primary">Lưu Menu Con</button>
@@ -1156,7 +1278,7 @@ function otr_render_menu_therocks_page() {
 
     <!-- Modal 3: Thêm/Sửa Menu Con Con (Nhóm Cột) -->
     <div id="modal-add-concon" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100000; align-items: center; justify-content: center;">
-        <div style="background: #fff; width: 460px; max-width: 90%; border-radius: 8px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); position: relative;">
+        <div style="background: #fff; width: 480px; max-width: 90%; border-radius: 8px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); position: relative;">
             <h3 id="modal-concon-heading" style="margin-top: 0; font-size: 18px; color: #18110b; border-bottom: 1px solid #eee; padding-bottom: 10px;">
                 Thêm Nhóm Cột / Menu Con Con (Cấp 3)
             </h3>
@@ -1167,11 +1289,25 @@ function otr_render_menu_therocks_page() {
                 <input type="hidden" name="parent_con_id" id="input_concon_parent_con" value="">
                 <input type="hidden" name="concon_id" id="input_concon_id" value="">
                 
-                <div style="margin-bottom: 16px;">
-                    <label style="display:block; font-weight: 600; margin-bottom: 4px;">Tên Nền Rượu / Nhóm Cột (Menu Con Con) *</label>
+                <!-- Tabs Ngôn Ngữ -->
+                <div style="display: flex; gap: 8px; border-bottom: 2px solid #caa875; padding-bottom: 6px; margin-bottom: 14px;">
+                    <button type="button" onclick="otrSwitchModalTab(this, 'vi')" class="button button-small button-primary otr-modal-tab-btn otr-btn-vi" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700;">🇻🇳 Tiếng Việt</button>
+                    <button type="button" onclick="otrSwitchModalTab(this, 'en')" class="button button-small otr-modal-tab-btn otr-btn-en" style="font-weight: 600;">🇬🇧 English</button>
+                </div>
+
+                <!-- Pane VI -->
+                <div class="otr-modal-pane-vi" style="margin-bottom: 16px;">
+                    <label style="display:block; font-weight: 600; margin-bottom: 4px;">Tên Nền Rượu / Nhóm Cột (VI) *</label>
                     <input type="text" name="concon_title" id="input_concon_title" required class="widefat" placeholder="VD: WHISKY, GIN, RUM & TEQUILA,...">
                     <p style="font-size: 12px; color: #777; margin: 4px 0 0;">Trong Kiểu 3, tên này sẽ là tiêu đề của từng cột thực đơn.</p>
                 </div>
+
+                <!-- Pane EN -->
+                <div class="otr-modal-pane-en" style="display:none; background: #fffdf8; padding: 12px 14px; border: 1px solid #ebd9c0; border-radius: 6px; margin-bottom: 16px;">
+                    <label style="display:block; font-weight: 700; color: #b8860b; margin-bottom: 4px;">Tên Nền Rượu / Nhóm Cột (English Title)</label>
+                    <input type="text" name="concon_title_en" id="input_concon_title_en" class="widefat" placeholder="e.g. WHISKY, GIN, RUM & TEQUILA...">
+                </div>
+
                 <div style="display: flex; justify-content: flex-end; gap: 10px;">
                     <button type="button" onclick="otrCloseModal('modal-add-concon')" class="button">Hủy</button>
                     <button type="submit" class="button button-primary">Lưu Nhóm Cột</button>
@@ -1182,7 +1318,7 @@ function otr_render_menu_therocks_page() {
 
     <!-- Modal 4: Thêm/Sửa Món -->
     <div id="modal-add-item" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100000; align-items: center; justify-content: center;">
-        <div style="background: #fff; width: 500px; max-width: 90%; border-radius: 8px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); position: relative; max-height: 90vh; overflow-y: auto;">
+        <div style="background: #fff; width: 540px; max-width: 90%; border-radius: 8px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); position: relative; max-height: 90vh; overflow-y: auto;">
             <h3 id="modal-item-heading" style="margin-top: 0; font-size: 18px; color: #18110b; border-bottom: 1px solid #eee; padding-bottom: 10px;">
                 Thêm Món Mới
             </h3>
@@ -1194,17 +1330,39 @@ function otr_render_menu_therocks_page() {
                 <input type="hidden" name="parent_concon_id" id="input_item_parent_concon" value="">
                 <input type="hidden" name="item_id" id="input_item_id" value="">
                 
-                <div style="margin-bottom: 12px;">
-                    <label style="display:block; font-weight: 600; margin-bottom: 4px;">Tên Món Ăn / Đồ Uống *</label>
-                    <input type="text" name="item_name" id="input_item_name" required class="widefat" placeholder="VD: Boulevardier">
+                <!-- Tabs Ngôn Ngữ -->
+                <div style="display: flex; gap: 8px; border-bottom: 2px solid #caa875; padding-bottom: 6px; margin-bottom: 14px;">
+                    <button type="button" onclick="otrSwitchModalTab(this, 'vi')" class="button button-small button-primary otr-modal-tab-btn otr-btn-vi" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700;">🇻🇳 Tiếng Việt</button>
+                    <button type="button" onclick="otrSwitchModalTab(this, 'en')" class="button button-small otr-modal-tab-btn otr-btn-en" style="font-weight: 600;">🇬🇧 English</button>
                 </div>
+
+                <!-- Pane VI -->
+                <div class="otr-modal-pane-vi">
+                    <div style="margin-bottom: 12px;">
+                        <label style="display:block; font-weight: 600; margin-bottom: 4px;">Tên Món Ăn / Đồ Uống (VI) *</label>
+                        <input type="text" name="item_name" id="input_item_name" required class="widefat" placeholder="VD: Boulevardier">
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="display:block; font-weight: 600; margin-bottom: 4px;">Thành phần / Mô tả hương vị (VI)</label>
+                        <textarea name="item_desc" id="input_item_desc" rows="3" class="widefat" placeholder="VD: Bourbon, Campari, Sweet Vermouth, Orange Twist..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Pane EN -->
+                <div class="otr-modal-pane-en" style="display:none; background: #fffdf8; padding: 12px 14px; border: 1px solid #ebd9c0; border-radius: 6px; margin-bottom: 14px;">
+                    <div style="margin-bottom: 12px;">
+                        <label style="display:block; font-weight: 700; color: #b8860b; margin-bottom: 4px;">Tên Món Ăn / Đồ Uống (English Name)</label>
+                        <input type="text" name="item_name_en" id="input_item_name_en" class="widefat" placeholder="e.g. Boulevardier">
+                    </div>
+                    <div>
+                        <label style="display:block; font-weight: 700; color: #b8860b; margin-bottom: 4px;">Thành phần / Mô tả hương vị (English Description)</label>
+                        <textarea name="item_desc_en" id="input_item_desc_en" rows="3" class="widefat" placeholder="e.g. Bourbon Reserve, Black Truffle Bitter, Sweet Vermouth..."></textarea>
+                    </div>
+                </div>
+
                 <div style="margin-bottom: 12px;">
                     <label style="display:block; font-weight: 600; margin-bottom: 4px;">Giá tiền *</label>
                     <input type="text" name="item_price" id="input_item_price" required class="widefat" placeholder="VD: 199k hoặc 250.000đ">
-                </div>
-                <div style="margin-bottom: 12px;">
-                    <label style="display:block; font-weight: 600; margin-bottom: 4px;">Thành phần / Mô tả hương vị</label>
-                    <textarea name="item_desc" id="input_item_desc" rows="2" class="widefat" placeholder="VD: Bourbon, Campari, Sweet Vermouth, Orange Twist"></textarea>
                 </div>
 
                 <!-- Chọn hình ảnh món ăn qua Media Library -->
@@ -1683,28 +1841,83 @@ function otr_render_menu_therocks_page() {
         }
     }
 
+    // 2.b Chuyển đổi Tab [Tiếng Việt] & [English] trong Modal
+    function otrSwitchModalTab(btn, lang) {
+        var modal = btn.closest('div[id^="modal-"]');
+        if (!modal) return;
+        var paneVi = modal.querySelector('.otr-modal-pane-vi');
+        var paneEn = modal.querySelector('.otr-modal-pane-en');
+        var btnVi = modal.querySelector('.otr-btn-vi');
+        var btnEn = modal.querySelector('.otr-btn-en');
+
+        if (lang === 'en') {
+            if (paneVi) paneVi.style.display = 'none';
+            if (paneEn) paneEn.style.display = 'block';
+            if (btnEn) {
+                btnEn.style.background = '#caa875';
+                btnEn.style.borderColor = '#b8935c';
+                btnEn.style.color = '#18110b';
+                btnEn.style.fontWeight = '700';
+            }
+            if (btnVi) {
+                btnVi.style.background = '#ffffff';
+                btnVi.style.borderColor = '#cccccc';
+                btnVi.style.color = '#333333';
+                btnVi.style.fontWeight = '600';
+            }
+        } else {
+            if (paneVi) paneVi.style.display = 'block';
+            if (paneEn) paneEn.style.display = 'none';
+            if (btnVi) {
+                btnVi.style.background = '#caa875';
+                btnVi.style.borderColor = '#b8935c';
+                btnVi.style.color = '#18110b';
+                btnVi.style.fontWeight = '700';
+            }
+            if (btnEn) {
+                btnEn.style.background = '#ffffff';
+                btnEn.style.borderColor = '#cccccc';
+                btnEn.style.color = '#333333';
+                btnEn.style.fontWeight = '600';
+            }
+        }
+    }
+
+    function otrResetModalTabs(modalId) {
+        var modal = document.getElementById(modalId);
+        if (!modal) return;
+        var btnVi = modal.querySelector('.otr-btn-vi');
+        if (btnVi) otrSwitchModalTab(btnVi, 'vi');
+    }
+
     // 3. Mở Modal Thêm/Sửa Menu Cha
     function otrOpenAddCha() {
         document.getElementById('modal-cha-title').textContent = 'Thêm Menu Cha Mới (Cấp 1)';
         document.getElementById('input_cha_id').value = '';
         document.getElementById('input_cha_title').value = '';
+        document.getElementById('input_cha_title_en').value = '';
         document.getElementById('input_cha_num').value = '';
         document.getElementById('input_cha_desc').value = '';
+        document.getElementById('input_cha_desc_en').value = '';
         document.getElementById('input_cha_image').value = '';
         document.getElementById('input_cha_layout').value = 'layout_3';
         renderImagePreview('preview_cha_image', '');
+        otrResetModalTabs('modal-add-cha');
         otrOpenModal('modal-add-cha');
     }
 
-    function otrEditCha(id, title, num, desc, image, layout) {
+    function otrEditCha(id, title, title_en, num, desc, desc_en, image, layout) {
         document.getElementById('modal-cha-title').textContent = 'Sửa Menu Cha: ' + title;
         document.getElementById('input_cha_id').value = id;
         document.getElementById('input_cha_title').value = title;
+        document.getElementById('input_cha_title_en').value = title_en || '';
         document.getElementById('input_cha_num').value = num;
         document.getElementById('input_cha_desc').value = desc;
+        document.getElementById('input_cha_desc_en').value = desc_en || '';
         document.getElementById('input_cha_image').value = image || '';
         document.getElementById('input_cha_layout').value = layout;
         renderImagePreview('preview_cha_image', image);
+        otrResetModalTabs('modal-add-cha');
         otrOpenModal('modal-add-cha');
     }
 
@@ -1714,26 +1927,34 @@ function otr_render_menu_therocks_page() {
         document.getElementById('input_con_parent_cha').value = chaId;
         document.getElementById('input_con_id').value = '';
         document.getElementById('input_con_title').value = '';
+        document.getElementById('input_con_title_en').value = '';
         document.getElementById('input_con_layout').value = 'layout_3';
         document.getElementById('input_con_desc').value = '';
+        document.getElementById('input_con_desc_en').value = '';
         document.getElementById('input_con_tag').value = '';
+        document.getElementById('input_con_tag_en').value = '';
         document.getElementById('input_con_price').value = '';
         document.getElementById('input_con_image').value = '';
         renderImagePreview('preview_con_image', '');
+        otrResetModalTabs('modal-add-con');
         otrOpenModal('modal-add-con');
     }
 
-    function otrEditCon(chaId, conId, title, layout, desc, tag, price, image) {
+    function otrEditCon(chaId, conId, title, title_en, layout, desc, desc_en, tag, tag_en, price, image) {
         document.getElementById('modal-con-heading').textContent = 'Sửa Menu Con: ' + title;
         document.getElementById('input_con_parent_cha').value = chaId;
         document.getElementById('input_con_id').value = conId;
         document.getElementById('input_con_title').value = title;
+        document.getElementById('input_con_title_en').value = title_en || '';
         document.getElementById('input_con_layout').value = layout;
         document.getElementById('input_con_desc').value = desc;
+        document.getElementById('input_con_desc_en').value = desc_en || '';
         document.getElementById('input_con_tag').value = tag;
+        document.getElementById('input_con_tag_en').value = tag_en || '';
         document.getElementById('input_con_price').value = price;
         document.getElementById('input_con_image').value = image || '';
         renderImagePreview('preview_con_image', image);
+        otrResetModalTabs('modal-add-con');
         otrOpenModal('modal-add-con');
     }
 
@@ -1744,6 +1965,19 @@ function otr_render_menu_therocks_page() {
         document.getElementById('input_concon_parent_con').value = conId;
         document.getElementById('input_concon_id').value = '';
         document.getElementById('input_concon_title').value = '';
+        document.getElementById('input_concon_title_en').value = '';
+        otrResetModalTabs('modal-add-concon');
+        otrOpenModal('modal-add-concon');
+    }
+
+    function otrEditConCon(chaId, conId, conconId, title, title_en) {
+        document.getElementById('modal-concon-heading').textContent = 'Sửa Nhóm Cột: ' + title;
+        document.getElementById('input_concon_parent_cha').value = chaId;
+        document.getElementById('input_concon_parent_con').value = conId;
+        document.getElementById('input_concon_id').value = conconId;
+        document.getElementById('input_concon_title').value = title;
+        document.getElementById('input_concon_title_en').value = title_en || '';
+        otrResetModalTabs('modal-add-concon');
         otrOpenModal('modal-add-concon');
     }
 
@@ -1755,24 +1989,30 @@ function otr_render_menu_therocks_page() {
         document.getElementById('input_item_parent_concon').value = conconId;
         document.getElementById('input_item_id').value = '';
         document.getElementById('input_item_name').value = '';
+        document.getElementById('input_item_name_en').value = '';
         document.getElementById('input_item_price').value = '199k';
         document.getElementById('input_item_desc').value = '';
+        document.getElementById('input_item_desc_en').value = '';
         document.getElementById('input_item_image').value = '';
         renderImagePreview('preview_item_image', '');
+        otrResetModalTabs('modal-add-item');
         otrOpenModal('modal-add-item');
     }
 
-    function otrEditItem(chaId, conId, conconId, itemId, name, price, desc, image) {
+    function otrEditItem(chaId, conId, conconId, itemId, name, name_en, price, desc, desc_en, image) {
         document.getElementById('modal-item-heading').textContent = 'Sửa Món: ' + name;
         document.getElementById('input_item_parent_cha').value = chaId;
         document.getElementById('input_item_parent_con').value = conId;
         document.getElementById('input_item_parent_concon').value = conconId;
         document.getElementById('input_item_id').value = itemId;
         document.getElementById('input_item_name').value = name;
+        document.getElementById('input_item_name_en').value = name_en || '';
         document.getElementById('input_item_price').value = price;
         document.getElementById('input_item_desc').value = desc;
+        document.getElementById('input_item_desc_en').value = desc_en || '';
         document.getElementById('input_item_image').value = image || '';
         renderImagePreview('preview_item_image', image);
+        otrResetModalTabs('modal-add-item');
         otrOpenModal('modal-add-item');
     }
 

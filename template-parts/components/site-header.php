@@ -43,7 +43,7 @@ if (empty($raw_menu) || in_array($raw_menu, array('#menu', '#', ''))) {
 } else {
     $menu_url = function_exists('otr_url') ? otr_url($raw_menu) : ((strpos($raw_menu, 'http') === 0) ? $raw_menu : home_url('/' . ltrim($raw_menu, '/')));
 }
-$menu_text = ! empty( $args['menu_text'] ) ? $args['menu_text'] : (get_field('header_menu_text', $front_page_id) ?: 'MENU');
+$menu_text = ! empty( $args['menu_text'] ) ? $args['menu_text'] : (function_exists('otr_get_field') ? otr_get_field('header_menu_text', $front_page_id, function_exists('otr_t') ? otr_t('MENU', 'MENU') : 'MENU') : 'MENU');
 
 $raw_contact = ! empty( $args['contact_url'] ) ? $args['contact_url'] : get_field('header_contact_url', $front_page_id);
 if (empty($raw_contact) || in_array($raw_contact, array('#contact', '#', ''))) {
@@ -51,7 +51,7 @@ if (empty($raw_contact) || in_array($raw_contact, array('#contact', '#', ''))) {
 } else {
     $contact_url = function_exists('otr_url') ? otr_url($raw_contact) : ((strpos($raw_contact, 'http') === 0) ? $raw_contact : home_url('/' . ltrim($raw_contact, '/')));
 }
-$contact_text = ! empty( $args['contact_text'] ) ? $args['contact_text'] : (get_field('header_contact_text', $front_page_id) ?: 'CONTACT');
+$contact_text = ! empty( $args['contact_text'] ) ? $args['contact_text'] : (function_exists('otr_get_field') ? otr_get_field('header_contact_text', $front_page_id, function_exists('otr_t') ? otr_t('LIÊN HỆ', 'CONTACT') : 'CONTACT') : 'CONTACT');
 
 $raw_blog = ! empty( $args['blog_url'] ) ? $args['blog_url'] : get_field('header_blog_url', $front_page_id);
 if (empty($raw_blog) || in_array($raw_blog, array('#blog', '#', ''))) {
@@ -59,7 +59,7 @@ if (empty($raw_blog) || in_array($raw_blog, array('#blog', '#', ''))) {
 } else {
     $blog_url = function_exists('otr_url') ? otr_url($raw_blog) : ((strpos($raw_blog, 'http') === 0) ? $raw_blog : home_url('/' . ltrim($raw_blog, '/')));
 }
-$blog_text = ! empty( $args['blog_text'] ) ? $args['blog_text'] : (get_field('header_blog_text', $front_page_id) ?: 'BÀI VIẾT');
+$blog_text = ! empty( $args['blog_text'] ) ? $args['blog_text'] : (function_exists('otr_get_field') ? otr_get_field('header_blog_text', $front_page_id, function_exists('otr_t') ? otr_t('BÀI VIẾT', 'BLOG') : 'BLOG') : 'BÀI VIẾT');
 
 $raw_booking = ! empty( $args['booking_url'] ) ? $args['booking_url'] : get_field('header_booking_url', $front_page_id);
 if (empty($raw_booking) || in_array($raw_booking, array('#book', '#booking', '#', ''))) {
@@ -67,7 +67,7 @@ if (empty($raw_booking) || in_array($raw_booking, array('#book', '#booking', '#'
 } else {
     $booking_url = function_exists('otr_url') ? otr_url($raw_booking) : ((strpos($raw_booking, 'http') === 0) ? $raw_booking : home_url('/' . ltrim($raw_booking, '/')));
 }
-$booking_text = ! empty( $args['booking_text'] ) ? $args['booking_text'] : (get_field('header_booking_text', $front_page_id) ?: 'ĐẶT BÀN TRƯỚC');
+$booking_text = ! empty( $args['booking_text'] ) ? $args['booking_text'] : (function_exists('otr_get_field') ? otr_get_field('header_booking_text', $front_page_id, function_exists('otr_t') ? otr_t('ĐẶT BÀN TRƯỚC', 'RESERVATION') : 'RESERVATION') : 'ĐẶT BÀN TRƯỚC');
 
 // Lấy link ảnh logo nếu truyền vào mảng ACF
 $logo_url = '';
@@ -119,18 +119,24 @@ if ( is_array( $logo ) && ! empty( $logo['url'] ) ) {
                 </a>
             </nav>
 
-            <!-- Nút Đặt bàn trước (Luôn NẰM BÊN NGOÀI trên mọi thiết bị kể cả mobile theo yêu cầu của bạn) -->
-            <a 
-                href="<?php echo esc_url( $booking_url ); ?>" 
-                class="btn-liquid-glass site-header__booking-btn inline-flex items-center justify-center rounded-full px-4 sm:px-5 md:px-7 py-1.5 sm:py-2 md:py-2.5 text-[11px] sm:text-xs md:text-[13px] font-sans font-medium tracking-[0.14em] uppercase select-none cursor-pointer whitespace-nowrap shrink-0 transition-all duration-300"
-            >
-                <span class="btn-roll-wrap">
-                    <span class="btn-roll-text">
-                        <span><?php echo esc_html( $booking_text ); ?></span>
-                        <span aria-hidden="true"><?php echo esc_html( $booking_text ); ?></span>
+            <!-- Cụm Nút Đặt bàn & Ngôn ngữ Desktop (Khớp 100% Mockup: [ ĐẶT BÀN TRƯỚC ]  VN ⌵) -->
+            <div class="hidden md:flex items-center gap-4 lg:gap-5 shrink-0">
+                <a 
+                    href="<?php echo esc_url( $booking_url ); ?>" 
+                    class="btn-liquid-glass site-header__booking-btn inline-flex items-center justify-center rounded-full px-5 lg:px-6 py-2 lg:py-2.5 text-xs lg:text-[13px] font-sans font-medium tracking-[0.14em] uppercase select-none cursor-pointer whitespace-nowrap shrink-0 transition-all duration-300"
+                >
+                    <span class="btn-roll-wrap">
+                        <span class="btn-roll-text">
+                            <span><?php echo esc_html( $booking_text ); ?></span>
+                            <span aria-hidden="true"><?php echo esc_html( $booking_text ); ?></span>
+                        </span>
                     </span>
-                </span>
-            </a>
+                </a>
+
+                <?php if (function_exists('otr_language_dropdown')): ?>
+                    <?php echo otr_language_dropdown(); ?>
+                <?php endif; ?>
+            </div>
 
             <!-- Nút Mobile Menu Toggle (Chỉ hiện trên mobile) -->
             <button id="mobile-nav-toggle" class="md:hidden text-[#caa875] p-1.5 hover:text-[#f7ebd8] transition-colors cursor-pointer shrink-0" aria-label="Menu" aria-expanded="false">
@@ -152,7 +158,28 @@ if ( is_array( $logo ) && ! empty( $logo['url'] ) ) {
             <a href="<?php echo esc_url( $instagram_url ); ?>" target="_blank" rel="noopener noreferrer" class="py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors">INSTAGRAM</a>
             <a href="<?php echo esc_url( $menu_url ); ?>" class="py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors"><?php echo esc_html( $menu_text ); ?></a>
             <a href="<?php echo esc_url( $contact_url ); ?>" class="py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors"><?php echo esc_html( $contact_text ); ?></a>
-            <a href="<?php echo esc_url( $blog_url ); ?>" class="py-2 hover:text-[#f7ebd8] transition-colors"><?php echo esc_html( $blog_text ); ?></a>
+            <a href="<?php echo esc_url( $blog_url ); ?>" class="py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors"><?php echo esc_html( $blog_text ); ?></a>
+            
+            <!-- Cụm Nút Đặt bàn & Ngôn ngữ bên trong Mobile Menu -->
+            <div class="pt-4 mt-2 border-t border-[#caa875]/20 flex items-center justify-between gap-3 sm:gap-4">
+                <a 
+                    href="<?php echo esc_url( $booking_url ); ?>" 
+                    class="btn-liquid-glass site-header__booking-btn flex-1 inline-flex items-center justify-center rounded-full px-5 py-2.5 text-xs font-sans font-medium tracking-[0.14em] uppercase select-none cursor-pointer whitespace-nowrap transition-all duration-300"
+                >
+                    <span class="btn-roll-wrap">
+                        <span class="btn-roll-text">
+                            <span><?php echo esc_html( $booking_text ); ?></span>
+                            <span aria-hidden="true"><?php echo esc_html( $booking_text ); ?></span>
+                        </span>
+                    </span>
+                </a>
+
+                <?php if (function_exists('otr_language_dropdown')): ?>
+                    <div class="shrink-0">
+                        <?php echo otr_language_dropdown(); ?>
+                    </div>
+                <?php endif; ?>
+            </div>
         </nav>
     </div>
 </header>

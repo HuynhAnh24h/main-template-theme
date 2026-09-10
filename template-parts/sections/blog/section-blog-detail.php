@@ -13,7 +13,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 $post_id    = get_the_ID();
 $categories = get_the_category( $post_id );
 $main_cat   = ! empty( $categories ) ? $categories[0] : null;
-$cat_name   = $main_cat ? $main_cat->name : 'Event';
+if ( $main_cat ) {
+    if ( $main_cat->slug === 'event' ) {
+        $cat_name = function_exists('otr_t') ? otr_t('Event', 'Event') : $main_cat->name;
+    } elseif ( in_array($main_cat->slug, array('bai-viet', 'tin-tuc', 'news', 'articles', 'article')) ) {
+        $cat_name = function_exists('otr_t') ? otr_t('Bài viết', 'Article') : $main_cat->name;
+    } else {
+        $cat_name = $main_cat->name;
+    }
+} else {
+    $cat_name = function_exists('otr_t') ? otr_t('Event', 'Event') : 'Event';
+}
 $cat_slug   = $main_cat ? $main_cat->slug : 'event';
 $cat_link   = $main_cat ? get_category_link( $main_cat->term_id ) : '#';
 
@@ -156,7 +166,7 @@ $post_date_formatted = get_the_date( 'F j, Y' );
 
         <!-- Tiêu đề mục -->
         <h3 class="font-mrch text-xl sm:text-2xl text-[#caa875] uppercase tracking-wider mb-8 md:mb-10 text-left">
-            EVENT VÀ BÀI VIẾT KHÁC
+            <?php echo esc_html(function_exists('otr_t') ? otr_t('EVENT VÀ BÀI VIẾT KHÁC', 'OTHER EVENTS & ARTICLES') : 'EVENT VÀ BÀI VIẾT KHÁC'); ?>
         </h3>
 
         <!-- Lưới 3 cột bài viết liên quan -->
@@ -175,7 +185,18 @@ $post_date_formatted = get_the_date( 'F j, Y' );
                 while ( $related_query->have_posts() ) : $related_query->the_post();
                     $rel_id      = get_the_ID();
                     $rel_cats    = get_the_category( $rel_id );
-                    $rel_cat_name= ! empty( $rel_cats ) ? $rel_cats[0]->name : 'Event';
+                    $rel_cat_obj = ! empty( $rel_cats ) ? $rel_cats[0] : null;
+                    if ( $rel_cat_obj ) {
+                        if ( $rel_cat_obj->slug === 'event' ) {
+                            $rel_cat_name = function_exists('otr_t') ? otr_t('Event', 'Event') : $rel_cat_obj->name;
+                        } elseif ( in_array($rel_cat_obj->slug, array('bai-viet', 'tin-tuc', 'news', 'articles', 'article')) ) {
+                            $rel_cat_name = function_exists('otr_t') ? otr_t('Bài viết', 'Article') : $rel_cat_obj->name;
+                        } else {
+                            $rel_cat_name = $rel_cat_obj->name;
+                        }
+                    } else {
+                        $rel_cat_name = function_exists('otr_t') ? otr_t('Event', 'Event') : 'Event';
+                    }
                     $rel_img     = '';
                     if ( has_post_thumbnail( $rel_id ) ) {
                         $rel_img = get_the_post_thumbnail_url( $rel_id, 'medium_large' );

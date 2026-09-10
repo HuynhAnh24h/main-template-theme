@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-$section_title = ! empty( $args['title'] ) ? $args['title'] : (function_exists('get_field') ? (get_field('testimonials_title', get_option('page_on_front')) ?: 'CẢM NHẬN TỪ KHÁCH HÀNG') : 'CẢM NHẬN TỪ KHÁCH HÀNG');
+$section_title = ! empty( $args['title'] ) ? $args['title'] : (function_exists('otr_get_field') ? otr_get_field('testimonials_title', get_option('page_on_front'), function_exists('otr_t') ? otr_t('CẢM NHẬN TỪ KHÁCH HÀNG', 'CUSTOMER REVIEWS') : 'CUSTOMER REVIEWS') : 'CẢM NHẬN TỪ KHÁCH HÀNG');
 
 // 1. Lấy danh sách cảm nhận từ Custom Post Type "testimonial"
 $testimonials = array();

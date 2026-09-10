@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $front_page_id = get_option('page_on_front');
-$section_title = ! empty( $args['title'] ) ? $args['title'] : (function_exists('get_field') ? (get_field('menu_section_title', $front_page_id) ?: 'MENU') : 'MENU');
+$section_title = ! empty( $args['title'] ) ? $args['title'] : (function_exists('otr_get_field') ? otr_get_field('menu_section_title', $front_page_id, 'MENU') : 'MENU');
 $menu_items    = ! empty( $args['items'] ) ? $args['items'] : array();
 
 $fallback_menu_images = array(
@@ -28,12 +28,12 @@ $fallback_menu_images = array(
     8 => 'https://images.unsplash.com/photo-1560512823-829485b8bf24?q=80&w=1000&auto=format&fit=crop',
 );
 
-// Nạp từ ACF nếu không truyền từ ngoài
+// Nạp từ ACF nếu không truyền từ ngoài (sử dụng otr_get_field để tự động lấy _en nếu có)
 if ( empty( $menu_items ) && function_exists('get_field') ) {
     for ($m = 1; $m <= 8; $m++) {
         $num_str   = sprintf('%02d', $m);
-        $title_val = get_field('menu_item_title_' . $m, $front_page_id);
-        $desc_val  = get_field('menu_item_desc_' . $m, $front_page_id);
+        $title_val = function_exists('otr_get_field') ? otr_get_field('menu_item_title_' . $m, $front_page_id) : get_field('menu_item_title_' . $m, $front_page_id);
+        $desc_val  = function_exists('otr_get_field') ? otr_get_field('menu_item_desc_' . $m, $front_page_id) : get_field('menu_item_desc_' . $m, $front_page_id);
         $img_val   = get_field('menu_item_image_' . $m, $front_page_id);
 
         $img_url = '';
@@ -63,56 +63,109 @@ if ( empty( $menu_items ) && function_exists('get_field') ) {
 
 // Fallback 8 món mẫu chuẩn quán bar nếu chưa cấu hình trong ACF
 if ( empty( $menu_items ) ) {
-    $menu_items = array(
-        array(
-            'num'   => '01',
-            'title' => 'BESPOKE COCKTAIL',
-            'desc'  => 'Đi ngang lâu lắm rồi giờ mới có dịp ghé quán, trời mưa có nhân viên siêu nice hỗ trợ',
-            'image' => $fallback_menu_images[1],
-        ),
-        array(
-            'num'   => '02',
-            'title' => 'CLASSIC COCKTAIL',
-            'desc'  => 'Hương vị cổ điển vượt thời gian — từ Old Fashioned đậm đà đến Negroni trầm lắng.',
-            'image' => $fallback_menu_images[2],
-        ),
-        array(
-            'num'   => '03',
-            'title' => 'SIGNATURE CREATION',
-            'desc'  => 'Sáng tạo độc quyền từ các bartender lành nghề với các tầng hương độc bản của thảo mộc cao nguyên.',
-            'image' => $fallback_menu_images[3],
-        ),
-        array(
-            'num'   => '04',
-            'title' => 'MOCKTAIL & BOTANICAL',
-            'desc'  => 'Trải nghiệm tinh tế không cồn, thanh mát và cân bằng hoàn hảo cho buổi tối thư thái.',
-            'image' => $fallback_menu_images[4],
-        ),
-        array(
-            'num'   => '05',
-            'title' => 'PREMIUM SPIRITS & WHISKY',
-            'desc'  => 'Bộ sưu tập single malt và whisky tuyển chọn từ các nhà chưng cất danh tiếng thế giới.',
-            'image' => $fallback_menu_images[5],
-        ),
-        array(
-            'num'   => '06',
-            'title' => 'WINE & CHAMPAGNE',
-            'desc'  => 'Những giọt vang thượng hạng và bọt sủi champagne lấp lánh nâng niu từng khoảnh khắc đáng nhớ.',
-            'image' => $fallback_menu_images[6],
-        ),
-        array(
-            'num'   => '07',
-            'title' => 'BAR BITES & TAPAS',
-            'desc'  => 'Món ăn nhẹ tinh hoa kết hợp phong vị Á - Âu, được thiết kế để tôn vinh hương vị đồ uống.',
-            'image' => $fallback_menu_images[7],
-        ),
-        array(
-            'num'   => '08',
-            'title' => 'SEASONAL SPECIALS',
-            'desc'  => 'Bản giao hưởng hương vị theo mùa — biến tấu ngẫu hứng với nguyên liệu tươi mới độc đáo.',
-            'image' => $fallback_menu_images[8],
-        ),
-    );
+    if ( function_exists('otr_is_en') && otr_is_en() ) {
+        $menu_items = array(
+            array(
+                'num'   => '01',
+                'title' => 'BESPOKE COCKTAIL',
+                'desc'  => 'Tailored creations crafted to your palate preferences by our master mixologists.',
+                'image' => $fallback_menu_images[1],
+            ),
+            array(
+                'num'   => '02',
+                'title' => 'CLASSIC COCKTAIL',
+                'desc'  => 'Timeless mixology classics — from rich Old Fashioned to bittersweet Negroni.',
+                'image' => $fallback_menu_images[2],
+            ),
+            array(
+                'num'   => '03',
+                'title' => 'SIGNATURE CREATION',
+                'desc'  => 'Exclusive recipes infused with rare highlands botanicals and artisanal craft.',
+                'image' => $fallback_menu_images[3],
+            ),
+            array(
+                'num'   => '04',
+                'title' => 'MOCKTAIL & BOTANICAL',
+                'desc'  => 'Sophisticated non-alcoholic elixirs, refreshing and crisp for relaxed evenings.',
+                'image' => $fallback_menu_images[4],
+            ),
+            array(
+                'num'   => '05',
+                'title' => 'PREMIUM SPIRITS & WHISKY',
+                'desc'  => 'Curated collection of single malts and fine spirits from iconic worldwide distilleries.',
+                'image' => $fallback_menu_images[5],
+            ),
+            array(
+                'num'   => '06',
+                'title' => 'WINE & CHAMPAGNE',
+                'desc'  => 'Exceptional vintages and sparkling champagnes honoring each unforgettable milestone.',
+                'image' => $fallback_menu_images[6],
+            ),
+            array(
+                'num'   => '07',
+                'title' => 'BAR BITES & TAPAS',
+                'desc'  => 'Artisanal bites fusing East and West notes, curated to elevate your drinking experience.',
+                'image' => $fallback_menu_images[7],
+            ),
+            array(
+                'num'   => '08',
+                'title' => 'SEASONAL SPECIALS',
+                'desc'  => 'A seasonal symphony of rare flavors — inspiring improvisations with fresh harvest.',
+                'image' => $fallback_menu_images[8],
+            ),
+        );
+    } else {
+        $menu_items = array(
+            array(
+                'num'   => '01',
+                'title' => 'BESPOKE COCKTAIL',
+                'desc'  => 'Đi ngang lâu lắm rồi giờ mới có dịp ghé quán, trời mưa có nhân viên siêu nice hỗ trợ',
+                'image' => $fallback_menu_images[1],
+            ),
+            array(
+                'num'   => '02',
+                'title' => 'CLASSIC COCKTAIL',
+                'desc'  => 'Hương vị cổ điển vượt thời gian — từ Old Fashioned đậm đà đến Negroni trầm lắng.',
+                'image' => $fallback_menu_images[2],
+            ),
+            array(
+                'num'   => '03',
+                'title' => 'SIGNATURE CREATION',
+                'desc'  => 'Sáng tạo độc quyền từ các bartender lành nghề với các tầng hương độc bản của thảo mộc cao nguyên.',
+                'image' => $fallback_menu_images[3],
+            ),
+            array(
+                'num'   => '04',
+                'title' => 'MOCKTAIL & BOTANICAL',
+                'desc'  => 'Trải nghiệm tinh tế không cồn, thanh mát và cân bằng hoàn hảo cho buổi tối thư thái.',
+                'image' => $fallback_menu_images[4],
+            ),
+            array(
+                'num'   => '05',
+                'title' => 'PREMIUM SPIRITS & WHISKY',
+                'desc'  => 'Bộ sưu tập single malt và whisky tuyển chọn từ các nhà chưng cất danh tiếng thế giới.',
+                'image' => $fallback_menu_images[5],
+            ),
+            array(
+                'num'   => '06',
+                'title' => 'WINE & CHAMPAGNE',
+                'desc'  => 'Những giọt vang thượng hạng và bọt sủi champagne lấp lánh nâng niu từng khoảnh khắc đáng nhớ.',
+                'image' => $fallback_menu_images[6],
+            ),
+            array(
+                'num'   => '07',
+                'title' => 'BAR BITES & TAPAS',
+                'desc'  => 'Món ăn nhẹ tinh hoa kết hợp phong vị Á - Âu, được thiết kế để tôn vinh hương vị đồ uống.',
+                'image' => $fallback_menu_images[7],
+            ),
+            array(
+                'num'   => '08',
+                'title' => 'SEASONAL SPECIALS',
+                'desc'  => 'Bản giao hưởng hương vị theo mùa — biến tấu ngẫu hứng với nguyên liệu tươi mới độc đáo.',
+                'image' => $fallback_menu_images[8],
+            ),
+        );
+    }
 }
 
 $raw_menu_link = function_exists('get_field') ? get_field('header_menu_url', $front_page_id) : '';
@@ -192,12 +245,13 @@ $menu_page_url = (empty($raw_menu_link) || in_array($raw_menu_link, array('#menu
 
                     <!-- 3. Nút Xem Menu dài nằm ở cuối danh sách menu trên Trang Chủ -->
                     <div class="pt-10 sm:pt-14 md:pt-16">
+                        <?php $btn_menu_text = function_exists('otr_t') ? otr_t('XEM MENU', 'VIEW MENU') : 'XEM MENU'; ?>
                         <a href="<?php echo esc_url( $menu_page_url ); ?>" 
                            class="btn-liquid-glass group/btn w-full py-4 sm:py-5 px-8 rounded-full font-serif font-medium text-xs sm:text-sm md:text-base tracking-[0.25em] uppercase flex items-center justify-center gap-3.5 select-none cursor-pointer">
                             <span class="btn-roll-wrap">
                                 <span class="btn-roll-text">
-                                    <span>XEM MENU</span>
-                                    <span aria-hidden="true">XEM MENU</span>
+                                    <span><?php echo esc_html( $btn_menu_text ); ?></span>
+                                    <span aria-hidden="true"><?php echo esc_html( $btn_menu_text ); ?></span>
                                 </span>
                             </span>
                             <svg class="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover/btn:translate-x-2 text-current" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
