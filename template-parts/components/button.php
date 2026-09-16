@@ -31,13 +31,13 @@ $base_class   = $is_text_link
     : 'btn-liquid-glass inline-flex items-center justify-center rounded-full text-xs font-medium tracking-[0.14em] uppercase select-none cursor-pointer ';
 
 $style_classes = array(
-    'outline'     => 'px-6 py-2.5',
+    'outline'     => 'px-7 py-3',
     'arrow'       => 'w-10 h-10',
     'text-link'   => 'gap-1 text-[#caa875] hover:text-[#f7ebd8] border-b border-transparent hover:border-current pb-0.5 normal-case font-normal',
-    'solid-dark'  => 'px-8 py-3.5',
-    'solid-light' => 'px-8 py-3.5',
-    'solid-gold'  => 'px-8 py-3.5',
-    'solid-black' => 'px-8 py-3.5',
+    'solid-dark'  => 'px-8 py-4',
+    'solid-light' => 'px-8 py-4',
+    'solid-gold'  => 'px-8 py-4',
+    'solid-black' => 'px-8 py-4',
 );
 
 $chosen_style_class = isset($style_classes[$style]) ? $style_classes[$style] : $style_classes['solid-gold'];

@@ -12,7 +12,7 @@ $excerpt = get_the_excerpt($post_id);
 $date = get_the_date('', $post_id);
 $image_html = has_post_thumbnail($post_id) 
     ? get_the_post_thumbnail($post_id, 'medium', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition duration-500', 'loading' => 'lazy', 'decoding' => 'async']) 
-    : '<div class="w-full h-full bg-[#1e1711] flex items-center justify-center text-[#caa875] text-3xl font-serif">🍸</div>';
+    : '<div class="w-full h-full bg-[#472B08] flex items-center justify-center text-[#caa875] text-3xl font-serif">🍸</div>';
 ?>
 
 <article class="bg-[#140f0a] rounded-2xl overflow-hidden border border-white/10 hover:border-[#caa875]/40 hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between <?php echo esc_attr($class_custom); ?>">

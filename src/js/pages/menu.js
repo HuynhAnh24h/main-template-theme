@@ -84,12 +84,12 @@ function initMenuPage() {
 
         // Cập nhật trạng thái nút tab con
         parentPanel.querySelectorAll('.menu-con-subtab-btn').forEach((b) => {
-          b.classList.remove('bg-[#c8a773]', 'text-[#1a120b]', 'font-semibold', 'border-[#c8a773]', 'shadow-md');
+          b.classList.remove('bg-[#c8a773]', 'text-[#472B08]', 'font-semibold', 'border-[#c8a773]', 'shadow-md');
           b.classList.add('bg-transparent', 'text-[#caa875]', 'border-dashed', 'border-[#caa875]/35');
         });
 
         btn.classList.remove('bg-transparent', 'text-[#caa875]', 'border-dashed', 'border-[#caa875]/35');
-        btn.classList.add('bg-[#c8a773]', 'text-[#1a120b]', 'font-semibold', 'border-[#c8a773]', 'shadow-md');
+        btn.classList.add('bg-[#c8a773]', 'text-[#472B08]', 'font-semibold', 'border-[#c8a773]', 'shadow-md');
 
         // Bật view nội dung tương ứng
         parentPanel.querySelectorAll('.menu-con-view-panel').forEach((view) => {
@@ -228,10 +228,10 @@ function initMenuPage() {
         const group = pill.closest('.alcohol-level-group');
         if (group) {
           group.querySelectorAll('.alcohol-level-pill').forEach((p) => {
-            p.classList.remove('bg-[#caa875]', 'text-[#171009]', 'font-bold');
+            p.classList.remove('bg-[#caa875]', 'text-[#472B08]', 'font-bold');
             p.classList.add('bg-transparent', 'text-[#caa875]');
           });
-          pill.classList.add('bg-[#caa875]', 'text-[#171009]', 'font-bold');
+          pill.classList.add('bg-[#caa875]', 'text-[#472B08]', 'font-bold');
           pill.classList.remove('bg-transparent', 'text-[#caa875]');
         }
       });

@@ -70,7 +70,7 @@
 
   /* Các biến màu cho hiệu ứng Wander */
   --color-wander-ink: #080604;
-  --color-wander-wash: 71,52,34;
+  --color-wander-wash: 71,43,8; /* #472B08 */
   --color-wander-paper: #F4EFE8;
   --color-wander-amber: #E8A33D;
   --color-wander-teal: #C97B4A;
@@ -218,7 +218,7 @@ body.home.is-loaded {
   }
 }
 
-/* ================= SITE HEADER (LUXURY NOIR & CHAMPAGNE GOLD - CHUẨN MOCKUP) ================= */
+/* ================= SITE HEADER (APPLE iOS LIQUID GLASS EFFECT KHI SCROLL) ================= */
 #site-header {
   position: fixed !important;
   top: 0 !important;
@@ -226,30 +226,47 @@ body.home.is-loaded {
   right: 0 !important;
   width: 100% !important;
   z-index: 9999 !important;
-  padding-top: 0.85rem !important;
-  padding-bottom: 0.85rem !important;
-  background: #18110a !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border-bottom: 1px solid rgba(202, 168, 117, 0.16) !important;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45) !important;
-  transition: padding 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  will-change: padding, background;
+  padding-top: 1.15rem !important;
+  padding-bottom: 1.15rem !important;
+  background: transparent !important;
+  backdrop-filter: blur(0px) !important;
+  -webkit-backdrop-filter: blur(0px) !important;
+  border-bottom: 1px solid transparent !important;
+  box-shadow: none !important;
+  transition: padding 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              -webkit-backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: padding, background, backdrop-filter, box-shadow;
 }
 
+/* Khi cuộn trang (Scroll): Kích hoạt nền Liquid Glass khúc xạ ánh sáng mờ ảo chuẩn Mockup */
 #site-header.liquid-glass,
 #site-header.is-scrolled,
 #site-header.site-header--scrolled {
-  padding-top: 0.6rem !important;
-  padding-bottom: 0.6rem !important;
-  background: rgba(22, 15, 9, 0.98) !important;
-  backdrop-filter: blur(28px) !important;
-  -webkit-backdrop-filter: blur(28px) !important;
-  border-bottom: 1px solid rgba(202, 168, 117, 0.28) !important;
-  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.75) !important;
+  padding-top: 0.65rem !important;
+  padding-bottom: 0.65rem !important;
+  background: linear-gradient(180deg, rgba(71, 43, 8, 0.68) 0%, rgba(71, 43, 8, 0.46) 100%) !important;
+  backdrop-filter: blur(26px) saturate(195%) contrast(108%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(195%) contrast(108%) !important;
+  border-bottom: 1px solid rgba(202, 168, 117, 0.18) !important;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+              0 1px 4px 0 rgba(202, 168, 117, 0.12),
+              0 14px 36px -4px rgba(0, 0, 0, 0.65) !important;
+}
+
+#site-header.liquid-glass::after,
+#site-header.is-scrolled::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent 8%, rgba(202, 168, 117, 0.12) 22%, rgba(255, 245, 225, 0.42) 50%, rgba(202, 168, 117, 0.12) 78%, transparent 92%) !important;
+  pointer-events: none !important;
 }
 
 /* Typography cho các liên kết điều hướng trên Header: SVN-Gilroy Medium */
@@ -266,94 +283,9 @@ body.home.is-loaded {
   color: #f7ebd8 !important;
 }
 
-/* Nút Đặt Bàn Trước trên Header chuẩn Liquid Glass & SVN-Gilroy Medium */
-.site-header__booking-btn,
-.site-header__booking-btn * {
-  font-family: 'SVN-Gilroy', system-ui, sans-serif !important;
-  font-weight: 500 !important;
-  letter-spacing: 0.14em !important;
-  text-transform: uppercase !important;
-}
-
-.site-header__booking-btn {
-  position: relative !important;
-  overflow: hidden !important;
-  isolation: isolate !important;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(38, 26, 17, 0.82) !important;
-  backdrop-filter: blur(20px) saturate(190%) contrast(102%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(190%) contrast(102%) !important;
-  border: 1px solid rgba(202, 168, 117, 0.45) !important;
-  color: #caa875 !important;
-  border-radius: 9999px !important;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.35),
-              inset 0 -1px 0 0 rgba(0, 0, 0, 0.4),
-              0 4px 16px -2px rgba(0, 0, 0, 0.5) !important;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              color 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  will-change: transform, box-shadow, background, border-color;
-}
-
-/* Tia sáng khúc xạ lướt qua mặt kính (Apple iOS Specular Sheen Sweep) */
-.site-header__booking-btn::before {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: -160% !important;
-  width: 130% !important;
-  height: 100% !important;
-  background: linear-gradient(
-    105deg,
-    transparent 20%,
-    rgba(255, 255, 255, 0.06) 35%,
-    rgba(255, 255, 255, 0.3) 48%,
-    rgba(202, 168, 117, 0.4) 52%,
-    rgba(255, 255, 255, 0.25) 56%,
-    transparent 75%
-  ) !important;
-  transform: skewX(-20deg) !important;
-  transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  pointer-events: none !important;
-  z-index: 1 !important;
-}
-
-.site-header__booking-btn:hover::before {
-  left: 160% !important;
-}
-
-.site-header__booking-btn:hover {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.22) 0%,
-    rgba(202, 168, 117, 0.32) 50%,
-    rgba(45, 30, 19, 0.95) 100%
-  ) !important;
-  backdrop-filter: blur(28px) saturate(200%) contrast(105%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(200%) contrast(105%) !important;
-  border-color: rgba(202, 168, 117, 0.88) !important;
-  color: #f7ebd8 !important;
-  box-shadow: 
-    0 10px 25px -4px rgba(0, 0, 0, 0.75),
-    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.7),
-    inset 0 -1px 1px 0 rgba(202, 168, 117, 0.35),
-    0 0 18px 2px rgba(202, 168, 117, 0.32) !important;
-  transform: translateY(-1.5px) scale(1.02);
-}
-
-.site-header__booking-btn:active {
-  transform: translateY(0) scale(0.955) !important;
-  transition: transform 0.12s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.12s ease !important;
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.4),
-    inset 0 2px 4px 0 rgba(0, 0, 0, 0.55),
-    inset 0 -1px 1px 0 rgba(255, 255, 255, 0.15) !important;
-}
-
 /* Mobile Navigation Sheet */
 #mobile-nav-menu {
-  background: rgba(24, 17, 10, 0.98) !important;
+  background: rgba(71, 43, 8, 0.96) !important;
   backdrop-filter: blur(28px) !important;
   -webkit-backdrop-filter: blur(28px) !important;
   border: 1px solid rgba(202, 168, 117, 0.3) !important;
@@ -473,22 +405,27 @@ body.home {
   animation: fadeIn 0.35s ease forwards;
 }
 
-/* ================= LIQUID GLASS & TEXT ROLL-UP BUTTON ANIMATION (APPLE iOS SYSTEM) ================= */
+/* ================= LIQUID GLASS & TEXT ROLL-UP BUTTON (1 NÚT NGUYÊN KHỐI LIỀN MẠCH) ================= */
 .btn-liquid-glass,
 .site-header__booking-btn,
 .otr-btn-glass {
   position: relative !important;
   overflow: hidden !important;
   isolation: isolate !important;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(38, 26, 17, 0.82) !important;
-  backdrop-filter: blur(20px) saturate(190%) contrast(102%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(190%) contrast(102%) !important;
-  border: 1px solid rgba(202, 168, 117, 0.45) !important;
-  color: #caa875 !important;
+  /* 1 Nút nguyên khối duy nhất: Màu kính hổ phách chuẩn yêu cầu rgba(149, 111, 64, 0.2) */
+  background: rgba(149, 111, 64, 0.2) !important;
+  backdrop-filter: blur(14px) saturate(180%) contrast(110%) brightness(105%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(180%) contrast(110%) !important;
+  /* Viền kính nhuyễn mịn tinh tế nguyên khối (Softer & finer glass edge) */
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: rgba(194, 160, 102, 1) !important;
   border-radius: 9999px !important;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.35),
-              inset 0 -1px 0 0 rgba(0, 0, 0, 0.4),
-              0 4px 16px -2px rgba(0, 0, 0, 0.5) !important;
+  /* Độ sâu khúc xạ nhuyễn mịn êm dịu (Soft diffused specular rim) */
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 1px 0 rgba(255, 255, 255, 0.18),
+    0 6px 20px -2px rgba(0, 0, 0, 0.45),
+    0 2px 4px 0 rgba(0, 0, 0, 0.25) !important;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               background 0.35s cubic-bezier(0.16, 1, 0.3, 1),
@@ -499,80 +436,215 @@ body.home {
   user-select: none !important;
 }
 
-/* Đảm bảo typography nút dùng SVN-Gilroy Medium */
+/* Tăng nhẹ padding top/bottom tạo độ căng phồng sang trọng */
+.site-header__booking-btn {
+  padding-top: 0.625rem !important;
+  padding-bottom: 0.625rem !important;
+}
+
+/* Đảm bảo typography nút dùng SVN-Gilroy và chữ màu chuẩn rgba(194, 160, 102, 1) cả khi mặc định & hover */
 .btn-liquid-glass,
 .btn-liquid-glass *,
 .site-header__booking-btn,
 .site-header__booking-btn * {
   font-family: 'SVN-Gilroy', system-ui, sans-serif !important;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
   letter-spacing: 0.14em !important;
+  color: rgba(194, 160, 102, 1) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7) !important;
 }
 
-/* Tia sáng khúc xạ lướt qua mặt kính (Apple iOS Specular Sheen Sweep) */
+/* TUYỆT ĐỐI KHÔNG CÓ LỚP HÌNH LỒNG BÊN TRONG ::before */
 .btn-liquid-glass::before,
 .site-header__booking-btn::before,
 .otr-btn-glass::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* Vệt sáng lướt qua mặt kính khi Hover (Chỉ kích hoạt khi rê chuột, không có viền thừa) */
+.btn-liquid-glass::after,
+.site-header__booking-btn::after,
+.otr-btn-glass::after {
   content: '' !important;
   position: absolute !important;
   top: 0 !important;
-  left: -160% !important;
-  width: 130% !important;
+  left: -180% !important;
+  width: 140% !important;
   height: 100% !important;
   background: linear-gradient(
     105deg,
-    transparent 20%,
-    rgba(255, 255, 255, 0.06) 35%,
-    rgba(255, 255, 255, 0.3) 48%,
-    rgba(202, 168, 117, 0.4) 52%,
-    rgba(255, 255, 255, 0.25) 56%,
-    transparent 75%
+    transparent 35%,
+    rgba(255, 255, 255, 0.08) 42%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0.12) 56%,
+    transparent 65%
   ) !important;
-  transform: skewX(-20deg) !important;
-  transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transform: skewX(-22deg) !important;
+  transition: left 0.75s cubic-bezier(0.16, 1, 0.3, 1) !important;
   pointer-events: none !important;
-  z-index: 1 !important;
+  z-index: 2 !important;
 }
 
-.btn-liquid-glass:hover::before,
-.site-header__booking-btn:hover::before,
-.otr-btn-glass:hover::before {
-  left: 160% !important;
+.btn-liquid-glass:hover::after,
+.site-header__booking-btn:hover::after,
+.otr-btn-glass:hover::after {
+  left: 180% !important;
 }
 
-/* Trạng thái Kính Lỏng khi Hover - Tỏa sáng rực rỡ từ bên trong (Internal Glass Glow) */
+/* Trạng thái Kính Lỏng khi Hover - Phát sáng nhẹ nhàng, giữ màu chữ rgba(194, 160, 102, 1) */
+.btn-liquid-glass:hover,
+.btn-liquid-glass:hover *,
+.site-header__booking-btn:hover,
+.site-header__booking-btn:hover *,
+.otr-btn-glass:hover,
+.otr-btn-glass:hover * {
+  color: rgba(194, 160, 102, 1) !important;
+}
+
 .btn-liquid-glass:hover,
 .site-header__booking-btn:hover,
 .otr-btn-glass:hover {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.22) 0%,
-    rgba(202, 168, 117, 0.32) 50%,
-    rgba(45, 30, 19, 0.95) 100%
-  ) !important;
-  backdrop-filter: blur(28px) saturate(200%) contrast(105%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(200%) contrast(105%) !important;
-  border-color: rgba(202, 168, 117, 0.88) !important;
-  color: #f7ebd8 !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  background: rgba(149, 111, 64, 0.32) !important;
+  border-color: rgba(255, 255, 255, 0.38) !important;
   box-shadow: 
-    0 10px 25px -4px rgba(0, 0, 0, 0.75),
-    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.7),
-    inset 0 -1px 1px 0 rgba(202, 168, 117, 0.35),
-    0 0 18px 2px rgba(202, 168, 117, 0.32) !important;
-  transform: translateY(-1.5px) scale(1.02);
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -1px 1px 0 rgba(255, 255, 255, 0.28),
+    0 10px 24px -3px rgba(0, 0, 0, 0.55),
+    0 3px 8px -2px rgba(0, 0, 0, 0.35),
+    0 0 10px 1px rgba(202, 168, 117, 0.2) !important;
 }
 
-/* Trạng thái Chạm/Bấm kiểu Apple Haptic Spring (Đàn hồi tức thì) */
+/* Trạng thái Chạm/Bấm kiểu Apple Haptic Spring */
 .btn-liquid-glass:active,
 .site-header__booking-btn:active,
 .otr-btn-glass:active {
-  transform: translateY(0) scale(0.955) !important;
+  transform: translateY(0) scale(0.96) !important;
   transition: transform 0.12s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.12s ease !important;
   box-shadow: 
     0 2px 8px rgba(0, 0, 0, 0.4),
-    inset 0 2px 4px 0 rgba(0, 0, 0, 0.55),
-    inset 0 -1px 1px 0 rgba(255, 255, 255, 0.15) !important;
+    inset 0 1.5px 3px 0 rgba(0, 0, 0, 0.5),
+    inset 0 -1px 1px 0 rgba(255, 255, 255, 0.25) !important;
 }
+
+/* ================= LANGUAGE DROPDOWN (DẠNG TEXT LINK THUẦN TÚY, KHÔNG PHẢI NÚT, HOVER MƯỢT KHÔNG BỊ MẤT) ================= */
+.otr-lang-dropdown {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  user-select: none !important;
+}
+
+.otr-lang-dropdown__btn {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  padding: 0.25rem 0.35rem !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: #caa875 !important;
+  font-family: 'SVN-Gilroy', system-ui, sans-serif !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  transition: color 0.25s ease, opacity 0.25s ease !important;
+}
+
+@media (min-width: 1024px) {
+  .otr-lang-dropdown__btn {
+    font-size: 13px !important;
+  }
+}
+
+.otr-lang-dropdown__btn::before,
+.otr-lang-dropdown__btn::after {
+  display: none !important;
+  content: none !important;
+}
+
+.otr-lang-dropdown__btn:hover,
+.otr-lang-dropdown.is-open .otr-lang-dropdown__btn {
+  color: #f7ebd8 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.otr-lang-dropdown__btn:active {
+  transform: scale(0.96) !important;
+}
+
+.otr-lang-dropdown__btn .otr-current-lang-code {
+  font-family: 'SVN-Gilroy', system-ui, sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.18em !important;
+  color: inherit !important;
+}
+
+.otr-lang-dropdown__btn svg {
+  color: inherit !important;
+  width: 0.75rem !important;
+  height: 0.75rem !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Cầu nối tàng hình (Invisible hover bridge) tránh mất menu khi rê chuột qua khoảng trống giữa text và menu */
+.otr-lang-dropdown__menu::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -14px !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 14px !important;
+  background: transparent !important;
+}
+
+/* Menu Dropdown mượt mà, sang trọng */
+.otr-lang-dropdown__menu {
+  min-width: 105px !important;
+  border-radius: 12px !important;
+  background: rgba(22, 15, 10, 0.98) !important;
+  border: 1px solid rgba(202, 168, 117, 0.35) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.85) !important;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Dropup menu khi ở footer (nếu dùng) */
+.otr-lang-dropdown.is-dropup .otr-lang-dropdown__menu {
+  bottom: calc(100% + 8px) !important;
+  top: auto !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  right: auto !important;
+}
+
+.otr-lang-dropdown.is-dropup .otr-lang-dropdown__menu::before {
+  top: auto !important;
+  bottom: -14px !important;
+  height: 14px !important;
+}
+
+/* Hiệu ứng viền Liquid Glass cho hình ảnh và thẻ trên toàn website */
+.img-liquid-glass,
+.liquid-glass-card,
+.liquid-glass-frame {
+  position: relative !important;
+  border: 1px solid rgba(202, 168, 117, 0.22) !important;
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
+    0 0 8px 1px rgba(202, 168, 117, 0.12),
+    0 8px 24px -4px rgba(0, 0, 0, 0.55) !important;
+}
+
 
 /* Biến thể Kính Vàng Kim iOS (Liquid Gold Special Edition) */
 .btn-liquid-glass.btn-liquid-gold,
@@ -1062,6 +1134,19 @@ a:hover .btn-roll-text {
   overflow: hidden;
 }
 
+#intro-bar-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#section-intro.is-revealed #intro-bar-bg {
+  opacity: 0.72 !important;
+}
+
 #intro-brown-bg {
   position: absolute;
   inset: 0;
@@ -1098,9 +1183,18 @@ a:hover .btn-roll-text {
   transition: opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1), filter 1.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+#section-intro.is-revealed #board {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s !important;
+}
+
 #section-intro.is-revealed #board .tile {
-  opacity: 0.88;
-  filter: brightness(0.95);
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: scale(0.92) !important;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 /* Lớp Vignette làm êm dịu tâm điểm để tôn câu Slogan */
@@ -1215,7 +1309,7 @@ body.home.is-loaded #site-header {
   justify-content: center;
   padding: 0.35rem 1.15rem;
   border-radius: 9999px;
-  background-color: #251c11;
+  background-color: #472b08;
   border: 1px solid rgba(202, 168, 117, 0.35);
   color: #caa875;
   font-size: 0.75rem;
@@ -1228,12 +1322,12 @@ body.home.is-loaded #site-header {
 
 .blog-post-card:hover .blog-card-tag,
 .blog-post-card.is-active .blog-card-tag {
-  background-color: #332010;
+  background-color: #59370a;
   border-color: rgba(202, 168, 117, 0.55);
 }
 
 .blog-card-tag:hover {
-  background-color: #4a2f16 !important;
+  background-color: #633e0b !important;
   color: #f7ebd8 !important;
   border-color: rgba(202, 168, 117, 0.8) !important;
   transform: scale(1.03);
@@ -1258,13 +1352,13 @@ body.home.is-loaded #site-header {
 
 .blog-tab-btn:hover {
   color: #caa875;
-  background-color: rgba(37, 28, 17, 0.7);
+  background-color: rgba(71, 43, 8, 0.7);
   border-color: rgba(202, 168, 117, 0.3);
 }
 
 .blog-tab-btn.is-active {
   color: #f4efe8 !important;
-  background-color: #251c11 !important;
+  background-color: #472b08 !important;
   border-color: rgba(202, 168, 117, 0.45) !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }

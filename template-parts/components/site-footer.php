@@ -182,13 +182,6 @@ $copyright   = ! empty( $args['copyright'] )   ? $args['copyright']   : ( functi
         </a>
     </div>
 
-    <!-- Language Switcher in Footer -->
-    <?php if (function_exists('otr_language_switcher')): ?>
-        <div class="flex justify-center items-center mb-6">
-            <?php echo otr_language_switcher(); ?>
-        </div>
-    <?php endif; ?>
-
     <!-- 3. VIỀN NÉT ĐỨT & BẢN QUYỀN: TRÀN TOÀN BỘ MÀN HÌNH -->
     <div class="w-full border-t border-dashed border-[#caa875]/25 pt-6 md:pt-7 text-center px-4">
         <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="inline-block text-[10px] md:text-xs tracking-[0.25em] text-[#caa875]/60 hover:text-[#caa875] uppercase font-sans transition-colors duration-200">

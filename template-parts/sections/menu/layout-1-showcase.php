@@ -63,7 +63,7 @@ if ( ! empty( $single_con ) ) {
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 border border-[#caa875]/25 shadow-2xl bg-[#140e08]">
         
         <!-- CỘT TRÁI: BẢNG TRA CỨU HƯƠNG VỊ & NỀN RƯỢU -->
-        <div class="lg:col-span-5 bg-[#26180a] p-6 sm:p-8 md:p-9 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#caa875]/20">
+        <div class="lg:col-span-5 bg-[#472B08] p-6 sm:p-8 md:p-9 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#caa875]/20">
             
             <!-- Header tên nhóm & Giá tiền -->
             <div class="flex items-baseline justify-between border-b border-[#caa875]/25 pb-3 mb-6">
@@ -126,7 +126,7 @@ if ( ! empty( $single_con ) ) {
                     foreach ( $levels as $lvl ) :
                         $isActive = (strcasecmp($lvl, $con_alcohol) === 0);
                     ?>
-                        <button type="button" class="alcohol-level-pill py-2.5 transition-colors cursor-pointer select-none <?php echo $isActive ? 'bg-[#caa875] text-[#171009] font-bold' : 'text-[#caa875] hover:bg-[#caa875]/10'; ?>">
+                        <button type="button" class="alcohol-level-pill py-2.5 transition-colors cursor-pointer select-none <?php echo $isActive ? 'bg-[#caa875] text-[#472B08] font-bold' : 'text-[#caa875] hover:bg-[#caa875]/10'; ?>">
                             <?php echo esc_html( $lvl ); ?>
                         </button>
                     <?php endforeach; ?>

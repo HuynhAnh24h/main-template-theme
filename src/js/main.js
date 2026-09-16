@@ -62,7 +62,7 @@ window.lucide = {
 };
 
 // Khởi tạo các thư viện dùng chung cho toàn site
-document.addEventListener('DOMContentLoaded', () => {
+function initGlobal() {
     // Đảm bảo các trang không có màn hình loading (#loader) luôn có class .is-loaded để cuộn và hiển thị bình thường
     if (!document.getElementById('loader')) {
         document.body.classList.add('is-loaded');
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.initLiquidGlassButtons = initLiquidGlassButtons;
     initLiquidGlassButtons();
 
-    // 7. Logic Dropdown Ngôn ngữ [ VN ⌵ ] (Desktop & Mobile)
+    // 7. Logic Dropdown Ngôn ngữ [ VN ⌵ ] (Dạng text link thanh lịch, hover mượt mà có độ trễ êm ái)
     function initLanguageDropdown() {
         const dropdowns = document.querySelectorAll('.otr-lang-dropdown');
         if (!dropdowns.length) return;
@@ -214,25 +214,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!btn || !menu) return;
 
-            const toggle = (forceOpen) => {
-                const isOpen = typeof forceOpen === 'boolean' ? forceOpen : menu.classList.contains('hidden');
-                if (isOpen) {
-                    // Close other dropdowns
-                    dropdowns.forEach(other => {
-                        if (other !== dropdown) {
-                            const oMenu = other.querySelector('.otr-lang-dropdown__menu');
-                            const oChev = other.querySelector('.otr-dropdown-chevron');
-                            const oBtn = other.querySelector('.otr-lang-dropdown__btn');
-                            if (oMenu) oMenu.classList.add('hidden');
-                            if (oChev) oChev.classList.remove('rotate-180');
-                            if (oBtn) oBtn.setAttribute('aria-expanded', 'false');
-                        }
-                    });
-                    menu.classList.remove('hidden');
-                    btn.setAttribute('aria-expanded', 'true');
-                    if (chevron) chevron.classList.add('rotate-180');
+            let closeTimeout = null;
+
+            const openMenu = () => {
+                if (closeTimeout) {
+                    clearTimeout(closeTimeout);
+                    closeTimeout = null;
+                }
+                // Đóng các dropdown khác nếu có
+                dropdowns.forEach(other => {
+                    if (other !== dropdown) {
+                        const oMenu = other.querySelector('.otr-lang-dropdown__menu');
+                        const oChev = other.querySelector('.otr-dropdown-chevron');
+                        const oBtn = other.querySelector('.otr-lang-dropdown__btn');
+                        if (oMenu) oMenu.classList.add('hidden');
+                        if (oChev) oChev.classList.remove('rotate-180');
+                        if (oBtn) oBtn.setAttribute('aria-expanded', 'false');
+                        other.classList.remove('is-open');
+                    }
+                });
+                menu.classList.remove('hidden');
+                dropdown.classList.add('is-open');
+                btn.setAttribute('aria-expanded', 'true');
+                if (chevron) chevron.classList.add('rotate-180');
+            };
+
+            const closeMenu = (delay = 0) => {
+                if (closeTimeout) clearTimeout(closeTimeout);
+                if (delay > 0) {
+                    closeTimeout = setTimeout(() => {
+                        menu.classList.add('hidden');
+                        dropdown.classList.remove('is-open');
+                        btn.setAttribute('aria-expanded', 'false');
+                        if (chevron) chevron.classList.remove('rotate-180');
+                    }, delay);
                 } else {
                     menu.classList.add('hidden');
+                    dropdown.classList.remove('is-open');
                     btn.setAttribute('aria-expanded', 'false');
                     if (chevron) chevron.classList.remove('rotate-180');
                 }
@@ -241,18 +259,23 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                toggle();
-            });
-
-            // Hover effect on desktop screens (>= 768px)
-            dropdown.addEventListener('mouseenter', () => {
-                if (window.innerWidth >= 768) {
-                    toggle(true);
+                if (menu.classList.contains('hidden')) {
+                    openMenu();
+                } else {
+                    closeMenu(0);
                 }
             });
+
+            // Hover mượt mà trên Desktop: Khi rê chuột vào mở ngay, khi rê chuột ra giữ 350ms để người dùng thoải mái di chuột không sợ mất menu
+            dropdown.addEventListener('mouseenter', () => {
+                if (window.innerWidth >= 768) {
+                    openMenu();
+                }
+            });
+
             dropdown.addEventListener('mouseleave', () => {
                 if (window.innerWidth >= 768) {
-                    toggle(false);
+                    closeMenu(350);
                 }
             });
         });
@@ -266,6 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const btn = dropdown.querySelector('.otr-lang-dropdown__btn');
                     if (menu && !menu.classList.contains('hidden')) {
                         menu.classList.add('hidden');
+                        dropdown.classList.remove('is-open');
                         if (btn) btn.setAttribute('aria-expanded', 'false');
                         if (chevron) chevron.classList.remove('rotate-180');
                     }
@@ -277,4 +301,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initLanguageDropdown();
 
     console.log('On The Rock Header & Global Javascript Loaded!');
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGlobal);
+} else {
+    initGlobal();
+}

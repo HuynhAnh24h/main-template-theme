@@ -676,7 +676,7 @@ function otr_booking_admin_settings_menu() {
     add_submenu_page(
         'edit.php?post_type=otr_booking',
         'Cài đặt nhận Email',
-        'Cài đặt nhận Email',
+        '<span class="dashicons dashicons-email-alt" style="font-size:16px;width:16px;height:16px;margin-right:6px;vertical-align:text-bottom;"></span> Cài đặt nhận Email',
         'manage_options',
         'otr-booking-settings',
         'otr_render_booking_settings_page'

@@ -20,17 +20,17 @@ function theme_custom_menu_registration() {
         'manage_options',
         'theme-custom',
         'theme_custom_fallback_page',
-        'dashicons-admin-appearance',
+        'dashicons-admin-customizer',
         60
     );
 
-    // Menu con "Home"
+    // Menu con "Trang chủ" (ghi đè mục đầu tiên của Theme Custom)
     add_submenu_page(
         'theme-custom',
         'Cấu hình Trang chủ',
-        'Home',
+        '<span class="dashicons dashicons-admin-home" style="font-size:16px;width:16px;height:16px;margin-right:6px;vertical-align:text-bottom;"></span> Trang chủ',
         'manage_options',
-        'theme-custom-home',
+        'theme-custom',
         'theme_custom_fallback_page'
     );
 
@@ -38,7 +38,7 @@ function theme_custom_menu_registration() {
     add_submenu_page(
         'theme-custom',
         'Cấu hình Trang Menu',
-        'Trang Menu',
+        '<span class="dashicons dashicons-food" style="font-size:16px;width:16px;height:16px;margin-right:6px;vertical-align:text-bottom;"></span> Trang Menu',
         'manage_options',
         'theme-custom-menu',
         'theme_custom_fallback_menu_page'
@@ -48,7 +48,7 @@ function theme_custom_menu_registration() {
     add_submenu_page(
         'theme-custom',
         'Cấu hình Đặt Bàn',
-        'Cấu hình Đặt Bàn',
+        '<span class="dashicons dashicons-calendar-alt" style="font-size:16px;width:16px;height:16px;margin-right:6px;vertical-align:text-bottom;"></span> Cấu hình Đặt Bàn',
         'manage_options',
         'theme-custom-booking',
         'theme_custom_fallback_booking_page'
@@ -58,7 +58,7 @@ function theme_custom_menu_registration() {
     add_submenu_page(
         'theme-custom',
         'Cấu hình Liên Hệ',
-        'Cấu hình Liên Hệ',
+        '<span class="dashicons dashicons-location-alt" style="font-size:16px;width:16px;height:16px;margin-right:6px;vertical-align:text-bottom;"></span> Cấu hình Liên Hệ',
         'manage_options',
         'theme-custom-contact',
         'theme_custom_fallback_contact_page'
@@ -68,7 +68,7 @@ function theme_custom_menu_registration() {
     add_submenu_page(
         'theme-custom',
         'Cấu hình Blog & Event',
-        'Blog & Event',
+        '<span class="dashicons dashicons-welcome-write-blog" style="font-size:16px;width:16px;height:16px;margin-right:6px;vertical-align:text-bottom;"></span> Blog & Event',
         'manage_options',
         'theme-custom-blog',
         'theme_custom_fallback_blog_page'
@@ -244,7 +244,7 @@ if (function_exists('acf_add_local_field_group')) {
         ),
         array(
             'key' => 'field_home_intro_quote',
-            'label' => '🇻🇳 Câu nói mở đầu (Tiếng Việt)',
+            'label' => '<span class="dashicons dashicons-translation" style="color:#2271b1;font-size:16px;width:16px;height:16px;vertical-align:text-bottom;"></span> Câu nói mở đầu (Tiếng Việt)',
             'name' => 'home_intro_quote',
             'type' => 'textarea',
             'default_value' => "Một quán cocktail bar ở Đà Lạt,\ncủa người Đà Lạt, dành cho những ai\nmuốn một trãi nghiệm Đà Lạt thú vị.",
@@ -255,7 +255,7 @@ if (function_exists('acf_add_local_field_group')) {
         ),
         array(
             'key' => 'field_home_intro_quote_en',
-            'label' => '🇬🇧 Câu nói mở đầu (English Translation)',
+            'label' => '<span class="dashicons dashicons-admin-site-alt3" style="color:#caa875;font-size:16px;width:16px;height:16px;vertical-align:text-bottom;"></span> Câu nói mở đầu (English Translation)',
             'name' => 'home_intro_quote_en',
             'type' => 'textarea',
             'default_value' => "A cocktail bar in Da Lat,\nby Da Lat locals, crafted for those\nseeking an enchanting Da Lat experience.",

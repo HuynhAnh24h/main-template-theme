@@ -92,15 +92,27 @@ function initWanderLoader() {
 
   let currentStep = 0;
   const totalSteps = Math.min(10, IMAGES.length);
-  const stepTime = 230; // Chậm rãi và mượt mà hơn (~2.3s cho 10 ảnh)
+  const stepTime = 115; // Nhanh, mượt mà và sang trọng (~1.1s cho 10 ảnh)
   let isDone = false;
+
+  // Cho phép click hoặc cuộn chuột để vào thẳng giao diện bình thường ngay lập tức
+  const skipToStage4 = () => {
+    if (!isDone) {
+      startStage4();
+    }
+  };
+  window.addEventListener('wheel', skipToStage4, { once: true, passive: true });
+  window.addEventListener('touchstart', skipToStage4, { once: true, passive: true });
+  if (loader) {
+    loader.addEventListener('click', skipToStage4);
+  }
 
   // ================= BẮT ĐẦU GIAI ĐOẠN 1 (Logo Trung Tâm To Rõ) =================
   if (stage1Logo) {
     stage1Logo.classList.add('stage-active');
   }
 
-  // Giữ Logo trang đầu trong 1400ms để người xem cảm nhận thương hiệu
+  // Giữ Logo trang đầu trong 750ms để người xem nhận diện thương hiệu
   setTimeout(() => {
     if (isDone) return;
     if (stage1Logo) {
@@ -113,9 +125,9 @@ function initWanderLoader() {
         stage2Wrap.classList.add('stage-active');
       }
       // Bắt đầu quăng bài Stage 2
-      setTimeout(loadStep, 150);
-    }, 200);
-  }, 1400);
+      setTimeout(loadStep, 100);
+    }, 150);
+  }, 750);
 
   // ================= GIAI ĐOẠN 2: QUĂNG XẤP BÀI VÀO GIỮA =================
   function loadStep() {
@@ -159,8 +171,8 @@ function initWanderLoader() {
     if (currentStep < totalSteps) {
       setTimeout(loadStep, stepTime);
     } else {
-      // Đã nạp 100% -> Dừng nghỉ 380ms để người xem thấy 100% trọn vẹn rồi bung ảnh
-      setTimeout(startStage3, 380);
+      // Đã nạp 100% -> Chuyển ngay sang bung ảnh
+      setTimeout(startStage3, 180);
     }
   }
 
@@ -182,7 +194,7 @@ function initWanderLoader() {
       progressWrap.style.opacity = '0';
     }
     if (stackWrap) {
-      stackWrap.style.transition = 'opacity 350ms ease';
+      stackWrap.style.transition = 'opacity 300ms ease';
       stackWrap.style.opacity = '0';
     }
 
@@ -190,7 +202,7 @@ function initWanderLoader() {
     if (stage3Logo) {
       setTimeout(() => {
         stage3Logo.classList.add('stage-active');
-      }, 100);
+      }, 50);
     }
 
     const mobile = isMobile();
@@ -217,7 +229,7 @@ function initWanderLoader() {
       const midX = dx * 0.5 + arcSide * arcBend * (dy >= 0 ? 0.35 : -0.35);
       const midY = dy * 0.5 - ((mobile ? 50 : 100) + Math.random() * (mobile ? 25 : 50));
       const flipRot = target.rot + arcSide * (mobile ? 50 : 100) + Math.random() * (mobile ? 30 : 60);
-      const delay = (mobile ? 30 : 50) + idx * (mobile ? 40 : 60);
+      const delay = ((mobile ? 30 : 50) + idx * (mobile ? 40 : 60)) * 0.45;
 
       if (tile.animate) {
         tile.animate([
@@ -227,7 +239,7 @@ function initWanderLoader() {
           { transform: `translate3d(${dx * 0.96}px, ${dy * 0.96}px, 0) rotate(${target.rot * 0.95}deg) scale(1.01)`, opacity: 1, offset: 0.88 },
           { transform: `translate3d(${dx}px, ${dy}px, 0) rotate(${target.rot}deg) scale(1)`, opacity: 1, offset: 1 }
         ], {
-          duration: mobile ? 1450 : 1750,
+          duration: mobile ? 800 : 950,
           delay: delay,
           easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
           fill: 'forwards'
@@ -238,8 +250,8 @@ function initWanderLoader() {
       }
     });
 
-    // Giữ màn hình Giai đoạn 3 trong khoảng 2.2s để người xem thưởng thức trọn vẹn bố cục
-    setTimeout(startStage4, 2200);
+    // Bung ảnh xong thì chuyển ngay sang Stage 4 (Xóa bỏ các mảnh ảnh, hiện nền quầy bar bình thường)
+    setTimeout(startStage4, 850);
   }
 
   // ================= GIAI ĐOẠN 4: CHUYỂN SANG MÀN NHUNG ĐEN & CÂU QUOTE (ẢNH STAGE 3 Ở LẠI LÀM NỀN) =================
@@ -247,44 +259,53 @@ function initWanderLoader() {
     if (isDone) return;
     isDone = true;
 
-    // 1. Kích hoạt chuyển cảnh mượt mà ở Section Intro:
-    // - Nền nâu #intro-brown-bg mờ dần, chuyển sang nền nhung đen
-    // - 10 ảnh ở Stage 3 ở lại làm Background nghệ thuật cho Section Intro
-    // - Lớp phủ Vignette #intro-wash hiện lên nhẹ nhàng để tôn câu slogan
+    // 1. Kích hoạt chuyển cảnh mượt mà ở Section Intro
     const introSection = document.getElementById('section-intro');
     if (introSection) {
       introSection.classList.add('is-revealed');
     }
 
-    // 2. Làm mờ nhẹ nhàng Logo Stage 3 ở trung tâm
+    // 2. Yêu cầu của người dùng: Các hình ảnh xấp bài/bung tỏa phải biến mất hoàn toàn, chỉ để lại không gian và hình ảnh bình thường
+    const boardEl = document.getElementById('board');
+    if (boardEl) {
+      boardEl.style.transition = 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+      boardEl.style.opacity = '0';
+      boardEl.style.transform = 'scale(0.95)';
+      boardEl.style.pointerEvents = 'none';
+      setTimeout(() => {
+        if (boardEl && boardEl.parentNode) boardEl.remove();
+      }, 900);
+    }
+
+    // 3. Làm mờ nhẹ nhàng Logo Stage 3 ở trung tâm
     if (stage3Logo) {
       stage3Logo.classList.remove('stage-active');
       stage3Logo.classList.add('stage-exit');
     }
 
-    // 3. Kích hoạt hiệu ứng xuất hiện cho câu quote ở Stage 4
+    // 4. Kích hoạt hiệu ứng xuất hiện cho câu quote ở Stage 4
     if (homeQuote) {
       homeQuote.classList.add('reveal');
     }
 
-    // 4. Mờ dần khung loader cố định và ẩn đi sau 2.0s
+    // 5. Mờ dần khung loader cố định và ẩn đi
     if (loader) {
       loader.classList.add('is-fading');
       setTimeout(() => {
         if (loader) loader.style.display = 'none';
-      }, 2000);
+      }, 1200);
     }
 
     // 5. Mở khóa cuộn trang
     document.body.classList.add('is-loaded');
   }
 
-  // Failsafe Timeout: Tối đa 8.5s tự động mở khóa
+  // Failsafe Timeout: Tối đa 4s tự động mở khóa
   setTimeout(() => {
     if (!isDone) {
       startStage4();
     }
-  }, 8500);
+  }, 4000);
 }
 
 function initHomePageFeatures() {

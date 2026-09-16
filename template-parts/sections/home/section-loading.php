@@ -41,6 +41,15 @@ if (is_array($header_logo) && !empty($header_logo['url'])) {
     $logo_url = get_template_directory_uri() . '/assets/images/otr-logo-gold.png';
 }
 
+// 2.5. Hình ảnh Quầy Bar chính thức (hiển thị làm nền chuẩn sau khi các ảnh xấp bài biến mất)
+$hero_bg_raw = function_exists('get_field') ? get_field('hero_bg_image', $front_page_id) : null;
+$hero_bar_url = 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1920&auto=format&fit=crop';
+if (is_array($hero_bg_raw) && !empty($hero_bg_raw['url'])) {
+    $hero_bar_url = $hero_bg_raw['url'];
+} elseif (is_string($hero_bg_raw) && !empty($hero_bg_raw)) {
+    $hero_bar_url = $hero_bg_raw;
+}
+
 // 3. Cấu hình 10 hình ảnh từ ACF (home_reveal_image_1 -> 10), fallback ảnh chuẩn thiết kế
 $images = isset($args['images']) ? $args['images'] : array();
 if (empty($images)) {
@@ -108,7 +117,7 @@ window.WanderConfig = {
         
         <!-- Thanh tiến trình & số % -->
         <div id="loader-progress-wrap" class="mt-8 sm:mt-9 flex flex-col items-center gap-2.5 transition-opacity duration-500">
-            <div class="w-40 sm:w-48 h-[2.5px] bg-[#2a1a05] rounded-full overflow-hidden">
+            <div class="w-40 sm:w-48 h-[2.5px] bg-[#472B08] rounded-full overflow-hidden">
                 <div id="progressBar" class="h-full bg-[#caa875] w-0 rounded-full"></div>
             </div>
             <span id="pctNum" class="text-[12px] sm:text-xs font-sans font-medium text-[#caa875] tracking-[0.22em]">0%</span>
@@ -129,6 +138,13 @@ window.WanderConfig = {
 <!-- ================= GIAI ĐOẠN 4 & MOODBOARD INTRO SECTION ================= -->
 <section id="section-intro" class="relative w-full h-screen overflow-hidden bg-[#070504] flex items-center justify-center select-none">
     
+    <!-- 0. Ảnh nền Quầy Bar chuẩn của quán (Hiện ở Stage 4 khi các ảnh bung tỏa biến mất) -->
+    <div 
+        id="intro-bar-bg"
+        class="absolute inset-0 bg-cover bg-center pointer-events-none z-0 filter brightness-[0.6] opacity-0 transition-opacity duration-1000 ease-out" 
+        style="background-image: url('<?php echo esc_url($hero_bar_url); ?>');"
+    ></div>
+
     <!-- 1. Lớp nền nhung đen cao cấp (Hiện ở Stage 4) -->
     <div 
         id="intro-velvet-bg"

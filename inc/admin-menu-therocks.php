@@ -449,7 +449,7 @@ function otr_register_menu_therocks_admin() {
         'manage_options',
         'menu-therocks',
         'otr_render_menu_therocks_page',
-        'dashicons-food',
+        'dashicons-beer',
         21
     );
 }
@@ -747,14 +747,14 @@ function otr_render_menu_therocks_page() {
                 <button type="button" onclick="otrOpenDemoModal()" class="button" style="background: #221911; border-color: #caa875; color: #caa875; font-weight: 700; padding: 6px 18px; height: auto; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
                     <span class="dashicons dashicons-visibility" style="margin-top:-2px;"></span> XEM DEMO 3 KIỂU MENU
                 </button>
-                <button type="button" onclick="otrOpenAddCha()" class="button button-primary" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700; padding: 6px 18px; height: auto; font-size: 14px;">
-                    + THÊM MENU CHA MỚI
+                <button type="button" onclick="otrOpenAddCha()" class="button button-primary" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700; padding: 6px 18px; height: auto; font-size: 14px; display: inline-flex; align-items: center; gap: 6px;">
+                    <span class="dashicons dashicons-plus-alt2" style="font-size: 17px; width: 17px; height: 17px; margin-top: -2px;"></span> THÊM MENU CHA MỚI
                 </button>
                 <form method="post" onsubmit="return confirm('Bạn có chắc muốn khôi phục về thực đơn mẫu gốc của quán?');" style="display:inline;">
                     <?php wp_nonce_field('otr_menu_therocks_nonce', 'otr_nonce'); ?>
                     <input type="hidden" name="otr_menu_action" value="reset_default">
-                    <button type="submit" class="button" style="color: #ff8888; border-color: #552222; background: rgba(50,10,10,0.5); padding: 6px 14px; height: auto;">
-                        ↺ Khôi Phục Mẫu
+                    <button type="submit" class="button" style="color: #ff8888; border-color: #552222; background: rgba(50,10,10,0.5); padding: 6px 14px; height: auto; display: inline-flex; align-items: center; gap: 6px;">
+                        <span class="dashicons dashicons-image-rotate" style="font-size: 16px; width: 16px; height: 16px; margin-top: -2px;"></span> Khôi Phục Mẫu
                     </button>
                 </form>
             </div>
@@ -878,8 +878,8 @@ function otr_render_menu_therocks_page() {
                             </div>
                         </div>
                     </div>
-                    <button type="button" onclick="otrOpenDemoModal()" class="button button-primary" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700; padding: 6px 16px;">
-                        👁 MỞ BẢNG DEMO & SO SÁNH 3 KIỂU
+                    <button type="button" onclick="otrOpenDemoModal()" class="button button-primary" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700; padding: 6px 16px; display: inline-flex; align-items: center; gap: 6px;">
+                        <span class="dashicons dashicons-visibility" style="margin-top:-2px;"></span> MỞ BẢNG DEMO & SO SÁNH 3 KIỂU
                     </button>
                 </div>
 
@@ -925,23 +925,23 @@ function otr_render_menu_therocks_page() {
                             <h2 style="color: #fff; margin: 0; font-size: 20px; font-weight: 700; font-family: Georgia, serif;">
                                 <?php echo esc_html($cha['title']); ?>
                             </h2>
-                            <span style="background: rgba(202, 168, 117, 0.2); color: #e5cdab; font-size: 12px; padding: 3px 10px; border-radius: 12px; border: 1px solid rgba(202, 168, 117, 0.4);">
-                                ⚙ <?php echo esc_html($cha_layout_name); ?>
+                            <span style="background: rgba(202, 168, 117, 0.2); color: #e5cdab; font-size: 12px; padding: 3px 10px; border-radius: 12px; border: 1px solid rgba(202, 168, 117, 0.4); display: inline-flex; align-items: center; gap: 4px;">
+                                <span class="dashicons dashicons-admin-generic" style="font-size: 13px; width: 13px; height: 13px; vertical-align: middle;"></span> <?php echo esc_html($cha_layout_name); ?>
                             </span>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <button type="button" onclick="otrEditCha('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($cha['title']); ?>', '<?php echo esc_js($cha['title_en'] ?? ''); ?>', '<?php echo esc_js($cha['num']); ?>', '<?php echo esc_js($cha['desc']); ?>', '<?php echo esc_js($cha['desc_en'] ?? ''); ?>', '<?php echo esc_js($cha['image'] ?? ''); ?>', '<?php echo esc_js($cha['layout']); ?>')" class="button button-small" style="background: #33261a; color: #caa875; border-color: #caa875;">
-                                ✎ Sửa Menu Cha
+                            <button type="button" onclick="otrEditCha('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($cha['title']); ?>', '<?php echo esc_js($cha['title_en'] ?? ''); ?>', '<?php echo esc_js($cha['num']); ?>', '<?php echo esc_js($cha['desc']); ?>', '<?php echo esc_js($cha['desc_en'] ?? ''); ?>', '<?php echo esc_js($cha['image'] ?? ''); ?>', '<?php echo esc_js($cha['layout']); ?>')" class="button button-small" style="background: #33261a; color: #caa875; border-color: #caa875; display: inline-flex; align-items: center; gap: 4px;">
+                                <span class="dashicons dashicons-edit" style="font-size: 14px; width: 14px; height: 14px; margin-top: -1px;"></span> Sửa Menu Cha
                             </button>
-                            <button type="button" onclick="otrOpenAddCon('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($cha['title']); ?>')" class="button button-primary button-small" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 600;">
-                                + Thêm Menu Con
+                            <button type="button" onclick="otrOpenAddCon('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($cha['title']); ?>')" class="button button-primary button-small" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                                <span class="dashicons dashicons-plus-alt2" style="font-size: 14px; width: 14px; height: 14px; margin-top: -1px;"></span> Thêm Menu Con
                             </button>
                             <form method="post" onsubmit="return confirm('Bạn có chắc muốn xóa Menu Cha này và toàn bộ các Menu Con bên trong?');" style="display:inline;">
                                 <?php wp_nonce_field('otr_menu_therocks_nonce', 'otr_nonce'); ?>
                                 <input type="hidden" name="otr_menu_action" value="delete_cha">
                                 <input type="hidden" name="cha_id" value="<?php echo esc_attr($cha_id); ?>">
-                                <button type="submit" class="button button-small" style="color: #ff5555; border-color: #ff5555; background: transparent;">
-                                    ✕ Xóa
+                                <button type="submit" class="button button-small" style="color: #ff5555; border-color: #ff5555; background: transparent; display: inline-flex; align-items: center; gap: 3px;">
+                                    <span class="dashicons dashicons-trash" style="font-size: 14px; width: 14px; height: 14px; margin-top: -1px;"></span> Xóa
                                 </button>
                             </form>
                         </div>
@@ -977,23 +977,25 @@ function otr_render_menu_therocks_page() {
                                                         <span style="font-size: 11.5px; color: #b8860b; font-weight: 600; margin-left: 6px;">[EN: <?php echo esc_html($con['title_en']); ?>]</span>
                                                     <?php endif; ?>
                                                 </h3>
-                                                <span style="background: <?php echo esc_attr($badge_color); ?>; color: #fff; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px;">
-                                                    ★ <?php echo esc_html($con_layout_name); ?>
+                                                <span style="background: <?php echo esc_attr($badge_color); ?>; color: #fff; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; display: inline-flex; align-items: center; gap: 3px;">
+                                                    <span class="dashicons dashicons-star-filled" style="font-size: 12px; width: 12px; height: 12px; vertical-align: middle;"></span> <?php echo esc_html($con_layout_name); ?>
                                                 </span>
                                             </div>
                                             <div style="display: flex; gap: 6px;">
-                                                <button type="button" onclick="otrEditCon('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($con['title']); ?>', '<?php echo esc_js($con['title_en'] ?? ''); ?>', '<?php echo esc_js($con['layout']); ?>', '<?php echo esc_js($con['desc'] ?? ''); ?>', '<?php echo esc_js($con['desc_en'] ?? ''); ?>', '<?php echo esc_js($con['tag'] ?? ''); ?>', '<?php echo esc_js($con['tag_en'] ?? ''); ?>', '<?php echo esc_js($con['price'] ?? ''); ?>', '<?php echo esc_js($con_img); ?>')" class="button button-small">
-                                                    ✎ Sửa
+                                                <button type="button" onclick="otrEditCon('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($con['title']); ?>', '<?php echo esc_js($con['title_en'] ?? ''); ?>', '<?php echo esc_js($con['layout']); ?>', '<?php echo esc_js($con['desc'] ?? ''); ?>', '<?php echo esc_js($con['desc_en'] ?? ''); ?>', '<?php echo esc_js($con['tag'] ?? ''); ?>', '<?php echo esc_js($con['tag_en'] ?? ''); ?>', '<?php echo esc_js($con['price'] ?? ''); ?>', '<?php echo esc_js($con_img); ?>')" class="button button-small" style="display: inline-flex; align-items: center; gap: 3px;">
+                                                    <span class="dashicons dashicons-edit" style="font-size: 14px; width: 14px; height: 14px; margin-top: -1px;"></span> Sửa
                                                 </button>
-                                                <button type="button" onclick="otrOpenAddConCon('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($con['title']); ?>')" class="button button-small button-primary" style="background: #2271b1;">
-                                                    + Thêm Cột / Nhóm
+                                                <button type="button" onclick="otrOpenAddConCon('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($con['title']); ?>')" class="button button-small button-primary" style="background: #2271b1; display: inline-flex; align-items: center; gap: 3px;">
+                                                    <span class="dashicons dashicons-category" style="font-size: 14px; width: 14px; height: 14px; margin-top: -1px;"></span> Thêm Cột / Nhóm
                                                 </button>
                                                 <form method="post" onsubmit="return confirm('Bạn có chắc muốn xóa Menu Con này?');" style="display:inline;">
                                                     <?php wp_nonce_field('otr_menu_therocks_nonce', 'otr_nonce'); ?>
                                                     <input type="hidden" name="otr_menu_action" value="delete_con">
                                                     <input type="hidden" name="parent_cha_id" value="<?php echo esc_attr($cha_id); ?>">
                                                     <input type="hidden" name="con_id" value="<?php echo esc_attr($con_id); ?>">
-                                                    <button type="submit" class="button button-small" style="color: #cc1818;">✕ Xóa</button>
+                                                    <button type="submit" class="button button-small" style="color: #cc1818; display: inline-flex; align-items: center; gap: 3px;">
+                                                        <span class="dashicons dashicons-trash" style="font-size: 14px; width: 14px; height: 14px; margin-top: -1px;"></span> Xóa
+                                                    </button>
                                                 </form>
                                             </div>
                                         </div>
@@ -1023,11 +1025,11 @@ function otr_render_menu_therocks_page() {
                                                                     </strong>
                                                                 </div>
                                                                 <div style="display: flex; gap: 4px;">
-                                                                    <button type="button" onclick="otrEditConCon('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($concon_id); ?>', '<?php echo esc_js($concon['title']); ?>', '<?php echo esc_js($concon['title_en'] ?? ''); ?>')" class="button button-small" style="font-size: 11px; padding: 0 6px; height: 24px; line-height: 22px;">
-                                                                        ✎
+                                                                    <button type="button" onclick="otrEditConCon('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($concon_id); ?>', '<?php echo esc_js($concon['title']); ?>', '<?php echo esc_js($concon['title_en'] ?? ''); ?>')" class="button button-small" style="font-size: 11px; padding: 0 5px; height: 24px; line-height: 22px; display: inline-flex; align-items: center;" title="Sửa nhóm cột">
+                                                                        <span class="dashicons dashicons-edit" style="font-size: 13px; width: 13px; height: 13px;"></span>
                                                                     </button>
-                                                                    <button type="button" onclick="otrOpenAddItem('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($concon_id); ?>', '<?php echo esc_js($concon['title']); ?>')" class="button button-small" style="font-size: 11px; padding: 0 6px; height: 24px; line-height: 22px; color: #2271b1;">
-                                                                        + Món
+                                                                    <button type="button" onclick="otrOpenAddItem('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($concon_id); ?>', '<?php echo esc_js($concon['title']); ?>')" class="button button-small" style="font-size: 11px; padding: 0 6px; height: 24px; line-height: 22px; color: #2271b1; display: inline-flex; align-items: center; gap: 2px;" title="Thêm món mới vào nhóm này">
+                                                                        <span class="dashicons dashicons-plus-alt2" style="font-size: 13px; width: 13px; height: 13px;"></span> Món
                                                                     </button>
                                                                     <form method="post" onsubmit="return confirm('Xóa nhóm này và tất cả món bên trong?');" style="display:inline;">
                                                                         <?php wp_nonce_field('otr_menu_therocks_nonce', 'otr_nonce'); ?>
@@ -1035,7 +1037,9 @@ function otr_render_menu_therocks_page() {
                                                                         <input type="hidden" name="parent_cha_id" value="<?php echo esc_attr($cha_id); ?>">
                                                                         <input type="hidden" name="parent_con_id" value="<?php echo esc_attr($con_id); ?>">
                                                                         <input type="hidden" name="concon_id" value="<?php echo esc_attr($concon_id); ?>">
-                                                                        <button type="submit" class="button button-small" style="color: #999; padding: 0 4px; height: 24px; line-height: 22px;">✕</button>
+                                                                        <button type="submit" class="button button-small" style="color: #999; padding: 0 4px; height: 24px; line-height: 22px; display: inline-flex; align-items: center;" title="Xóa nhóm cột">
+                                                                            <span class="dashicons dashicons-trash" style="font-size: 13px; width: 13px; height: 13px;"></span>
+                                                                        </button>
                                                                     </form>
                                                                 </div>
                                                             </div>
@@ -1063,7 +1067,9 @@ function otr_render_menu_therocks_page() {
                                                                                 </div>
                                                                             </div>
                                                                             <div style="display: flex; gap: 4px; shrink-0; margin-left: 8px;">
-                                                                                <button type="button" onclick="otrEditItem('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($concon_id); ?>', '<?php echo esc_js($it['id']); ?>', '<?php echo esc_js($it['name']); ?>', '<?php echo esc_js($it['name_en'] ?? ''); ?>', '<?php echo esc_js($it['price']); ?>', '<?php echo esc_js($it['desc'] ?? ''); ?>', '<?php echo esc_js($it['desc_en'] ?? ''); ?>', '<?php echo esc_js($it['image'] ?? ''); ?>')" class="button button-small" style="padding: 0 5px; height: 22px; line-height: 20px; font-size: 10px;">✎</button>
+                                                                                <button type="button" onclick="otrEditItem('<?php echo esc_js($cha_id); ?>', '<?php echo esc_js($con_id); ?>', '<?php echo esc_js($concon_id); ?>', '<?php echo esc_js($it['id']); ?>', '<?php echo esc_js($it['name']); ?>', '<?php echo esc_js($it['name_en'] ?? ''); ?>', '<?php echo esc_js($it['price']); ?>', '<?php echo esc_js($it['desc'] ?? ''); ?>', '<?php echo esc_js($it['desc_en'] ?? ''); ?>', '<?php echo esc_js($it['image'] ?? ''); ?>')" class="button button-small" style="padding: 0 5px; height: 22px; line-height: 20px; font-size: 10px; display: inline-flex; align-items: center;" title="Sửa thông tin món">
+                                                                                    <span class="dashicons dashicons-edit" style="font-size: 12px; width: 12px; height: 12px;"></span>
+                                                                                </button>
                                                                                 <form method="post" onsubmit="return confirm('Xóa món này?');" style="display:inline;">
                                                                                     <?php wp_nonce_field('otr_menu_therocks_nonce', 'otr_nonce'); ?>
                                                                                     <input type="hidden" name="otr_menu_action" value="delete_item">
@@ -1071,7 +1077,9 @@ function otr_render_menu_therocks_page() {
                                                                                     <input type="hidden" name="parent_con_id" value="<?php echo esc_attr($con_id); ?>">
                                                                                     <input type="hidden" name="parent_concon_id" value="<?php echo esc_attr($concon_id); ?>">
                                                                                     <input type="hidden" name="item_id" value="<?php echo esc_attr($it['id']); ?>">
-                                                                                    <button type="submit" class="button button-small" style="color: #cc1818; padding: 0 4px; height: 22px; line-height: 20px; font-size: 10px;">✕</button>
+                                                                                    <button type="submit" class="button button-small" style="color: #cc1818; padding: 0 4px; height: 22px; line-height: 20px; font-size: 10px; display: inline-flex; align-items: center;" title="Xóa món này">
+                                                                                        <span class="dashicons dashicons-trash" style="font-size: 12px; width: 12px; height: 12px;"></span>
+                                                                                    </button>
                                                                                 </form>
                                                                             </div>
                                                                         </div>
@@ -1112,8 +1120,12 @@ function otr_render_menu_therocks_page() {
                 
                 <!-- Tabs Ngôn Ngữ -->
                 <div style="display: flex; gap: 8px; border-bottom: 2px solid #caa875; padding-bottom: 6px; margin-bottom: 14px;">
-                    <button type="button" onclick="otrSwitchModalTab(this, 'vi')" class="button button-small button-primary otr-modal-tab-btn otr-btn-vi" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700;">🇻🇳 Tiếng Việt</button>
-                    <button type="button" onclick="otrSwitchModalTab(this, 'en')" class="button button-small otr-modal-tab-btn otr-btn-en" style="font-weight: 600;">🇬🇧 English</button>
+                    <button type="button" onclick="otrSwitchModalTab(this, 'vi')" class="button button-small button-primary otr-modal-tab-btn otr-btn-vi" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-translation" style="font-size: 14px; width: 14px; height: 14px;"></span> Tiếng Việt
+                    </button>
+                    <button type="button" onclick="otrSwitchModalTab(this, 'en')" class="button button-small otr-modal-tab-btn otr-btn-en" style="font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-admin-site-alt3" style="font-size: 14px; width: 14px; height: 14px;"></span> English
+                    </button>
                 </div>
 
                 <!-- Pane VI -->
@@ -1162,11 +1174,11 @@ function otr_render_menu_therocks_page() {
                 <div style="margin-bottom: 14px; background: #fafafa; border: 1px solid #e5e5e5; border-radius: 6px; padding: 12px 14px;">
                     <label style="display:block; font-weight: 600; margin-bottom: 6px;">Ảnh bìa / Banner Menu Cha</label>
                     <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
-                        <button type="button" class="button button-secondary otr-upload-media-btn" data-target-input="input_cha_image" data-target-preview="preview_cha_image" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 600;">
+                        <button type="button" class="button button-secondary otr-upload-media-btn" data-target-input="input_cha_image" data-target-preview="preview_cha_image" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
                             <span class="dashicons dashicons-admin-media" style="vertical-align: middle; margin-top:-2px;"></span> Chọn từ Thư viện Media
                         </button>
-                        <button type="button" class="button otr-remove-media-btn" data-target-input="input_cha_image" data-target-preview="preview_cha_image" style="color: #cc1818;">
-                            ✕ Xóa ảnh
+                        <button type="button" class="button otr-remove-media-btn" data-target-input="input_cha_image" data-target-preview="preview_cha_image" style="color: #cc1818; display: inline-flex; align-items: center; gap: 3px;">
+                            <span class="dashicons dashicons-trash" style="font-size: 14px; width: 14px; height: 14px; margin-top: -1px;"></span> Xóa ảnh
                         </button>
                     </div>
                     <div id="preview_cha_image" style="min-height: 20px; margin-bottom: 8px;"></div>
@@ -1174,8 +1186,12 @@ function otr_render_menu_therocks_page() {
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" onclick="otrCloseModal('modal-add-cha')" class="button">Hủy</button>
-                    <button type="submit" class="button button-primary">Lưu Menu Cha</button>
+                    <button type="button" onclick="otrCloseModal('modal-add-cha')" class="button" style="display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-no-alt" style="font-size: 15px; width: 15px; height: 15px; margin-top: -1px;"></span> Hủy
+                    </button>
+                    <button type="submit" class="button button-primary" style="display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-saved" style="font-size: 15px; width: 15px; height: 15px; margin-top: -1px;"></span> Lưu Menu Cha
+                    </button>
                 </div>
             </form>
         </div>
@@ -1195,8 +1211,12 @@ function otr_render_menu_therocks_page() {
                 
                 <!-- Tabs Ngôn Ngữ -->
                 <div style="display: flex; gap: 8px; border-bottom: 2px solid #caa875; padding-bottom: 6px; margin-bottom: 14px;">
-                    <button type="button" onclick="otrSwitchModalTab(this, 'vi')" class="button button-small button-primary otr-modal-tab-btn otr-btn-vi" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700;">🇻🇳 Tiếng Việt</button>
-                    <button type="button" onclick="otrSwitchModalTab(this, 'en')" class="button button-small otr-modal-tab-btn otr-btn-en" style="font-weight: 600;">🇬🇧 English</button>
+                    <button type="button" onclick="otrSwitchModalTab(this, 'vi')" class="button button-small button-primary otr-modal-tab-btn otr-btn-vi" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-translation" style="font-size: 14px; width: 14px; height: 14px;"></span> Tiếng Việt
+                    </button>
+                    <button type="button" onclick="otrSwitchModalTab(this, 'en')" class="button button-small otr-modal-tab-btn otr-btn-en" style="font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-admin-site-alt3" style="font-size: 14px; width: 14px; height: 14px;"></span> English
+                    </button>
                 </div>
 
                 <!-- Pane VI -->
@@ -1257,11 +1277,11 @@ function otr_render_menu_therocks_page() {
                 <div style="margin-bottom: 14px; background: #fafafa; border: 1px solid #e5e5e5; border-radius: 6px; padding: 12px 14px;">
                     <label style="display:block; font-weight: 600; margin-bottom: 6px;">Ảnh đại diện / Slider Menu Con (Tùy chọn)</label>
                     <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
-                        <button type="button" class="button button-secondary otr-upload-media-btn" data-target-input="input_con_image" data-target-preview="preview_con_image" style="background: #2271b1; border-color: #135e96; color: #fff; font-weight: 600;">
+                        <button type="button" class="button button-secondary otr-upload-media-btn" data-target-input="input_con_image" data-target-preview="preview_con_image" style="background: #2271b1; border-color: #135e96; color: #fff; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
                             <span class="dashicons dashicons-admin-media" style="vertical-align: middle; margin-top:-2px;"></span> Chọn từ Thư viện Media
                         </button>
-                        <button type="button" class="button otr-remove-media-btn" data-target-input="input_con_image" data-target-preview="preview_con_image" style="color: #cc1818;">
-                            ✕ Xóa ảnh
+                        <button type="button" class="button otr-remove-media-btn" data-target-input="input_con_image" data-target-preview="preview_con_image" style="color: #cc1818; display: inline-flex; align-items: center; gap: 3px;">
+                            <span class="dashicons dashicons-trash" style="font-size: 14px; width: 14px; height: 14px; margin-top: -1px;"></span> Xóa ảnh
                         </button>
                     </div>
                     <div id="preview_con_image" style="min-height: 20px; margin-bottom: 8px;"></div>
@@ -1269,8 +1289,12 @@ function otr_render_menu_therocks_page() {
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" onclick="otrCloseModal('modal-add-con')" class="button">Hủy</button>
-                    <button type="submit" class="button button-primary">Lưu Menu Con</button>
+                    <button type="button" onclick="otrCloseModal('modal-add-con')" class="button" style="display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-no-alt" style="font-size: 15px; width: 15px; height: 15px; margin-top: -1px;"></span> Hủy
+                    </button>
+                    <button type="submit" class="button button-primary" style="display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-saved" style="font-size: 15px; width: 15px; height: 15px; margin-top: -1px;"></span> Lưu Menu Con
+                    </button>
                 </div>
             </form>
         </div>
@@ -1291,8 +1315,12 @@ function otr_render_menu_therocks_page() {
                 
                 <!-- Tabs Ngôn Ngữ -->
                 <div style="display: flex; gap: 8px; border-bottom: 2px solid #caa875; padding-bottom: 6px; margin-bottom: 14px;">
-                    <button type="button" onclick="otrSwitchModalTab(this, 'vi')" class="button button-small button-primary otr-modal-tab-btn otr-btn-vi" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700;">🇻🇳 Tiếng Việt</button>
-                    <button type="button" onclick="otrSwitchModalTab(this, 'en')" class="button button-small otr-modal-tab-btn otr-btn-en" style="font-weight: 600;">🇬🇧 English</button>
+                    <button type="button" onclick="otrSwitchModalTab(this, 'vi')" class="button button-small button-primary otr-modal-tab-btn otr-btn-vi" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-translation" style="font-size: 14px; width: 14px; height: 14px;"></span> Tiếng Việt
+                    </button>
+                    <button type="button" onclick="otrSwitchModalTab(this, 'en')" class="button button-small otr-modal-tab-btn otr-btn-en" style="font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-admin-site-alt3" style="font-size: 14px; width: 14px; height: 14px;"></span> English
+                    </button>
                 </div>
 
                 <!-- Pane VI -->
@@ -1309,8 +1337,12 @@ function otr_render_menu_therocks_page() {
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" onclick="otrCloseModal('modal-add-concon')" class="button">Hủy</button>
-                    <button type="submit" class="button button-primary">Lưu Nhóm Cột</button>
+                    <button type="button" onclick="otrCloseModal('modal-add-concon')" class="button" style="display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-no-alt" style="font-size: 15px; width: 15px; height: 15px; margin-top: -1px;"></span> Hủy
+                    </button>
+                    <button type="submit" class="button button-primary" style="display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-saved" style="font-size: 15px; width: 15px; height: 15px; margin-top: -1px;"></span> Lưu Nhóm Cột
+                    </button>
                 </div>
             </form>
         </div>
@@ -1332,8 +1364,12 @@ function otr_render_menu_therocks_page() {
                 
                 <!-- Tabs Ngôn Ngữ -->
                 <div style="display: flex; gap: 8px; border-bottom: 2px solid #caa875; padding-bottom: 6px; margin-bottom: 14px;">
-                    <button type="button" onclick="otrSwitchModalTab(this, 'vi')" class="button button-small button-primary otr-modal-tab-btn otr-btn-vi" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700;">🇻🇳 Tiếng Việt</button>
-                    <button type="button" onclick="otrSwitchModalTab(this, 'en')" class="button button-small otr-modal-tab-btn otr-btn-en" style="font-weight: 600;">🇬🇧 English</button>
+                    <button type="button" onclick="otrSwitchModalTab(this, 'vi')" class="button button-small button-primary otr-modal-tab-btn otr-btn-vi" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-translation" style="font-size: 14px; width: 14px; height: 14px;"></span> Tiếng Việt
+                    </button>
+                    <button type="button" onclick="otrSwitchModalTab(this, 'en')" class="button button-small otr-modal-tab-btn otr-btn-en" style="font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-admin-site-alt3" style="font-size: 14px; width: 14px; height: 14px;"></span> English
+                    </button>
                 </div>
 
                 <!-- Pane VI -->
@@ -1369,11 +1405,11 @@ function otr_render_menu_therocks_page() {
                 <div style="margin-bottom: 16px; background: #fafafa; border: 1px solid #e5e5e5; border-radius: 6px; padding: 12px 14px;">
                     <label style="display:block; font-weight: 600; margin-bottom: 6px;">Ảnh món / Đồ uống (Tùy chọn)</label>
                     <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
-                        <button type="button" class="button button-secondary otr-upload-media-btn" data-target-input="input_item_image" data-target-preview="preview_item_image" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 600;">
+                        <button type="button" class="button button-secondary otr-upload-media-btn" data-target-input="input_item_image" data-target-preview="preview_item_image" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
                             <span class="dashicons dashicons-admin-media" style="vertical-align: middle; margin-top:-2px;"></span> Chọn từ Thư viện Media
                         </button>
-                        <button type="button" class="button otr-remove-media-btn" data-target-input="input_item_image" data-target-preview="preview_item_image" style="color: #cc1818;">
-                            ✕ Xóa ảnh
+                        <button type="button" class="button otr-remove-media-btn" data-target-input="input_item_image" data-target-preview="preview_item_image" style="color: #cc1818; display: inline-flex; align-items: center; gap: 3px;">
+                            <span class="dashicons dashicons-trash" style="font-size: 14px; width: 14px; height: 14px; margin-top: -1px;"></span> Xóa ảnh
                         </button>
                     </div>
                     <div id="preview_item_image" style="min-height: 20px; margin-bottom: 8px;"></div>
@@ -1381,8 +1417,12 @@ function otr_render_menu_therocks_page() {
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" onclick="otrCloseModal('modal-add-item')" class="button">Hủy</button>
-                    <button type="submit" class="button button-primary">Lưu Món</button>
+                    <button type="button" onclick="otrCloseModal('modal-add-item')" class="button" style="display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-no-alt" style="font-size: 15px; width: 15px; height: 15px; margin-top: -1px;"></span> Hủy
+                    </button>
+                    <button type="submit" class="button button-primary" style="display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="dashicons dashicons-saved" style="font-size: 15px; width: 15px; height: 15px; margin-top: -1px;"></span> Lưu Món
+                    </button>
                 </div>
             </form>
         </div>
@@ -1406,22 +1446,24 @@ function otr_render_menu_therocks_page() {
                         Xem trước bản vẽ bố cục, ưu điểm và chọn ngay kiểu hiển thị thích hợp nhất cho từng nhóm đồ uống.
                     </p>
                 </div>
-                <button type="button" onclick="otrCloseModal('modal-menu-demo')" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(202,168,117,0.3); color: #fff; width: 34px; height: 34px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">✕</button>
+                <button type="button" onclick="otrCloseModal('modal-menu-demo')" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(202,168,117,0.3); color: #fff; width: 34px; height: 34px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                    <span class="dashicons dashicons-no-alt" style="font-size: 18px; width: 18px; height: 18px;"></span>
+                </button>
             </div>
 
             <!-- Thanh Tabs Chuyển Đổi Kiểu Demo -->
             <div style="background: #faf8f5; border-bottom: 1px solid #e8dfd3; padding: 10px 24px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-                <button type="button" class="otr-demo-tab-btn button" data-tab="demo-tab-1" onclick="otrSwitchDemoTab('demo-tab-1')" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700; padding: 6px 16px;">
-                    ★ Kiểu 1: Showcase Card & Slider Ảnh
+                <button type="button" class="otr-demo-tab-btn button" data-tab="demo-tab-1" onclick="otrSwitchDemoTab('demo-tab-1')" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700; padding: 6px 16px; display: inline-flex; align-items: center; gap: 5px;">
+                    <span class="dashicons dashicons-id-alt" style="font-size: 16px; width: 16px; height: 16px;"></span> Kiểu 1: Showcase Card & Slider Ảnh
                 </button>
-                <button type="button" class="otr-demo-tab-btn button" data-tab="demo-tab-2" onclick="otrSwitchDemoTab('demo-tab-2')" style="background: #fff; color: #333; font-weight: 600; padding: 6px 16px;">
-                    ★ Kiểu 2: Sticky Sidebar (Bám Dính)
+                <button type="button" class="otr-demo-tab-btn button" data-tab="demo-tab-2" onclick="otrSwitchDemoTab('demo-tab-2')" style="background: #fff; color: #333; font-weight: 600; padding: 6px 16px; display: inline-flex; align-items: center; gap: 5px;">
+                    <span class="dashicons dashicons-align-left" style="font-size: 16px; width: 16px; height: 16px;"></span> Kiểu 2: Sticky Sidebar (Bám Dính)
                 </button>
-                <button type="button" class="otr-demo-tab-btn button" data-tab="demo-tab-3" onclick="otrSwitchDemoTab('demo-tab-3')" style="background: #fff; color: #333; font-weight: 600; padding: 6px 16px;">
-                    ★ Kiểu 3: Danh Sách Cột Theo Rượu (Classic)
+                <button type="button" class="otr-demo-tab-btn button" data-tab="demo-tab-3" onclick="otrSwitchDemoTab('demo-tab-3')" style="background: #fff; color: #333; font-weight: 600; padding: 6px 16px; display: inline-flex; align-items: center; gap: 5px;">
+                    <span class="dashicons dashicons-columns" style="font-size: 16px; width: 16px; height: 16px;"></span> Kiểu 3: Danh Sách Cột Theo Rượu (Classic)
                 </button>
-                <button type="button" class="otr-demo-tab-btn button" data-tab="demo-tab-matrix" onclick="otrSwitchDemoTab('demo-tab-matrix')" style="background: #221911; color: #caa875; border-color: #caa875; font-weight: 600; padding: 6px 16px; margin-left: auto;">
-                    📊 Bảng So Sánh 3 Kiểu
+                <button type="button" class="otr-demo-tab-btn button" data-tab="demo-tab-matrix" onclick="otrSwitchDemoTab('demo-tab-matrix')" style="background: #221911; color: #caa875; border-color: #caa875; font-weight: 600; padding: 6px 16px; margin-left: auto; display: inline-flex; align-items: center; gap: 5px;">
+                    <span class="dashicons dashicons-chart-bar" style="font-size: 16px; width: 16px; height: 16px;"></span> Bảng So Sánh 3 Kiểu
                 </button>
             </div>
 
@@ -1494,11 +1536,11 @@ function otr_render_menu_therocks_page() {
                             </div>
 
                             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <button type="button" onclick="otrSelectLayoutFromDemo('layout_1')" class="button button-primary" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700; padding: 6px 18px;">
-                                    ✓ CHỌN KIỂU 1 CHO MENU
+                                <button type="button" onclick="otrSelectLayoutFromDemo('layout_1')" class="button button-primary" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: 700; padding: 6px 18px; display: inline-flex; align-items: center; gap: 5px;">
+                                    <span class="dashicons dashicons-yes-alt" style="font-size: 16px; width: 16px; height: 16px;"></span> CHỌN KIỂU 1 CHO MENU
                                 </button>
                                 <a href="<?php echo esc_url(home_url('/menu/')); ?>" target="_blank" class="button" style="display: inline-flex; align-items: center; gap: 4px;">
-                                    ↗ Xem Thực Tế Trên Website
+                                    <span class="dashicons dashicons-external" style="font-size: 15px; width: 15px; height: 15px; margin-top: -1px;"></span> Xem Thực Tế Trên Website
                                 </a>
                             </div>
                         </div>
@@ -1572,11 +1614,11 @@ function otr_render_menu_therocks_page() {
                             </div>
 
                             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <button type="button" onclick="otrSelectLayoutFromDemo('layout_2')" class="button button-primary" style="background: #2271b1; border-color: #135e96; color: #fff; font-weight: 700; padding: 6px 18px;">
-                                    ✓ CHỌN KIỂU 2 CHO MENU
+                                <button type="button" onclick="otrSelectLayoutFromDemo('layout_2')" class="button button-primary" style="background: #2271b1; border-color: #135e96; color: #fff; font-weight: 700; padding: 6px 18px; display: inline-flex; align-items: center; gap: 5px;">
+                                    <span class="dashicons dashicons-yes-alt" style="font-size: 16px; width: 16px; height: 16px;"></span> CHỌN KIỂU 2 CHO MENU
                                 </button>
                                 <a href="<?php echo esc_url(home_url('/menu/')); ?>" target="_blank" class="button" style="display: inline-flex; align-items: center; gap: 4px;">
-                                    ↗ Xem Thực Tế Trên Website
+                                    <span class="dashicons dashicons-external" style="font-size: 15px; width: 15px; height: 15px; margin-top: -1px;"></span> Xem Thực Tế Trên Website
                                 </a>
                             </div>
                         </div>
@@ -1663,11 +1705,11 @@ function otr_render_menu_therocks_page() {
                             </div>
 
                             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <button type="button" onclick="otrSelectLayoutFromDemo('layout_3')" class="button button-primary" style="background: #1f7a4d; border-color: #175d3a; color: #fff; font-weight: 700; padding: 6px 18px;">
-                                    ✓ CHỌN KIỂU 3 CHO MENU
+                                <button type="button" onclick="otrSelectLayoutFromDemo('layout_3')" class="button button-primary" style="background: #1f7a4d; border-color: #175d3a; color: #fff; font-weight: 700; padding: 6px 18px; display: inline-flex; align-items: center; gap: 5px;">
+                                    <span class="dashicons dashicons-yes-alt" style="font-size: 16px; width: 16px; height: 16px;"></span> CHỌN KIỂU 3 CHO MENU
                                 </button>
                                 <a href="<?php echo esc_url(home_url('/menu/')); ?>" target="_blank" class="button" style="display: inline-flex; align-items: center; gap: 4px;">
-                                    ↗ Xem Thực Tế Trên Website
+                                    <span class="dashicons dashicons-external" style="font-size: 15px; width: 15px; height: 15px; margin-top: -1px;"></span> Xem Thực Tế Trên Website
                                 </a>
                             </div>
                         </div>
@@ -1717,9 +1759,9 @@ function otr_render_menu_therocks_page() {
                             </tr>
                             <tr>
                                 <td><strong>Thao tác nhanh</strong></td>
-                                <td><button type="button" onclick="otrSelectLayoutFromDemo('layout_1')" class="button button-small" style="background:#caa875; border-color:#b8935c; color:#18110b; font-weight:600;">Chọn Kiểu 1</button></td>
-                                <td><button type="button" onclick="otrSelectLayoutFromDemo('layout_2')" class="button button-small button-primary" style="background:#2271b1;">Chọn Kiểu 2</button></td>
-                                <td><button type="button" onclick="otrSelectLayoutFromDemo('layout_3')" class="button button-small" style="background:#1f7a4d; border-color:#175d3a; color:#fff; font-weight:600;">Chọn Kiểu 3</button></td>
+                                <td><button type="button" onclick="otrSelectLayoutFromDemo('layout_1')" class="button button-small" style="background:#caa875; border-color:#b8935c; color:#18110b; font-weight:600; display: inline-flex; align-items: center; gap: 3px;"><span class="dashicons dashicons-yes-alt" style="font-size: 13px; width: 13px; height: 13px;"></span> Chọn Kiểu 1</button></td>
+                                <td><button type="button" onclick="otrSelectLayoutFromDemo('layout_2')" class="button button-small button-primary" style="background:#2271b1; display: inline-flex; align-items: center; gap: 3px;"><span class="dashicons dashicons-yes-alt" style="font-size: 13px; width: 13px; height: 13px;"></span> Chọn Kiểu 2</button></td>
+                                <td><button type="button" onclick="otrSelectLayoutFromDemo('layout_3')" class="button button-small" style="background:#1f7a4d; border-color:#175d3a; color:#fff; font-weight:600; display: inline-flex; align-items: center; gap: 3px;"><span class="dashicons dashicons-yes-alt" style="font-size: 13px; width: 13px; height: 13px;"></span> Chọn Kiểu 3</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -1732,7 +1774,9 @@ function otr_render_menu_therocks_page() {
                 <div style="font-size: 12px; color: #666;">
                     💡 <em>Gợi ý: Mỗi Menu Con có thể chọn 1 kiểu hiển thị riêng biệt để thực đơn đa dạng và sinh động nhất!</em>
                 </div>
-                <button type="button" onclick="otrCloseModal('modal-menu-demo')" class="button">Đóng Cửa Sổ</button>
+                <button type="button" onclick="otrCloseModal('modal-menu-demo')" class="button" style="display: inline-flex; align-items: center; gap: 4px;">
+                    <span class="dashicons dashicons-no-alt" style="font-size: 15px; width: 15px; height: 15px; margin-top: -1px;"></span> Đóng Cửa Sổ
+                </button>
             </div>
 
         </div>

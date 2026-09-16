@@ -124,7 +124,7 @@ $tree = function_exists('otr_get_therocks_menu_tree') ? otr_get_therocks_menu_tr
                             $sub_title = function_exists('otr_t_menu') ? otr_t_menu($sub, 'title') : $sub['title'];
                         ?>
                             <button type="button" 
-                                    class="menu-layout3-tab-btn px-5 sm:px-6 py-3.5 text-xs sm:text-[13px] tracking-[0.14em] uppercase text-left transition-all duration-300 cursor-pointer <?php echo $isActiveTab ? 'bg-[#c8a773] text-[#1a120b] font-semibold border border-[#c8a773] shadow-lg' : 'bg-[#211508]/80 text-[#caa875] border border-dashed border-[#caa875]/30 hover:border-[#caa875]'; ?>"
+                                    class="menu-layout3-tab-btn px-5 sm:px-6 py-3.5 text-xs sm:text-[13px] tracking-[0.14em] uppercase text-left transition-all duration-300 cursor-pointer <?php echo $isActiveTab ? 'bg-[#c8a773] text-[#472B08] font-semibold border border-[#c8a773] shadow-lg' : 'bg-[#472B08]/80 text-[#caa875] border border-dashed border-[#caa875]/30 hover:border-[#caa875]'; ?>"
                                     data-target-group="<?php echo esc_attr( $cha_id ); ?>"
                                     data-target-subtab="<?php echo esc_attr( $sub_key ); ?>">
                                 <?php echo esc_html( $sub_title ); ?>

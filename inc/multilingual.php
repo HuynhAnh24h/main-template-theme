@@ -263,27 +263,32 @@ function otr_language_switcher( $custom_class = '' ) {
  * 3.1 Component Language Dropdown UI [ VN ⌵ ]
  * Thiết kế chuẩn mockup: Nút chữ VN/EN kèm mũi tên chevron down, mở menu thả xuống sang trọng phong cách Liquid Glass
  */
-function otr_language_dropdown( $custom_class = '' ) {
+function otr_language_dropdown( $custom_class = '', $dropup = false ) {
     $current = otr_get_current_lang();
     $current_label = ( $current === 'en' ) ? 'EN' : 'VN';
     $vi_url  = esc_url( otr_get_lang_switch_url( 'vi' ) );
     $en_url  = esc_url( otr_get_lang_switch_url( 'en' ) );
 
+    $extra_classes = trim( ( $dropup ? 'is-dropup ' : '' ) . $custom_class );
+    $menu_pos = $dropup 
+        ? 'bottom-full mb-2 left-1/2 -translate-x-1/2' 
+        : 'top-full mt-2.5 right-0';
+
     ob_start();
     ?>
-    <div class="otr-lang-dropdown relative inline-block text-left select-none <?php echo esc_attr( $custom_class ); ?>">
+    <div class="otr-lang-dropdown relative inline-flex items-center select-none <?php echo esc_attr( $extra_classes ); ?>">
         <button 
             type="button" 
-            class="otr-lang-dropdown__btn inline-flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-xs md:text-[13px] font-sans font-medium tracking-[0.14em] text-[#caa875] hover:text-[#f7ebd8] transition-colors focus:outline-none cursor-pointer" 
+            class="otr-lang-dropdown__btn inline-flex items-center gap-1.5 py-1 px-1 text-xs lg:text-[13px] font-sans font-medium tracking-[0.18em] text-[#caa875] hover:text-[#f7ebd8] uppercase transition-colors duration-200 focus:outline-none cursor-pointer bg-transparent border-0" 
             aria-expanded="false" 
             aria-haspopup="true"
         >
-            <span class="otr-current-lang-code font-semibold tracking-wider"><?php echo esc_html( $current_label ); ?></span>
-            <svg class="w-3 h-3 transition-transform duration-300 transform otr-dropdown-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <span class="otr-current-lang-code font-semibold"><?php echo esc_html( $current_label ); ?></span>
+            <svg class="w-3 h-3 transition-transform duration-300 transform otr-dropdown-chevron text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
         </button>
-        <div class="otr-lang-dropdown__menu hidden absolute right-0 mt-1 min-w-[100px] rounded-xl bg-[#160f0a]/98 backdrop-blur-2xl border border-[#caa875]/35 shadow-[0_15px_35px_rgba(0,0,0,0.85)] py-1.5 z-[99999] overflow-hidden">
+        <div class="otr-lang-dropdown__menu hidden absolute <?php echo esc_attr( $menu_pos ); ?> min-w-[105px] rounded-xl bg-[#18110b]/98 border border-[#caa875]/35 shadow-[0_12px_32px_rgba(0,0,0,0.85)] py-1.5 z-[99999] overflow-hidden">
             <a 
                 href="<?php echo $vi_url; ?>" 
                 class="flex items-center justify-between px-3.5 py-2 text-xs font-sans tracking-wider transition-all duration-200 <?php echo ( $current === 'vi' ) ? 'text-[#caa875] font-bold bg-[#caa875]/15' : 'text-[#caa875]/75 hover:text-[#f7ebd8] hover:bg-[#caa875]/10'; ?>"
@@ -317,7 +322,7 @@ function otr_register_multilingual_metabox() {
     foreach ( $screens as $screen ) {
         add_meta_box(
             'otr_multilingual_box',
-            '🌐 Bản Dịch Tiếng Anh / English Version (Bilingual Content)',
+            '<span class="dashicons dashicons-translation" style="color: #2271b1; vertical-align: middle; margin-right: 6px;"></span> ' . __( 'Bản Dịch Tiếng Anh / English Version (Bilingual Content)', 'ontherock' ),
             'otr_render_multilingual_metabox',
             $screen,
             'normal',
@@ -339,11 +344,11 @@ function otr_render_multilingual_metabox( $post ) {
     <div class="otr-bilingual-admin-box" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
         <!-- Thanh điều hướng Tab trực quan -->
         <div style="display: flex; gap: 8px; border-bottom: 2px solid #caa875; padding-bottom: 8px; margin-bottom: 16px;">
-            <button type="button" onclick="otrAdminSwitchLangTab('tab_en')" id="btn_tab_en" class="button button-primary" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: bold;">
-                🇬🇧 Nội dung Tiếng Anh (English Content)
+            <button type="button" onclick="otrAdminSwitchLangTab('tab_en')" id="btn_tab_en" class="button button-primary" style="background: #caa875; border-color: #b8935c; color: #18110b; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; padding: 4px 14px; height: auto;">
+                <span class="dashicons dashicons-admin-site-alt3" style="font-size: 16px; width: 16px; height: 16px;"></span> Nội dung Tiếng Anh (English Content)
             </button>
-            <button type="button" onclick="otrAdminSwitchLangTab('tab_vi_notice')" id="btn_tab_vi_notice" class="button" style="font-weight: 600;">
-                🇻🇳 Tiếng Việt (Nhập tại giao diện chuẩn WP)
+            <button type="button" onclick="otrAdminSwitchLangTab('tab_vi_notice')" id="btn_tab_vi_notice" class="button" style="font-weight: 600; display: inline-flex; align-items: center; gap: 6px; padding: 4px 14px; height: auto; border-color: #ccd0d4; color: #2c3338; background: #f6f7f7;">
+                <span class="dashicons dashicons-translation" style="font-size: 16px; width: 16px; height: 16px;"></span> Tiếng Việt (Nhập tại giao diện chuẩn WP)
             </button>
         </div>
 
@@ -406,7 +411,9 @@ function otr_render_multilingual_metabox( $post ) {
 
         <!-- Khung Tab Thông Báo Tiếng Việt -->
         <div id="otr_admin_tab_vi_notice" style="display: none; background: #f0f6fc; border-left: 4px solid #2271b1; padding: 14px 18px; border-radius: 4px;">
-            <h4 style="margin: 0 0 8px; color: #1d2327;">🇻🇳 Hướng dẫn quản trị Tiếng Việt:</h4>
+            <h4 style="margin: 0 0 8px; color: #1d2327; display: flex; align-items: center; gap: 6px;">
+                <span class="dashicons dashicons-info" style="color: #2271b1; font-size: 18px; width: 18px; height: 18px;"></span> Hướng dẫn quản trị Tiếng Việt:
+            </h4>
             <p style="margin: 0; color: #50575e; font-size: 13px; line-height: 1.6;">
                 Nội dung <strong>Tiếng Việt</strong> mặc định vẫn được soạn thảo trực tiếp ở các ô <strong>Tiêu đề</strong>, <strong>Nội dung bài viết</strong> và <strong>Tóm tắt</strong> chuẩn của WordPress ở phía trên màn hình. Bạn không cần nhập thêm bất cứ ô nào khác!
             </p>
@@ -428,18 +435,20 @@ function otr_render_multilingual_metabox( $post ) {
             btnEn.style.borderColor = '#b8935c';
             btnEn.style.color = '#18110b';
             btnVi.className = 'button';
-            btnVi.style.background = '';
-            btnVi.style.color = '';
+            btnVi.style.background = '#f6f7f7';
+            btnVi.style.borderColor = '#ccd0d4';
+            btnVi.style.color = '#2c3338';
         } else {
             tabEn.style.display = 'none';
             tabVi.style.display = 'block';
             btnVi.className = 'button button-primary';
-            btnVi.style.background = '#2271b1';
-            btnVi.style.borderColor = '#135e96';
-            btnVi.style.color = '#fff';
+            btnVi.style.background = '#caa875';
+            btnVi.style.borderColor = '#b8935c';
+            btnVi.style.color = '#18110b';
             btnEn.className = 'button';
-            btnEn.style.background = '';
-            btnEn.style.color = '';
+            btnEn.style.background = '#f6f7f7';
+            btnEn.style.borderColor = '#ccd0d4';
+            btnEn.style.color = '#2c3338';
         }
     }
     </script>

@@ -84,13 +84,16 @@ if ( is_array( $logo ) && ! empty( $logo['url'] ) ) {
 <header id="site-header" class="site-header fixed top-0 left-0 right-0 z-[9999] py-2.5 sm:py-3 px-4 sm:px-8 md:px-12 lg:px-16 transition-all duration-300">
     <div class="w-full max-w-[1536px] mx-auto flex items-center justify-between">
         
-        <!-- Nhóm mạng xã hội bên trái (Desktop) -->
+        <!-- Nhóm mạng xã hội & Bài viết bên trái (Desktop) -->
         <nav class="hidden md:flex md:flex-1 items-center gap-7 lg:gap-9 text-xs md:text-[13px] font-sans font-medium tracking-[0.18em] text-[#caa875] uppercase">
             <a href="<?php echo esc_url( $facebook_url ); ?>" target="_blank" rel="noopener noreferrer" class="hover:text-[#f7ebd8] transition-colors duration-200">
                 FACEBOOK
             </a>
             <a href="<?php echo esc_url( $instagram_url ); ?>" target="_blank" rel="noopener noreferrer" class="hover:text-[#f7ebd8] transition-colors duration-200">
                 INSTAGRAM
+            </a>
+            <a href="<?php echo esc_url( $blog_url ); ?>" class="hover:text-[#f7ebd8] transition-colors duration-200">
+                <?php echo esc_html( $blog_text ); ?>
             </a>
         </nav>
 
@@ -114,16 +117,13 @@ if ( is_array( $logo ) && ! empty( $logo['url'] ) ) {
                 <a href="<?php echo esc_url( $contact_url ); ?>" class="hover:text-[#f7ebd8] transition-colors duration-200">
                     <?php echo esc_html( $contact_text ); ?>
                 </a>
-                <a href="<?php echo esc_url( $blog_url ); ?>" class="hover:text-[#f7ebd8] transition-colors duration-200">
-                    <?php echo esc_html( $blog_text ); ?>
-                </a>
             </nav>
 
             <!-- Cụm Nút Đặt bàn & Ngôn ngữ Desktop (Khớp 100% Mockup: [ ĐẶT BÀN TRƯỚC ]  VN ⌵) -->
             <div class="hidden md:flex items-center gap-4 lg:gap-5 shrink-0">
                 <a 
                     href="<?php echo esc_url( $booking_url ); ?>" 
-                    class="btn-liquid-glass site-header__booking-btn inline-flex items-center justify-center rounded-full px-5 lg:px-6 py-2 lg:py-2.5 text-xs lg:text-[13px] font-sans font-medium tracking-[0.14em] uppercase select-none cursor-pointer whitespace-nowrap shrink-0 transition-all duration-300"
+                    class="btn-liquid-glass site-header__booking-btn inline-flex items-center justify-center rounded-full px-6 lg:px-7 py-2.5 lg:py-3 text-xs lg:text-[13px] font-sans font-medium tracking-[0.14em] uppercase select-none cursor-pointer whitespace-nowrap shrink-0 transition-all duration-300"
                 >
                     <span class="btn-roll-wrap">
                         <span class="btn-roll-text">
@@ -138,15 +138,21 @@ if ( is_array( $logo ) && ! empty( $logo['url'] ) ) {
                 <?php endif; ?>
             </div>
 
-            <!-- Nút Mobile Menu Toggle (Chỉ hiện trên mobile) -->
-            <button id="mobile-nav-toggle" class="md:hidden text-[#caa875] p-1.5 hover:text-[#f7ebd8] transition-colors cursor-pointer shrink-0" aria-label="Menu" aria-expanded="false">
-                <svg class="w-6 h-6 mobile-icon-menu" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>
-                <svg class="w-6 h-6 mobile-icon-close hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
+            <!-- Cụm Nút Mobile: Ngôn ngữ & Hamburger Toggle -->
+            <div class="flex md:hidden items-center gap-2">
+                <?php if (function_exists('otr_language_dropdown')): ?>
+                    <?php echo otr_language_dropdown(); ?>
+                <?php endif; ?>
+
+                <button id="mobile-nav-toggle" class="text-[#caa875] p-1.5 hover:text-[#f7ebd8] transition-colors cursor-pointer shrink-0" aria-label="Menu" aria-expanded="false">
+                    <svg class="w-6 h-6 mobile-icon-menu" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                    <svg class="w-6 h-6 mobile-icon-close hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
         </div>
 
     </div>
@@ -160,11 +166,11 @@ if ( is_array( $logo ) && ! empty( $logo['url'] ) ) {
             <a href="<?php echo esc_url( $contact_url ); ?>" class="py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors"><?php echo esc_html( $contact_text ); ?></a>
             <a href="<?php echo esc_url( $blog_url ); ?>" class="py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors"><?php echo esc_html( $blog_text ); ?></a>
             
-            <!-- Cụm Nút Đặt bàn & Ngôn ngữ bên trong Mobile Menu -->
-            <div class="pt-4 mt-2 border-t border-[#caa875]/20 flex items-center justify-between gap-3 sm:gap-4">
+            <!-- Nút Đặt bàn bên trong Mobile Menu -->
+            <div class="pt-4 mt-2 border-t border-[#caa875]/20 flex items-center justify-center">
                 <a 
                     href="<?php echo esc_url( $booking_url ); ?>" 
-                    class="btn-liquid-glass site-header__booking-btn flex-1 inline-flex items-center justify-center rounded-full px-5 py-2.5 text-xs font-sans font-medium tracking-[0.14em] uppercase select-none cursor-pointer whitespace-nowrap transition-all duration-300"
+                    class="btn-liquid-glass site-header__booking-btn w-full inline-flex items-center justify-center rounded-full px-6 py-3 text-xs font-sans font-medium tracking-[0.14em] uppercase select-none cursor-pointer whitespace-nowrap transition-all duration-300"
                 >
                     <span class="btn-roll-wrap">
                         <span class="btn-roll-text">
@@ -173,12 +179,6 @@ if ( is_array( $logo ) && ! empty( $logo['url'] ) ) {
                         </span>
                     </span>
                 </a>
-
-                <?php if (function_exists('otr_language_dropdown')): ?>
-                    <div class="shrink-0">
-                        <?php echo otr_language_dropdown(); ?>
-                    </div>
-                <?php endif; ?>
             </div>
         </nav>
     </div>
