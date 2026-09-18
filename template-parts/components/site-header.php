@@ -86,14 +86,29 @@ if ( is_array( $logo ) && ! empty( $logo['url'] ) ) {
         
         <!-- Nhóm mạng xã hội & Bài viết bên trái (Desktop) -->
         <nav class="hidden md:flex md:flex-1 items-center gap-7 lg:gap-9 text-xs md:text-[13px] font-sans font-medium tracking-[0.18em] text-[#caa875] uppercase">
-            <a href="<?php echo esc_url( $facebook_url ); ?>" target="_blank" rel="noopener noreferrer" class="hover:text-[#f7ebd8] transition-colors duration-200">
-                FACEBOOK
+            <a href="<?php echo esc_url( $facebook_url ); ?>" target="_blank" rel="noopener noreferrer" class="site-header__link hover:text-[#f7ebd8] transition-colors duration-200">
+                <span class="btn-roll-wrap">
+                    <span class="btn-roll-text">
+                        <span>FACEBOOK</span>
+                        <span aria-hidden="true">FACEBOOK</span>
+                    </span>
+                </span>
             </a>
-            <a href="<?php echo esc_url( $instagram_url ); ?>" target="_blank" rel="noopener noreferrer" class="hover:text-[#f7ebd8] transition-colors duration-200">
-                INSTAGRAM
+            <a href="<?php echo esc_url( $instagram_url ); ?>" target="_blank" rel="noopener noreferrer" class="site-header__link hover:text-[#f7ebd8] transition-colors duration-200">
+                <span class="btn-roll-wrap">
+                    <span class="btn-roll-text">
+                        <span>INSTAGRAM</span>
+                        <span aria-hidden="true">INSTAGRAM</span>
+                    </span>
+                </span>
             </a>
-            <a href="<?php echo esc_url( $blog_url ); ?>" class="hover:text-[#f7ebd8] transition-colors duration-200">
-                <?php echo esc_html( $blog_text ); ?>
+            <a href="<?php echo esc_url( $blog_url ); ?>" class="site-header__link hover:text-[#f7ebd8] transition-colors duration-200">
+                <span class="btn-roll-wrap">
+                    <span class="btn-roll-text">
+                        <span><?php echo esc_html( $blog_text ); ?></span>
+                        <span aria-hidden="true"><?php echo esc_html( $blog_text ); ?></span>
+                    </span>
+                </span>
             </a>
         </nav>
 
@@ -111,11 +126,21 @@ if ( is_array( $logo ) && ! empty( $logo['url'] ) ) {
         <!-- Nhóm điều hướng & nút Đặt bàn bên phải -->
         <div class="flex md:flex-1 items-center justify-end gap-3 sm:gap-5 md:gap-7 lg:gap-8">
             <nav class="hidden md:flex items-center gap-6 lg:gap-8 text-xs md:text-[13px] font-sans font-medium tracking-[0.18em] text-[#caa875] uppercase">
-                <a href="<?php echo esc_url( $menu_url ); ?>" class="hover:text-[#f7ebd8] transition-colors duration-200">
-                    <?php echo esc_html( $menu_text ); ?>
+                <a href="<?php echo esc_url( $menu_url ); ?>" class="site-header__link hover:text-[#f7ebd8] transition-colors duration-200">
+                    <span class="btn-roll-wrap">
+                        <span class="btn-roll-text">
+                            <span><?php echo esc_html( $menu_text ); ?></span>
+                            <span aria-hidden="true"><?php echo esc_html( $menu_text ); ?></span>
+                        </span>
+                    </span>
                 </a>
-                <a href="<?php echo esc_url( $contact_url ); ?>" class="hover:text-[#f7ebd8] transition-colors duration-200">
-                    <?php echo esc_html( $contact_text ); ?>
+                <a href="<?php echo esc_url( $contact_url ); ?>" class="site-header__link hover:text-[#f7ebd8] transition-colors duration-200">
+                    <span class="btn-roll-wrap">
+                        <span class="btn-roll-text">
+                            <span><?php echo esc_html( $contact_text ); ?></span>
+                            <span aria-hidden="true"><?php echo esc_html( $contact_text ); ?></span>
+                        </span>
+                    </span>
                 </a>
             </nav>
 
@@ -160,11 +185,46 @@ if ( is_array( $logo ) && ! empty( $logo['url'] ) ) {
     <!-- Mobile Navigation Drawer -->
     <div id="mobile-nav-menu" class="hidden md:hidden bg-[#18110a]/98 backdrop-blur-2xl border border-[#caa875]/30 px-6 py-6 mt-3 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.95)]">
         <nav class="flex flex-col gap-3 text-xs sm:text-sm font-sans font-medium tracking-[0.18em] text-[#caa875] uppercase">
-            <a href="<?php echo esc_url( $facebook_url ); ?>" target="_blank" rel="noopener noreferrer" class="py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors">FACEBOOK</a>
-            <a href="<?php echo esc_url( $instagram_url ); ?>" target="_blank" rel="noopener noreferrer" class="py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors">INSTAGRAM</a>
-            <a href="<?php echo esc_url( $menu_url ); ?>" class="py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors"><?php echo esc_html( $menu_text ); ?></a>
-            <a href="<?php echo esc_url( $contact_url ); ?>" class="py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors"><?php echo esc_html( $contact_text ); ?></a>
-            <a href="<?php echo esc_url( $blog_url ); ?>" class="py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors"><?php echo esc_html( $blog_text ); ?></a>
+            <a href="<?php echo esc_url( $facebook_url ); ?>" target="_blank" rel="noopener noreferrer" class="site-header__link py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors">
+                <span class="btn-roll-wrap">
+                    <span class="btn-roll-text">
+                        <span>FACEBOOK</span>
+                        <span aria-hidden="true">FACEBOOK</span>
+                    </span>
+                </span>
+            </a>
+            <a href="<?php echo esc_url( $instagram_url ); ?>" target="_blank" rel="noopener noreferrer" class="site-header__link py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors">
+                <span class="btn-roll-wrap">
+                    <span class="btn-roll-text">
+                        <span>INSTAGRAM</span>
+                        <span aria-hidden="true">INSTAGRAM</span>
+                    </span>
+                </span>
+            </a>
+            <a href="<?php echo esc_url( $menu_url ); ?>" class="site-header__link py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors">
+                <span class="btn-roll-wrap">
+                    <span class="btn-roll-text">
+                        <span><?php echo esc_html( $menu_text ); ?></span>
+                        <span aria-hidden="true"><?php echo esc_html( $menu_text ); ?></span>
+                    </span>
+                </span>
+            </a>
+            <a href="<?php echo esc_url( $contact_url ); ?>" class="site-header__link py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors">
+                <span class="btn-roll-wrap">
+                    <span class="btn-roll-text">
+                        <span><?php echo esc_html( $contact_text ); ?></span>
+                        <span aria-hidden="true"><?php echo esc_html( $contact_text ); ?></span>
+                    </span>
+                </span>
+            </a>
+            <a href="<?php echo esc_url( $blog_url ); ?>" class="site-header__link py-2 hover:text-[#f7ebd8] border-b border-[#caa875]/15 transition-colors">
+                <span class="btn-roll-wrap">
+                    <span class="btn-roll-text">
+                        <span><?php echo esc_html( $blog_text ); ?></span>
+                        <span aria-hidden="true"><?php echo esc_html( $blog_text ); ?></span>
+                    </span>
+                </span>
+            </a>
             
             <!-- Nút Đặt bàn bên trong Mobile Menu -->
             <div class="pt-4 mt-2 border-t border-[#caa875]/20 flex items-center justify-center">

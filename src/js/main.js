@@ -163,10 +163,10 @@ function initGlobal() {
         onHeaderScroll();
     }
 
-    // 6. Hiệu ứng Liquid Glass & Dual Text Roll-up cho Button
+    // 6. Hiệu ứng Liquid Glass & Dual Text Roll-up cho Button và Header Navigation Links
     function initLiquidGlassButtons() {
-        const buttons = document.querySelectorAll('.btn-liquid-glass, .otr-btn-glass, .otr-btn');
-        buttons.forEach(btn => {
+        const targets = document.querySelectorAll('.btn-liquid-glass, .otr-btn-glass, .otr-btn, #site-header nav a, .site-header__link');
+        targets.forEach(btn => {
             if (btn.querySelector('.btn-roll-wrap')) return;
 
             const childNodes = Array.from(btn.childNodes);

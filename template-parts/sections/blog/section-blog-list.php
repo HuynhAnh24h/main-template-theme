@@ -59,7 +59,8 @@ $fallback_images = array(
     'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1200&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1543007630-9710e4a00a20?q=80&w=1200&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1572116469696-31de0f17cc34?q=80&w=1200&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1560512823-829485b8bf24?q=80&w=1200&auto=format&fit=crop',
+    'https://images.un
+    splash.com/photo-1560512823-829485b8bf24?q=80&w=1200&auto=format&fit=crop',
 );
 $blog_page_id = get_queried_object_id();
 if ( empty( $blog_page_id ) || ! is_page() ) {

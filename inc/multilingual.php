@@ -283,7 +283,14 @@ function otr_language_dropdown( $custom_class = '', $dropup = false ) {
             aria-expanded="false" 
             aria-haspopup="true"
         >
-            <span class="otr-current-lang-code font-semibold"><?php echo esc_html( $current_label ); ?></span>
+            <span class="otr-current-lang-code font-semibold">
+                <span class="btn-roll-wrap">
+                    <span class="btn-roll-text">
+                        <span><?php echo esc_html( $current_label ); ?></span>
+                        <span aria-hidden="true"><?php echo esc_html( $current_label ); ?></span>
+                    </span>
+                </span>
+            </span>
             <svg class="w-3 h-3 transition-transform duration-300 transform otr-dropdown-chevron text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
